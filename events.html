@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Events & Clubs Hub - Events</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        accent: '#ec4899',
+                        success: '#10b981',
+                        dark: '#1e293b',
+                        light: '#f8fafc',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
+    <!-- Header Section -->
+    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-university text-primary-600 dark:text-primary-400 text-2xl mr-2"></i>
+                        <span class="text-xl font-heading font-bold text-gray-800 dark:text-white">CampusHub</span>
+                    </div>
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="index.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Home</a>
+                        <a href="events.html" class="border-primary-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Events</a>
+                        <a href="clubs.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Clubs</a>
+                        <a href="authPage.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Profile</a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline"></i>
+                    </button>
+                    <button id="auth-button" onclick="toggleAuthModal()" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Login</button>
+                    <button id="logout-button" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors hidden">Logout</button>
+                </div>
+                <div class="-mr-2 flex items-center md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-lg">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="index.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Home</a>
+                <a href="events.html" class="bg-primary-50 border-primary-500 text-primary-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Events</a>
+                <a href="clubs.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Clubs</a>
+                <a href="authPage.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Profile</a>
+                <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center px-5 space-x-3">
+                        <button id="theme-toggle-mobile" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5">
+                            <i class="fas fa-moon dark:hidden"></i>
+                            <i class="fas fa-sun hidden dark:inline"></i>
+                        </button>
+                        <button onclick="toggleAuthModal()" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 class="text-3xl font-heading font-bold text-gray-900 dark:text-white mb-4">Upcoming Events</h1>
+        <div class="relative mb-6">
+            <input type="text" id="searchInput" placeholder="Search events by title, category, or location..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all w-full bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+            <i class="fas fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
+        </div>
+        <div class="flex flex-wrap gap-4 mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+            <div class="relative min-w-[150px]">
+                <select id="eventTypeFilter" class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option value="">All Event Types</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="lecture">Lecture</option>
+                    <option value="social">Social</option>
+                    <option value="sports">Sports</option>
+                    <option value="concert">Concert</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 dark:text-gray-500"></i>
+            </div>
+            <div class="relative min-w-[150px]">
+                <select id="dateFilter" class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option value="">All Dates</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                    <option value="upcoming">Upcoming</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 dark:text-gray-500"></i>
+            </div>
+            <div class="relative min-w-[150px]">
+                <select id="organizerFilter" class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option value="">All Organizers</option>
+                    <option value="university">University</option>
+                    <option value="tech-club">Tech Club</option>
+                    <option value="music-club">Music Club</option>
+                    <option value="sports-club">Sports Club</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 dark:text-gray-500"></i>
+            </div>
+            <div class="flex gap-2 ml-auto">
+                <button id="gridViewBtn" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors active">
+                    <i class="fas fa-th-large"></i> Grid
+                </button>
+                <button id="listViewBtn" class="bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fas fa-list"></i> List
+                </button>
+                <button id="calendarViewBtn" class="bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fas fa-calendar"></i> Calendar
+                </button>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="eventsContainer">
+            <!-- Event cards will be inserted here by JavaScript -->
+        </div>
+        <div id="calendarContainer" class="hidden bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+            <!-- Calendar view will be inserted here -->
+        </div>
+    </div>
+    
+    <!-- Event Details Modal -->
+    <div class="fixed inset-0 z-50 hidden overflow-y-auto" id="eventModal">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 opacity-75 dark:bg-gray-900 dark:opacity-90 transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+                <div class="relative p-6 border-b border-gray-200 dark:border-gray-600">
+                    <h2 class="text-xl font-heading font-bold text-gray-900 dark:text-white" id="modalEventTitle">Event Title</h2>
+                    <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" id="closeModal">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <img src="" alt="Event Image" class="w-full h-64 object-cover rounded-lg mb-6" id="modalEventImage">
+                    <div class="flex flex-wrap gap-6 mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm text-gray-500 dark:text-gray-400">Date & Time</h4>
+                                <p class="font-medium text-gray-900 dark:text-white" id="modalEventDate">Nov 15, 2023 • 4:00 PM</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm text-gray-500 dark:text-gray-400">Location</h4>
+                                <p class="font-medium text-gray-900 dark:text-white" id="modalEventLocation">Student Center, Room 205</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm text-gray-500 dark:text-gray-400">Organizer</h4>
+                                <p class="font-medium text-gray-900 dark:text-white" id="modalEventOrganizer">Tech Club</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 mb-6" id="countdownTimer">
+                        <div class="text-center bg-gray-100 dark:bg-gray-700 p-3 rounded-lg min-w-[60px]">
+                            <div class="text-lg font-bold text-primary-600 dark:text-primary-400" id="days">00</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400 uppercase">Days</div>
+                        </div>
+                        <div class="text-center bg-gray-100 dark:bg-gray-700 p-3 rounded-lg min-w-[60px]">
+                            <div class="text-lg font-bold text-primary-600 dark:text-primary-400" id="hours">00</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400 uppercase">Hours</div>
+                        </div>
+                        <div class="text-center bg-gray-100 dark:bg-gray-700 p-3 rounded-lg min-w-[60px]">
+                            <div class="text-lg font-bold text-primary-600 dark:text-primary-400" id="minutes">00</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400 uppercase">Minutes</div>
+                        </div>
+                        <div class="text-center bg-gray-100 dark:bg-gray-700 p-3 rounded-lg min-w-[60px]">
+                            <div class="text-lg font-bold text-primary-600 dark:text-primary-400" id="seconds">00</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400 uppercase">Seconds</div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-6" id="modalEventTags">
+                        <!-- Tags will be inserted here -->
+                    </div>
+                    <div class="text-gray-600 dark:text-gray-300 leading-relaxed mb-6" id="modalEventDescription">
+                        <p>Full event description will appear here with all the details about what attendees can expect, any special requirements, and other important information.</p>
+                    </div>
+                </div>
+                <div class="p-6 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center">
+                    <div class="flex gap-2">
+                        <button class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                        <button class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                        <button class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg font-medium transition-colors" id="modalRsvpBtn">
+                        <span>RSVP</span>
+                        <i class="fas fa-spinner loading hidden ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample event data
+        const events = [
+            {
+                id: 1,
+                title: "Tech Workshop: Intro to Web Development",
+                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=300&q=80",
+                date: "2023-11-15T16:00:00",
+                location: "Computer Science Building, Room 101",
+                organizer: "Tech Club",
+                organizerAvatar: "https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                description: "Join us for an introductory workshop on web development where you'll learn the basics of HTML, CSS, and JavaScript. Perfect for beginners!",
+                tags: ["Tech", "Workshop", "Programming"],
+                type: "workshop"
+            },
+            {
+                id: 2,
+                title: "Annual Music Festival",
+                image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=300&q=80",
+                date: "2023-11-20T18:00:00",
+                location: "University Quad",
+                organizer: "Music Club",
+                organizerAvatar: "https://images.unsplash.com/photo-1511671782779-c97d3d27d1f7?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                description: "Our biggest event of the year featuring performances from student bands, solo artists, and special guests. Food trucks will be available!",
+                tags: ["Music", "Concert", "Social"],
+                type: "concert"
+            },
+            {
+                id: 3,
+                title: "Guest Lecture: AI in Modern Society",
+                image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=300&q=80",
+                date: "2023-11-22T14:00:00",
+                location: "Engineering Hall, Auditorium",
+                organizer: "University",
+                organizerAvatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                description: "Dr. Sarah Chen from Stanford University will discuss the ethical implications and future directions of artificial intelligence technologies.",
+                tags: ["Lecture", "Tech", "AI"],
+                type: "lecture"
+            },
+            {
+                id: 4,
+                title: "Basketball Tournament Finals",
+                image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=300&q=80",
+                date: "2023-11-25T19:00:00",
+                location: "University Gymnasium",
+                organizer: "Sports Club",
+                organizerAvatar: "https://images.unsplash.com/photo-1519861531473-9200262188bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                description: "Come cheer for your favorite team as they compete in the championship game of our annual intramural basketball tournament!",
+                tags: ["Sports", "Basketball", "Tournament"],
+                type: "sports"
+            },
+            {
+                id: 5,
+                title: "Hackathon 2023",
+                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=300&q=80",
+                date: "2023-12-02T10:00:00",
+                location: "Innovation Center",
+                organizer: "Tech Club",
+                organizerAvatar: "https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                description: "24-hour coding competition where students form teams to build innovative projects. Prizes for winners and free food for all participants!",
+                tags: ["Tech", "Hackathon", "Programming"],
+                type: "workshop"
+            },
+            {
+                id: 6,
+                title: "Winter Formal Dance",
+                image: "https://images.unsplash.com/photo-1519671488599-2f6f6a1ef767?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=300&q=80",
+                date: "2023-12-09T20:00:00",
+                location: "Grand Ballroom",
+                organizer: "Student Council",
+                organizerAvatar: "https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                description: "End the semester with a night of dancing, music, and fun at our annual Winter Formal. Semi-formal attire required.",
+                tags: ["Social", "Dance", "Party"],
+                type: "social"
+            }
+        ];
+        
+        // RSVP status for each event (simulating user data)
+        const rsvpStatus = {};
+        
+        // DOM Elements
+        const eventsContainer = document.getElementById('eventsContainer');
+        const calendarContainer = document.getElementById('calendarContainer');
+        const searchInput = document.getElementById('searchInput');
+        const eventTypeFilter = document.getElementById('eventTypeFilter');
+        const dateFilter = document.getElementById('dateFilter');
+        const organizerFilter = document.getElementById('organizerFilter');
+        const gridViewBtn = document.getElementById('gridViewBtn');
+        const listViewBtn = document.getElementById('listViewBtn');
+        const calendarViewBtn = document.getElementById('calendarViewBtn');
+        const eventModal = document.getElementById('eventModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalRsvpBtn = document.getElementById('modalRsvpBtn');
+        
+        // Current view state
+        let currentView = 'grid';
+        let currentEventId = null;
+        
+        // Initialize the page
+        function init() {
+            renderEvents(events);
+            setupEventListeners();
+        }
+        
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Search and filter inputs
+            searchInput.addEventListener('input', filterEvents);
+            eventTypeFilter.addEventListener('change', filterEvents);
+            dateFilter.addEventListener('change', filterEvents);
+            organizerFilter.addEventListener('change', filterEvents);
+            
+            // View toggle buttons
+            gridViewBtn.addEventListener('click', () => toggleView('grid'));
+            listViewBtn.addEventListener('click', () => toggleView('list'));
+            calendarViewBtn.addEventListener('click', () => toggleView('calendar'));
+            
+            // Modal controls
+            closeModal.addEventListener('click', closeEventModal);
+            modalRsvpBtn.addEventListener('click', toggleRsvp);
+            
+            // Close modal when clicking outside content
+            eventModal.addEventListener('click', (e) => {
+                if (e.target === eventModal) {
+                    closeEventModal();
+                }
+            });
+
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-button').addEventListener('click', () => {
+                const mobileMenu = document.getElementById('mobile-menu');
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Theme toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+            themeToggle.addEventListener('click', toggleTheme);
+            themeToggleMobile.addEventListener('click', toggleTheme);
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        // Render events to the page
+        function renderEvents(eventsToRender) {
+            eventsContainer.innerHTML = '';
+            
+            if (eventsToRender.length === 0) {
+                eventsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center col-span-full">No events found matching your criteria.</p>';
+                return;
+            }
+            
+            eventsToRender.forEach(event => {
+                const eventCard = createEventCard(event);
+                eventsContainer.appendChild(eventCard);
+            });
+        }
+        
+        // Create an event card element
+        function createEventCard(event) {
+            const eventDate = new Date(event.date);
+            const formattedDate = eventDate.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+            const formattedTime = eventDate.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            const isAttending = rsvpStatus[event.id] || false;
+            
+            const card = document.createElement('div');
+            card.className = currentView === 'list' 
+                ? 'bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg'
+                : 'bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg';
+            card.dataset.id = event.id;
+            card.innerHTML = `
+                <img src="${event.image}" alt="${event.title}" class="${currentView === 'list' ? 'w-full md:w-48 h-40 object-cover' : 'w-full h-40 object-cover'}">
+                <div class="p-4 flex-1">
+                    <div class="flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 mb-2">
+                        <i class="far fa-calendar-alt"></i>
+                        <span>${formattedDate} • ${formattedTime}</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">${event.title}</h3>
+                    <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${event.location}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
+                        <img src="${event.organizerAvatar}" alt="${event.organizer}" class="w-6 h-6 rounded-full">
+                        <span>${event.organizer}</span>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">${event.description}</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        ${event.tags.map(tag => `<span class="bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs px-2 py-1 rounded-full">#${tag}</span>`).join('')}
+                    </div>
+                    <button class="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors ${isAttending ? 'bg-success hover:bg-success/90' : ''}" data-id="${event.id}">
+                        ${isAttending ? '<i class="fas fa-check mr-2"></i>Attending' : 'RSVP'}
+                    </button>
+                </div>
+            `;
+            
+            // Add click event to open modal
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('button')) {
+                    openEventModal(event);
+                }
+            });
+            
+            // Add RSVP button event
+            const rsvpBtn = card.querySelector('button');
+            rsvpBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleRsvp(e.target.dataset.id);
+            });
+            
+            return card;
+        }
+        
+        // Render calendar view
+        function renderCalendar(eventsToRender) {
+            calendarContainer.innerHTML = `
+                <div class="text-center">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Event Calendar</h2>
+                    <p class="text-gray-600 dark:text-gray-300">Basic calendar view (to be implemented with a calendar library)</p>
+                </div>
+            `;
+            // Note: For a full calendar implementation, consider integrating a library like FullCalendar
+            // This is a placeholder for demonstration
+            eventsToRender.forEach(event => {
+                const eventDate = new Date(event.date);
+                const formattedDate = eventDate.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+                const div = document.createElement('div');
+                div.className = 'p-2 border-b border-gray-200 dark:border-gray-600';
+                div.innerHTML = `
+                    <div class="text-sm text-primary-600 dark:text-primary-400">${formattedDate}</div>
+                    <div class="text-gray-900 dark:text-white">${event.title}</div>
+                `;
+                div.addEventListener('click', () => openEventModal(event));
+                calendarContainer.appendChild(div);
+            });
+        }
+        
+        // Filter events based on search and filter criteria
+        function filterEvents() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedType = eventTypeFilter.value;
+            const selectedDate = dateFilter.value;
+            const selectedOrganizer = organizerFilter.value;
+            
+            const filteredEvents = events.filter(event => {
+                const matchesSearch = 
+                    event.title.toLowerCase().includes(searchTerm) ||
+                    event.description.toLowerCase().includes(searchTerm) ||
+                    event.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                
+                const matchesType = selectedType ? event.type === selectedType : true;
+                
+                const eventDate = new Date(event.date);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                let matchesDate = true;
+                if (selectedDate === 'today') {
+                    matchesDate = eventDate.toDateString() === today.toDateString();
+                } else if (selectedDate === 'week') {
+                    const endOfWeek = new Date(today);
+                    endOfWeek.setDate(today.getDate() + 7);
+                    matchesDate = eventDate >= today && eventDate <= endOfWeek;
+                } else if (selectedDate === 'month') {
+                    matchesDate = eventDate.getMonth() === today.getMonth() && 
+                                  eventDate.getFullYear() === today.getFullYear();
+                } else if (selectedDate === 'upcoming') {
+                    matchesDate = eventDate >= today;
+                }
+                
+                const matchesOrganizer = selectedOrganizer ? 
+                    event.organizer.toLowerCase().includes(selectedOrganizer) : true;
+                
+                return matchesSearch && matchesType && matchesDate && matchesOrganizer;
+            });
+            
+            if (currentView === 'calendar') {
+                renderCalendar(filteredEvents);
+            } else {
+                renderEvents(filteredEvents);
+            }
+        }
+        
+        // Toggle between grid, list, and calendar views
+        function toggleView(view) {
+            currentView = view;
+            
+            gridViewBtn.classList.remove('bg-primary-600', 'text-white', 'active');
+            listViewBtn.classList.remove('bg-primary-600', 'text-white', 'active');
+            calendarViewBtn.classList.remove('bg-primary-600', 'text-white', 'active');
+            gridViewBtn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-100', 'border', 'border-gray-200', 'dark:border-gray-600');
+            listViewBtn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-100', 'border', 'border-gray-200', 'dark:border-gray-600');
+            calendarViewBtn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-100', 'border', 'border-gray-200', 'dark:border-gray-600');
+            
+            if (view === 'grid') {
+                gridViewBtn.classList.add('bg-primary-600', 'text-white', 'active');
+                gridViewBtn.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-100', 'border', 'border-gray-200', 'dark:border-gray-600');
+                eventsContainer.classList.remove('flex', 'flex-col');
+                eventsContainer.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-6');
+                calendarContainer.classList.add('hidden');
+                eventsContainer.classList.remove('hidden');
+            } else if (view === 'list') {
+                listViewBtn.classList.add('bg-primary-600', 'text-white', 'active');
+                listViewBtn.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-100', 'border', 'border-gray-200', 'dark:border-gray-600');
+                eventsContainer.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-6');
+                eventsContainer.classList.add('flex', 'flex-col', 'gap-6');
+                calendarContainer.classList.add('hidden');
+                eventsContainer.classList.remove('hidden');
+            } else if (view === 'calendar') {
+                calendarViewBtn.classList.add('bg-primary-600', 'text-white', 'active');
+                calendarViewBtn.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-100', 'border', 'border-gray-200', 'dark:border-gray-600');
+                eventsContainer.classList.add('hidden');
+                calendarContainer.classList.remove('hidden');
+            }
+            
+            filterEvents();
+        }
+        
+        // Open event details modal
+        function openEventModal(event) {
+            currentEventId = event.id;
+            
+            document.getElementById('modalEventTitle').textContent = event.title;
+            document.getElementById('modalEventImage').src = event.image;
+            const eventDate = new Date(event.date);
+            document.getElementById('modalEventDate').textContent = `${eventDate.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            })} • ${eventDate.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            })}`;
+            document.getElementById('modalEventLocation').textContent = event.location;
+            document.getElementById('modalEventOrganizer').textContent = event.organizer;
+            document.getElementById('modalEventDescription').innerHTML = `<p>${event.description}</p>`;
+            
+            const tagsContainer = document.getElementById('modalEventTags');
+            tagsContainer.innerHTML = event.tags.map(tag => `<span class="bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs px-2 py-1 rounded-full">#${tag}</span>`).join('');
+            
+            modalRsvpBtn.innerHTML = rsvpStatus[event.id] 
+                ? '<i class="fas fa-check mr-2"></i>Attending'
+                : '<span>RSVP</span><i class="fas fa-spinner loading hidden ml-2"></i>';
+            modalRsvpBtn.classList.toggle('bg-success', rsvpStatus[event.id]);
+            modalRsvpBtn.classList.toggle('hover:bg-success/90', rsvpStatus[event.id]);
+            modalRsvpBtn.classList.toggle('bg-primary-600', !rsvpStatus[event.id]);
+            modalRsvpBtn.classList.toggle('hover:bg-primary-700', !rsvpStatus[event.id]);
+            
+            eventModal.classList.remove('hidden');
+            
+            // Start countdown timer
+            startCountdown(event.date);
+        }
+        
+        // Close event modal
+        function closeEventModal() {
+            eventModal.classList.add('hidden');
+            currentEventId = null;
+            clearInterval(window.countdownInterval);
+        }
+        
+        // Toggle RSVP status
+        function toggleRsvp(eventId = currentEventId) {
+            rsvpStatus[eventId] = !rsvpStatus[eventId];
+            const isAttending = rsvpStatus[eventId];
+            
+            // Update modal button
+            if (eventId === currentEventId) {
+                modalRsvpBtn.innerHTML = isAttending 
+                    ? '<i class="fas fa-check mr-2"></i>Attending'
+                    : '<span>RSVP</span><i class="fas fa-spinner loading hidden ml-2"></i>';
+                modalRsvpBtn.classList.toggle('bg-success', isAttending);
+                modalRsvpBtn.classList.toggle('hover:bg-success/90', isAttending);
+                modalRsvpBtn.classList.toggle('bg-primary-600', !isAttending);
+                modalRsvpBtn.classList.toggle('hover:bg-primary-700', !isAttending);
+            }
+            
+            // Update event card button
+            const eventCard = document.querySelector(`[data-id="${eventId}"]`);
+            if (eventCard) {
+                const rsvpBtn = eventCard.querySelector('button');
+                rsvpBtn.innerHTML = isAttending 
+                    ? '<i class="fas fa-check mr-2"></i>Attending'
+                    : 'RSVP';
+                rsvpBtn.classList.toggle('bg-success', isAttending);
+                rsvpBtn.classList.toggle('hover:bg-success/90', isAttending);
+                rsvpBtn.classList.toggle('bg-primary-600', !isAttending);
+                rsvpBtn.classList.toggle('hover:bg-primary-700', !isAttending);
+            }
+        }
+        
+        // Start countdown timer for event
+        function startCountdown(eventDate) {
+            clearInterval(window.countdownInterval);
+            
+            const updateCountdown = () => {
+                const now = new Date();
+                const timeDiff = new Date(eventDate) - now;
+                
+                if (timeDiff <= 0) {
+                    document.getElementById('countdownTimer').innerHTML = '<p class="text-red-500 dark:text-red-400">Event has started!</p>';
+                    clearInterval(window.countdownInterval);
+                    return;
+                }
+                
+                const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                
+                document.getElementById('days').textContent = String(days).padStart(2, '0');
+                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            };
+            
+            updateCountdown();
+            window.countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        // Initialize auth modal toggle (placeholder, as auth logic is in index.html)
+        function toggleAuthModal() {
+            window.location.href = 'authPage.html';
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

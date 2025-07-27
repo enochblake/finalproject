@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Events & Clubs Hub | Clubs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .club-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .tag:hover {
+            transform: scale(1.05);
+        }
+        
+        .gallery-item {
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+        
+        @media (max-width: 640px) {
+            .search-container {
+                width: 100%;
+            }
+        }
+
+        .mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header/Navigation -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm">
+        <nav class="container mx-auto px-4 py-3 flex justify-between items-center" aria-label="Main navigation">
+            <div class="flex items-center space-x-8">
+                <a href="#" class="flex items-center space-x-2" aria-label="Campus Clubs Home">
+                    <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-xl">CE</div>
+                    <span class="text-xl font-semibold text-gray-800">Campus Clubs</span>
+                </a>
+                <div id="navLinks" class="hidden md:flex space-x-6">
+                    <a href="Laho.html" class="text-gray-600 hover:text-indigo-600 transition">Home</a>
+                    <a href="events.html" class="text-gray-600 hover:text-indigo-600 transition">Events</a>
+                    <a href="clubs.html" class="text-indigo-600 font-medium" aria-current="page">Clubs</a>
+                    <a href="authPage.html" class="text-gray-600 hover:text-indigo-600 transition">Profile</a>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative search-container">
+                    <input type="text" id="clubSearch" placeholder="Search clubs..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent w-64" aria-label="Search clubs">
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-600" aria-label="Toggle mobile menu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white shadow-sm mobile-menu transform -translate-y-full">
+            <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                <a href="Laho.html" class="text-gray-600 hover:text-indigo-600 transition">Home</a>
+                <a href="events.html" class="text-gray-600 hover:text-indigo-600 transition">Events</a>
+                <a href="clubs.html" class="text-indigo-600 font-medium" aria-current="page">Clubs</a>
+                <a href="authPage.html" class="text-gray-600 hover:text-indigo-600 transition">Profile</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8" role="main">
+        <!-- Page Title and Filters -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <div class="mb-4 md:mb-0">
+                <h1 class="text-3xl font-bold text-gray-800">Student Clubs Directory</h1>
+                <p class="text-gray-600">Find and join student organizations that match your interests</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <div class="relative">
+                    <select id="categoryFilter" class="appearance-none bg-white border border-gray-300 rounded-full px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm" aria-label="Filter by category">
+                        <option value="all">All Categories</option>
+                        <option value="Academic">Academic</option>
+                        <option value="Cultural">Cultural</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Arts">Arts</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Service">Service</option>
+                        <option value="Business">Business</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </div>
+                </div>
+                <div class="relative">
+                    <select id="tagFilter" class="appearance-none bg-white border border-gray-300 rounded-full px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm" aria-label="Filter by tag">
+                        <option value="all">All Tags</option>
+                        <option value="Tech">Tech</option>
+                        <option value="Coding">Coding</option>
+                        <option value="Innovation">Innovation</option>
+                        <option value="Cultural">Cultural</option>
+                        <option value="International">International</option>
+                        <option value="Diversity">Diversity</option>
+                        <option value="Environment">Environment</option>
+                        <option value="Sustainability">Sustainability</option>
+                        <option value="Activism">Activism</option>
+                        <option value="Photography">Photography</option>
+                        <option value="Art">Art</option>
+                        <option value="Workshops">Workshops</option>
+                        <option value="Debate">Debate</option>
+                        <option value="Public Speaking">Public Speaking</option>
+                        <option value="Politics">Politics</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Frisbee">Frisbee</option>
+                        <option value="Recreation">Recreation</option>
+                        <option value="Business">Business</option>
+                        <option value="Startups">Startups</option>
+                        <option value="Music">Music</option>
+                        <option value="Performance">Performance</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </div>
+                </div>
+                <div class="relative">
+                    <select id="sortBy" class="appearance-none bg-white border border-gray-300 rounded-full px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm" aria-label="Sort clubs">
+                        <option value="name-asc">Sort: A-Z</option>
+                        <option value="name-desc">Sort: Z-A</option>
+                        <option value="members-asc">Members: Low to High</option>
+                        <option value="members-desc">Members: High to Low</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </div>
+                </div>
+                <button id="toggleView" class="bg-white border border-gray-300 rounded-full px-4 py-2 focus:outline-none hover:bg-gray-50 transition" aria-label="Toggle list view">
+                    <i class="fas fa-list text-indigo-600"></i>
+                    <span class="ml-2 text-sm hidden md:inline">List View</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Clubs Grid View -->
+        <div id="clubsGridView" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" role="region" aria-label="Clubs list">
+            <!-- Club cards will be inserted here by JavaScript -->
+        </div>
+
+        <!-- No Clubs Found Message -->
+        <div id="noClubsMessage" class="hidden text-center py-12">
+            <i class="fas fa-users-slash text-5xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">No clubs found</h3>
+            <p class="text-gray-500 mb-4">Try adjusting your search or filters</p>
+            <button id="resetFilters" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition" aria-label="Reset filters">Reset filters</button>
+        </div>
+    </main>
+
+    <!-- Club Details Modal -->
+    <div id="clubModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none transition" role="dialog" aria-modal="true" aria-labelledby="clubModalTitle">
+        <div class="modal-content bg-white rounded-xl w-full max-w-4xl mx-4 overflow-hidden transform transition">
+            <!-- Modal content will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Join Confirmation Modal -->
+    <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none transition" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+        <div class="bg-white rounded-xl w-full max-w-md mx-4 p-6 transform transition">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="confirmModalTitle" class="text-xl font-semibold text-gray-800">Join Club</h3>
+                <button id="closeConfirmModal" class="text-gray-500 hover:text-gray-700" aria-label="Close confirmation modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6" id="confirmMessage">Are you sure you want to join this club?</p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancelJoin" class="px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Cancel join">Cancel</button>
+                <button id="confirmJoin" class="px-4 py-2 rounded-full bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 transition" aria-label="Confirm join">Join Club</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample club data with updated dates for 2025
+        const clubs = [
+            {
+                id: 1,
+                name: "Tech Innovators",
+                logo: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                banner: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                category: "Technology",
+                description: "A community of tech enthusiasts passionate about innovation, coding, and emerging technologies. We host hackathons, workshops, and networking events with industry professionals.",
+                shortDescription: "For tech enthusiasts passionate about innovation and coding",
+                members: 145,
+                tags: ["Tech", "Coding", "Innovation"],
+                officers: [
+                    { name: "Alex Johnson", role: "President", avatar: "https://randomuser.me/api/portraits/men/32.jpg" },
+                    { name: "Sarah Chen", role: "Vice President", avatar: "https://randomuser.me/api/portraits/women/44.jpg" },
+                    { name: "Michael Brown", role: "Treasurer", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }
+                ],
+                socials: {
+                    instagram: "@techinnovators",
+                    facebook: "facebook.com/techinnovators",
+                    email: "tech@university.edu"
+                },
+                gallery: [
+                    "https://images.unsplash.com/photo-1517430816045-df4b7ebf5431?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1517430816045-df4b7ebf5431?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ],
+                upcomingEvents: [
+                    { title: "Annual Hackathon", date: "2025-11-15", time: "10:00 AM" },
+                    { title: "Guest Speaker: AI Ethics", date: "2025-11-22", time: "4:00 PM" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Global Cultures",
+                logo: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                banner: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                category: "Cultural",
+                description: "Celebrating diversity on campus through cultural exchange, language practice, and international cuisine. We organize cultural nights, language tables, and study abroad information sessions.",
+                shortDescription: "Celebrating diversity through cultural exchange and events",
+                members: 89,
+                tags: ["Cultural", "International", "Diversity"],
+                officers: [
+                    { name: "Maria Garcia", role: "President", avatar: "https://randomuser.me/api/portraits/women/65.jpg" },
+                    { name: "James Wilson", role: "Event Coordinator", avatar: "https://randomuser.me/api/portraits/men/43.jpg" }
+                ],
+                socials: {
+                    instagram: "@globalcultures",
+                    email: "cultures@university.edu"
+                },
+                gallery: [
+                    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ],
+                upcomingEvents: [
+                    { title: "International Food Fair", date: "2025-11-10", time: "12:00 PM" }
+                ]
+            },
+            {
+                id: 3,
+                name: "Environmental Society",
+                logo: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                banner: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                category: "Service",
+                description: "Dedicated to promoting sustainability on campus and in the local community. We organize cleanups, tree planting, and advocate for environmentally friendly policies.",
+                shortDescription: "Promoting sustainability on campus and in the community",
+                members: 112,
+                tags: ["Environment", "Sustainability", "Activism"],
+                officers: [
+                    { name: "Taylor Green", role: "President", avatar: "https://randomuser.me/api/portraits/women/33.jpg" },
+                    { name: "Jordan Smith", role: "Outreach Coordinator", avatar: "https://randomuser.me/api/portraits/men/55.jpg" }
+                ],
+                socials: {
+                    twitter: "@envsociety",
+                    email: "environment@university.edu"
+                },
+                gallery: [
+                    "https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ],
+                upcomingEvents: [
+                    { title: "Campus Cleanup Day", date: "2025-11-05", time: "9:00 AM" },
+                    { title: "Sustainability Workshop", date: "2025-11-18", time: "3:00 PM" }
+                ]
+            },
+            {
+                id: 4,
+                name: "Photography Club",
+                logo: "https://images.unsplash.com/photo-1504198266287-1659872e6590?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                banner: "https://images.unsplash.com/photo-1504198266287-1659872e6590?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                category: "Arts",
+                description: "For photography enthusiasts of all skill levels. We organize photo walks, workshops, and exhibitions. Club members get access to our equipment lending library.",
+                shortDescription: "For photography enthusiasts of all skill levels",
+                members: 67,
+                tags: ["Photography", "Art", "Workshops"],
+                officers: [
+                    { name: "Emma Wilson", role: "President", avatar: "https://randomuser.me/api/portraits/women/28.jpg" },
+                    { name: "David Kim", role: "Workshop Leader", avatar: "https://randomuser.me/api/portraits/men/12.jpg" }
+                ],
+                socials: {
+                    instagram: "@univphotoclub",
+                    flickr: "flickr.com/univphotoclub",
+                    email: "photo@university.edu"
+                },
+                gallery: [
+                    "https://images.unsplash.com/photo-1504198266287-1659872e6590?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1504198266287-1659872e6590?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ],
+                upcomingEvents: [
+                    { title: "Night Photography Workshop", date: "2025-11-08", time: "7:00 PM" },
+                    { title: "Fall Photo Exhibition", date: "2025-11-25", time: "6:00 PM" }
+                ]
+            },
+            {
+                id: 5,
+                name: "Debate Society",
+                logo: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                banner: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                category: "Academic",
+                description: "Develop your public speaking and critical thinking skills through competitive debate. We host weekly meetings, tournaments, and public debates on current issues.",
+                shortDescription: "Develop public speaking and critical thinking skills",
+                members: 53,
+                tags: ["Debate", "Public Speaking", "Politics"],
+                officers: [
+                    { name: "Robert Chen", role: "President", avatar: "https://randomuser.me/api/portraits/men/41.jpg" },
+                    { name: "Sophia Martinez", role: "Tournament Director", avatar: "https://randomuser.me/api/portraits/women/63.jpg" }
+                ],
+                socials: {
+                    email: "debate@university.edu"
+                },
+                gallery: [
+                    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ],
+                upcomingEvents: [
+                    { title: "Weekly Debate Meeting", date: "2025-11-03", time: "6:00 PM" },
+                    { title: "Intercollegiate Debate Tournament", date: "2025-11-20", time: "9:00 AM" }
+                ]
+            },
+            {
+                id: 6,
+                name: "Ultimate Frisbee",
+                logo: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                banner: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                category: "Sports",
+                description: "Competitive and recreational ultimate frisbee for all skill levels. We have men's, women's, and mixed teams that compete regionally, plus casual pickup games.",
+                shortDescription: "Competitive and recreational ultimate frisbee teams",
+                members: 42,
+                tags: ["Sports", "Frisbee", "Recreation"],
+                officers: [
+                    { name: "Chris Taylor", role: "Captain", avatar: "https://randomuser.me/api/portraits/men/29.jpg" },
+                    { name: "Jamie Lee", role: "Co-Captain", avatar: "https://randomuser.me/api/portraits/women/37.jpg" }
+                ],
+                socials: {
+                    instagram: "@ultimatefrisbee",
+                    email: "frisbee@university.edu"
+                },
+                gallery: [
+                    "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ],
+                upcomingEvents: [
+                    { title: "Pickup Game", date: "2025-11-07", time: "4:00 PM" },
+                    { title: "Regional Tournament", date: "2025-11-12", time: "8:00 AM" }
+                ]
+            },
+            {
+                id: 7,
+                name: "Entrepreneurship Club",
+                logo: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                banner: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                category: "Business",
+                description: "For students interested in startups, business, and innovation. We host pitch competitions, founder talks, and provide resources for student entrepreneurs.",
+                shortDescription: "For students interested in startups and business",
+                members: 78,
+                tags: ["Business", "Startups", "Innovation"],
+                officers: [
+                    { name: "Daniel Park", role: "President", avatar: "https://randomuser.me/api/portraits/men/67.jpg" },
+                    { name: "Natalie Wong", role: "VP of Events", avatar: "https://randomuser.me/api/portraits/women/72.jpg" }
+                ],
+                socials: {
+                    linkedin: "linkedin.com/company/entrepreneurship-club",
+                    email: "entrepreneurs@university.edu"
+                },
+                gallery: [
+                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ],
+                upcomingEvents: [
+                    { title: "Startup Pitch Night", date: "2025-11-09", time: "5:30 PM" },
+                    { title: "Founder Fireside Chat", date: "2025-11-16", time: "6:00 PM" }
+                ]
+            },
+            {
+                id: 8,
+                name: "Music Ensemble",
+                logo: "https://images.unsplash.com/photo-1511671782772-c97d3e27f8b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                banner: "https://images.unsplash.com/photo-1511671782772-c97d3e27f8b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                category: "Arts",
+                description: "Open to musicians of all instruments and skill levels. We perform at campus events and host open mic nights. No audition required - just a love for music!",
+                shortDescription: "For musicians of all instruments and skill levels",
+                members: 36,
+                tags: ["Music", "Performance", "Arts"],
+                officers: [
+                    { name: "Olivia Johnson", role: "Conductor", avatar: "https://randomuser.me/api/portraits/women/51.jpg" },
+                    { name: "Ethan Brown", role: "Section Leader", avatar: "https://randomuser.me/api/portraits/men/38.jpg" }
+                ],
+                socials: {
+                    youtube: "youtube.com/univmusic",
+                    email: "music@university.edu"
+                },
+                gallery: [
+                    "https://images.unsplash.com/photo-1511671782772-c97d3e27f8b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                ],
+                upcomingEvents: [
+                    { title: "Fall Concert", date: "2025-11-14", time: "7:30 PM" },
+                    { title: "Open Mic Night", date: "2025-11-28", time: "8:00 PM" }
+                ]
+            }
+        ];
+
+        // Load membership status from localStorage or initialize empty
+        let membershipStatus = JSON.parse(localStorage.getItem('membershipStatus')) || {};
+
+        // Save membership status to localStorage
+        function saveMembershipStatus() {
+            localStorage.setItem('membershipStatus', JSON.stringify(membershipStatus));
+        }
+
+        // DOM elements
+        const clubsGridView = document.getElementById('clubsGridView');
+        const noClubsMessage = document.getElementById('noClubsMessage');
+        const clubModal = document.getElementById('clubModal');
+        const confirmModal = document.getElementById('confirmModal');
+        const clubSearch = document.getElementById('clubSearch');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const tagFilter = document.getElementById('tagFilter');
+        const sortBy = document.getElementById('sortBy');
+        const resetFilters = document.getElementById('resetFilters');
+        const closeConfirmModal = document.getElementById('closeConfirmModal');
+        const cancelJoin = document.getElementById('cancelJoin');
+        const confirmJoin = document.getElementById('confirmJoin');
+        const confirmMessage = document.getElementById('confirmMessage');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        // Current club being processed for join action
+        let currentClubId = null;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderClubs();
+            setupEventListeners();
+        });
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                mobileMenu.classList.remove('translate-y-full');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-times text-xl"></i>';
+                mobileMenuBtn.setAttribute('aria-label', 'Close mobile menu');
+            } else {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.add('translate-y-full');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+                mobileMenuBtn.setAttribute('aria-label', 'Toggle mobile menu');
+            }
+        }
+
+        // Render club cards
+        function renderClubs(filteredClubs = clubs) {
+            clubsGridView.innerHTML = '';
+            
+            if (filteredClubs.length === 0) {
+                noClubsMessage.classList.remove('hidden');
+                return;
+            } else {
+                noClubsMessage.classList.add('hidden');
+            }
+            
+            filteredClubs.forEach(club => {
+                const clubCard = document.createElement('div');
+                clubCard.className = 'club-card bg-white rounded-xl shadow-sm overflow-hidden transition duration-300 hover:cursor-pointer';
+                clubCard.setAttribute('role', 'article');
+                clubCard.setAttribute('aria-labelledby', `club-title-${club.id}`);
+                clubCard.innerHTML = `
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${club.logo}" alt="${club.name} logo" class="w-full h-full object-cover">
+                        <span class="absolute top-2 right-2 bg-white text-xs font-medium px-2 py-1 rounded-full">${club.category}</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 id="club-title-${club.id}" class="text-lg font-semibold text-gray-800 mb-2">${club.name}</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">${club.shortDescription}</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            ${club.tags.map(tag => `<span class="tag text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full hover:bg-gray-200 transition">#${tag}</span>`).join('')}
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500"><i class="fas fa-users mr-1" aria-hidden="true"></i> ${club.members} members</span>
+                            <div class="flex space-x-2">
+                                <button data-club-id="${club.id}" class="view-more-btn px-3 py-1 rounded-full border border-gray-300 text-xs font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="View more about ${club.name}">
+                                    View More
+                                </button>
+                                <button data-club-id="${club.id}" class="join-btn px-3 py-1 rounded-full text-xs font-medium ${membershipStatus[club.id] ? 'bg-green-100 text-green-800' : 'bg-indigo-600 text-white'} hover:${membershipStatus[club.id] ? 'bg-green-200' : 'bg-indigo-700'} transition" aria-label="${membershipStatus[club.id] ? 'Leave' : 'Join'} ${club.name}">
+                                    ${membershipStatus[club.id] ? '<i class="fas fa-check-circle mr-1" aria-hidden="true"></i>Joined' : '<i class="fas fa-user-plus mr-1" aria-hidden="true"></i>Join'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add click event to open modal
+                clubCard.querySelector('.view-more-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openClubModal(club);
+                });
+                
+                // Add click event to join button
+                clubCard.querySelector('.join-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showJoinConfirmation(club.id, club.name);
+                });
+                
+                clubsGridView.appendChild(clubCard);
+            });
+        }
+
+        // Filter and sort clubs
+        function filterAndSortClubs() {
+            const searchTerm = clubSearch.value.toLowerCase();
+            const category = categoryFilter.value;
+            const tag = tagFilter.value;
+            const sortOption = sortBy.value;
+            
+            let filteredClubs = clubs.filter(club => {
+                const matchesSearch = 
+                    club.name.toLowerCase().includes(searchTerm) ||
+                    club.shortDescription.toLowerCase().includes(searchTerm) ||
+                    club.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                
+                const matchesCategory = category === 'all' || club.category === category;
+                const matchesTag = tag === 'all' || club.tags.includes(tag);
+                
+                return matchesSearch && matchesCategory && matchesTag;
+            });
+            
+            // Sort clubs
+            switch(sortOption) {
+                case 'name-asc':
+                    filteredClubs.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-desc':
+                    filteredClubs.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                case 'members-asc':
+                    filteredClubs.sort((a, b) => a.members - b.members);
+                    break;
+                case 'members-desc':
+                    filteredClubs.sort((a, b) => b.members - a.members);
+                    break;
+            }
+            
+            renderClubs(filteredClubs);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search and filter events
+            clubSearch.addEventListener('input', filterAndSortClubs);
+            categoryFilter.addEventListener('change', filterAndSortClubs);
+            tagFilter.addEventListener('change', filterAndSortClubs);
+            sortBy.addEventListener('change', filterAndSortClubs);
+            
+            // Mobile menu toggle
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            
+            // Reset filters
+            resetFilters.addEventListener('click', () => {
+                clubSearch.value = '';
+                categoryFilter.value = 'all';
+                tagFilter.value = 'all';
+                sortBy.value = 'name-asc';
+                filterAndSortClubs();
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === clubModal) {
+                    closeClubModal();
+                }
+                if (e.target === confirmModal) {
+                    closeConfirmModalFunc();
+                }
+            });
+            
+            // Close confirm modal buttons
+            closeConfirmModal.addEventListener('click', closeConfirmModalFunc);
+            cancelJoin.addEventListener('click', closeConfirmModalFunc);
+            
+            // Confirm join button
+            confirmJoin.addEventListener('click', () => {
+                toggleMembership(currentClubId);
+                closeConfirmModalFunc();
+            });
+        }
+
+        // Show join confirmation modal
+        function showJoinConfirmation(clubId, clubName) {
+            currentClubId = clubId;
+            const isMember = membershipStatus[clubId];
+            
+            if (isMember) {
+                confirmMessage.textContent = `Are you sure you want to leave ${clubName}?`;
+                confirmJoin.textContent = 'Leave Club';
+                confirmJoin.setAttribute('aria-label', `Leave ${clubName}`);
+            } else {
+                confirmMessage.textContent = `Are you sure you want to join ${clubName}?`;
+                confirmJoin.textContent = 'Join Club';
+                confirmJoin.setAttribute('aria-label', `Join ${clubName}`);
+            }
+            
+            confirmModal.classList.remove('pointer-events-none');
+            confirmModal.classList.add('pointer-events-auto');
+            confirmModal.classList.remove('opacity-0');
+        }
+
+        // Close confirm modal
+        function closeConfirmModalFunc() {
+            confirmModal.classList.add('pointer-events-none');
+            confirmModal.classList.add('opacity-0');
+            currentClubId = null;
+        }
+
+        // Toggle membership status
+        function toggleMembership(clubId) {
+            membershipStatus[clubId] = !membershipStatus[clubId];
+            const club = clubs.find(c => c.id === clubId);
+            
+            if (membershipStatus[clubId]) {
+                club.members += 1;
+            } else {
+                club.members = Math.max(club.members - 1, 0);
+            }
+            
+            saveMembershipStatus();
+            filterAndSortClubs();
+        }
+
+        // Open club modal
+        function openClubModal(club) {
+            const modalContent = document.querySelector('#clubModal .modal-content');
+            
+            modalContent.innerHTML = `
+                <div class="relative">
+                    <button id="closeModal" class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 z-10" aria-label="Close club details modal">
+                        <i class="fas fa-times text-gray-600" aria-hidden="true"></i>
+                    </button>
+                    <div class="h-48 sm:h-64 overflow-hidden">
+                        <img src="${club.banner}" alt="${club.name} banner" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center mb-6">
+                            <div class="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
+                                <img src="${club.logo}" alt="${club.name} logo" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md">
+                            </div>
+                            <div>
+                                <h2 id="clubModalTitle" class="text-2xl font-bold text-gray-800 mb-1">${club.name}</h2>
+                                <div class="flex flex-wrap items-center gap-4">
+                                    <span class="flex items-center text-gray-600">
+                                        <i class="fas fa-tag mr-2" aria-hidden="true"></i>
+                                        ${club.category}
+                                    </span>
+                                    <span class="flex items-center text-gray-600">
+                                        <i class="fas fa-users mr-2" aria-hidden="true"></i>
+                                        ${club.members} members
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">About</h3>
+                            <p class="text-gray-600">${club.description}</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Upcoming Events</h3>
+                                ${club.upcomingEvents.length > 0 ? 
+                                    `<div class="space-y-2">
+                                        ${club.upcomingEvents.map(event => `
+                                            <div class="bg-gray-50 rounded-lg p-3">
+                                                <p class="font-medium text-gray-800">${event.title}</p>
+                                                <p class="text-sm text-gray-600">${formatDate(event.date)} • ${event.time}</p>
+                                            </div>
+                                        `).join('')}
+                                    </div>` : 
+                                    '<p class="text-gray-500">No upcoming events scheduled</p>'}
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Club Officers</h3>
+                                <div class="space-y-3">
+                                    ${club.officers.map(officer => `
+                                        <div class="flex items-center">
+                                            <img src="${officer.avatar}" alt="${officer.name}" class="w-10 h-10 rounded-full mr-3">
+                                            <div>
+                                                <p class="font-medium text-gray-800">${officer.name}</p>
+                                                <p class="text-sm text-gray-600">${officer.role}</p>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${club.gallery && club.gallery.length > 0 ? `
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-3">Gallery</h3>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                ${club.gallery.map(image => `
+                                    <div class="gallery-item h-32 overflow-hidden rounded-lg hover:shadow-md">
+                                        <img src="${image}" alt="Club gallery image" class="w-full h-full object-cover">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>` : ''}
+                        
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Connect With Us</h3>
+                            <div class="flex flex-wrap gap-3">
+                                ${club.socials.instagram ? `
+                                    <a href="https://instagram.com/${club.socials.instagram.replace('@', '')}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Follow on Instagram">
+                                        <i class="fab fa-instagram mr-2 text-pink-600" aria-hidden="true"></i> Instagram
+                                    </a>` : ''}
+                                ${club.socials.facebook ? `
+                                    <a href="https://${club.socials.facebook}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Follow on Facebook">
+                                        <i class="fab fa-facebook mr-2 text-blue-600" aria-hidden="true"></i> Facebook
+                                    </a>` : ''}
+                                ${club.socials.twitter ? `
+                                    <a href="https://twitter.com/${club.socials.twitter.replace('@', '')}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Follow on Twitter">
+                                        <i class="fab fa-twitter mr-2 text-blue-400" aria-hidden="true"></i> Twitter
+                                    </a>` : ''}
+                                ${club.socials.linkedin ? `
+                                    <a href="https://${club.socials.linkedin}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Follow on LinkedIn">
+                                        <i class="fab fa-linkedin mr-2 text-blue-700" aria-hidden="true"></i> LinkedIn
+                                    </a>` : ''}
+                                ${club.socials.youtube ? `
+                                    <a href="https://${club.socials.youtube}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Follow on YouTube">
+                                        <i class="fab fa-youtube mr-2 text-red-600" aria-hidden="true"></i> YouTube
+                                    </a>` : ''}
+                                ${club.socials.email ? `
+                                    <a href="mailto:${club.socials.email}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Contact via Email">
+                                        <i class="fas fa-envelope mr-2 text-gray-600" aria-hidden="true"></i> Email
+                                    </a>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-3">
+                            <button data-club-id="${club.id}" class="join-modal-btn px-6 py-3 rounded-full text-sm font-medium ${membershipStatus[club.id] ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-indigo-600 text-white hover:bg-indigo-700'} transition flex items-center" aria-label="${membershipStatus[club.id] ? 'Leave' : 'Join'} ${club.name}">
+                                ${membershipStatus[club.id] ? '<i class="fas fa-check-circle mr-2" aria-hidden="true"></i>Joined' : '<i class="fas fa-user-plus mr-2" aria-hidden="true"></i>Join Club'}
+                            </button>
+                            <button class="px-6 py-3 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition flex items-center" aria-label="Share ${club.name}">
+                                <i class="fas fa-share-alt mr-2" aria-hidden="true"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Show modal
+            clubModal.classList.remove('pointer-events-none');
+            clubModal.classList.add('pointer-events-auto');
+            clubModal.classList.remove('opacity-0');
+            
+            // Add event listeners to modal buttons
+            document.getElementById('closeModal').addEventListener('click', closeClubModal);
+            
+            const joinBtn = document.querySelector('.join-modal-btn');
+            if (joinBtn) {
+                joinBtn.addEventListener('click', function() {
+                    const clubId = parseInt(this.getAttribute('data-club-id'));
+                    const club = clubs.find(c => c.id === clubId);
+                    showJoinConfirmation(clubId, club.name);
+                });
+            }
+        }
+
+        // Close club modal
+        function closeClubModal() {
+            clubModal.classList.add('pointer-events-none');
+            clubModal.classList.add('opacity-0');
+        }
+
+        // Format date as "Month Day, Year"
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+    </script>
+</body>
+</html>
