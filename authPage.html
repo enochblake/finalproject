@@ -587,14 +587,14 @@
               // Redirect to club representative dashboard
               sessionStorage.setItem('loggedIn', 'true');
               sessionStorage.setItem('userRole', 'club-rep');
-              window.location.href = 'primaryadmindashboard.html';
+              window.location.href = 'clubrepdash.html';
               break;
               
             case 'admin':
               // Redirect to admin dashboard
               sessionStorage.setItem('loggedIn', 'true');
               sessionStorage.setItem('userRole', 'admin');
-              window.location.href = 'dashboard.html';
+              window.location.href = 'admindashboard.html';
               break;
           }
         }, 1500);
