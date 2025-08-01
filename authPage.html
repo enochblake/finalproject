@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusHub | Authentication</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Custom styles from your main page */
+    .input-group {
+      position: relative;
+    }
+    .input-group i {
+      position: absolute;
+      top: 50%;
+      left: 0.75rem;
+      transform: translateY(-50%);
+      color: #6b7280;
+    }
+    .form-input {
+      padding-left: 2.75rem;
+      width: 100%;
+    }
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 0.75rem;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #6b7280;
+    }
+    .password-strength {
+      height: 4px;
+      background-color: #e5e7eb;
+      margin-top: 0.5rem;
+      border-radius: 2px;
+    }
+    .password-strength-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+    .role-option {
+      transition: all 0.2s ease;
+    }
+    .role-option:hover {
+      border-color: #3b82f6;
+    }
+    .role-tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #1f2937;
+      color: white;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      width: 150px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+    .role-option:hover .role-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+    .toggle-forms.active {
+      color: #1e40af;
+      position: relative;
+    }
+    .toggle-forms.active:after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #1e40af;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    }
+    
+    /* Dark mode support */
+    .dark .input-group i {
+      color: #9ca3af;
+    }
+    .dark .password-toggle {
+      color: #9ca3af;
+    }
+    .dark .password-strength {
+      background-color: #4b5563;
+    }
+    .dark .role-option:hover {
+      border-color: #6366f1;
+    }
+    .dark .role-tooltip {
+      background-color: #374151;
+    }
+    
+    /* Loading spinner */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .loading {
+      animation: spin 1s linear infinite;
+    }
+    
+    /* Sticky navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    .navbar-scrolled {
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .dark .navbar-scrolled {
+      background-color: rgba(31, 41, 55, 0.95);
+    }
+    
+    /* Main content spacing */
+    .main-content {
+      margin-top: 80px;
+    }
+  </style>
+</head>
+<body class="font-sans bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
+  <!-- Sticky Navbar -->
+  <nav class="navbar bg-white dark:bg-gray-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 flex items-center">
+            <i class="fas fa-university text-primary-600 dark:text-primary-400 text-2xl mr-2"></i>
+            <span class="text-xl font-heading font-bold text-gray-800 dark:text-white">CampusHub</span>
+          </div>
+          <div class="hidden md:ml-6 md:flex md:space-x-8">
+            <a href="index.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Home</a>
+            <a href="events.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Events</a>
+            <a href="clubs.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Clubs</a>
+            <a href="#announcements" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Announcements</a>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center space-x-4">
+          <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5">
+            <i class="fas fa-moon dark:hidden"></i>
+            <i class="fas fa-sun hidden dark:inline"></i>
+          </button>
+          <a href="authPage.html" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Login</a>
+        </div>
+        <div class="-mr-2 flex items-center md:hidden">
+          <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+            <span class="sr-only">Open main menu</span>
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content flex items-center justify-center min-h-[calc(100vh-80px)] p-4">
+    <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+      <!-- Logo Header -->
+      <div class="gradient-bg p-6 text-center">
+        <div class="flex items-center justify-center mb-2">
+          <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary-600 mr-3">
+            <i class="fas fa-university text-xl"></i>
+          </div>
+          <h1 class="text-2xl font-bold text-white">CampusHub</h1>
+        </div>
+        <p class="text-primary-100 text-sm">Your gateway to campus life</p>
+      </div>
+      
+      <!-- Form Content -->
+      <div class="p-8">
+        <!-- Form Toggle -->
+        <div class="flex justify-center space-x-8 mb-8">
+          <button id="loginToggle" class="text-lg font-medium text-gray-800 dark:text-gray-200 toggle-forms active">Login</button>
+          <button id="registerToggle" class="text-lg font-medium text-gray-800 dark:text-gray-200 toggle-forms">Register</button>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="loginForm" class="space-y-5">
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="loginEmail" placeholder="Email Address" class="form-input" required>
+          </div>
+          
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="loginPassword" placeholder="Password" class="form-input" required>
+            <i class="fas fa-eye password-toggle" id="toggleLoginPassword"></i>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <input type="checkbox" id="rememberMe" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600">
+              <label for="rememberMe" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Remember me</label>
+            </div>
+            <a href="#" class="text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">Forgot password?</a>
+          </div>
+          
+          <div>
+            <label for="loginRole" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Role</label>
+            <select id="loginRole" class="form-input">
+              <option value="student">Student</option>
+              <option value="club-rep">Club Representative</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-3 rounded-md text-sm font-medium transition-colors flex items-center justify-center">
+            <span id="loginBtnText">Login</span>
+            <i class="fas fa-spinner loading hidden ml-2"></i>
+          </button>
+          
+          <div class="flex items-center justify-center space-x-4 my-4">
+            <div class="h-px bg-gray-300 dark:bg-gray-600 flex-1"></div>
+            <span class="text-gray-500 dark:text-gray-400 text-sm">OR</span>
+            <div class="h-px bg-gray-300 dark:bg-gray-600 flex-1"></div>
+          </div>
+          
+          <button type="button" class="w-full bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-800 dark:text-white px-4 py-3 rounded-md text-sm font-medium transition-colors border border-gray-300 dark:border-gray-600 flex items-center justify-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo" class="w-5 h-5 mr-2">
+            Continue with Google
+          </button>
+          
+          <div class="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
+            Don't have an account? <a href="#" id="switchToRegister" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">Register here</a>
+          </div>
+        </form>
+        
+        <!-- Register Form -->
+        <form id="registerForm" class="space-y-5 hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
+              <input type="text" id="firstName" placeholder="John" class="form-input" required>
+            </div>
+            <div>
+              <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
+              <input type="text" id="lastName" placeholder="Doe" class="form-input" required>
+            </div>
+          </div>
+          
+          <div>
+            <label for="registerEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+            <div class="input-group">
+              <i class="fas fa-envelope"></i>
+              <input type="email" id="registerEmail" placeholder="student@university.edu" class="form-input" required>
+            </div>
+            <p id="emailError" class="text-xs text-red-500 mt-1 hidden">Please enter a valid email address</p>
+          </div>
+          
+          <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+            <div class="input-group">
+              <i class="fas fa-phone"></i>
+              <input type="tel" id="phone" placeholder="+1 (555) 123-4567" class="form-input">
+            </div>
+          </div>
+          
+          <div>
+            <label for="registerPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+            <div class="input-group">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="registerPassword" placeholder="Create a password" class="form-input" required>
+              <i class="fas fa-eye password-toggle" id="toggleRegisterPassword"></i>
+            </div>
+            <div class="password-strength">
+              <div class="password-strength-bar" id="passwordStrengthBar"></div>
+            </div>
+            <p id="passwordError" class="text-xs text-red-500 mt-1 hidden">Password must be at least 8 characters</p>
+          </div>
+          
+          <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
+            <div class="input-group">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="confirmPassword" placeholder="Confirm your password" class="form-input" required>
+            </div>
+            <p id="confirmPasswordError" class="text-xs text-red-500 mt-1 hidden">Passwords do not match</p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select Your Role</label>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="relative">
+                <input type="radio" id="studentRole" name="role" value="student" class="hidden peer" checked>
+                <label for="studentRole" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-gray-700 transition duration-200 role-option">
+                  <i class="fas fa-user-graduate text-2xl text-primary-600 dark:text-primary-400 mb-2"></i>
+                  <span class="text-sm font-medium">Student</span>
+                  <div class="role-tooltip">
+                    <p>For regular students to access campus events and resources</p>
+                  </div>
+                </label>
+              </div>
+              
+              <div class="relative">
+                <input type="radio" id="clubRole" name="role" value="club-rep" class="hidden peer">
+                <label for="clubRole" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-gray-700 transition duration-200 role-option">
+                  <i class="fas fa-users text-2xl text-primary-600 dark:text-primary-400 mb-2"></i>
+                  <span class="text-sm font-medium">Club Rep</span>
+                  <div class="role-tooltip">
+                    <p>For club representatives to manage events and members</p>
+                  </div>
+                </label>
+              </div>
+              
+              <div class="relative">
+                <input type="radio" id="adminRole" name="role" value="admin" class="hidden peer">
+                <label for="adminRole" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-gray-700 transition duration-200 role-option">
+                  <i class="fas fa-user-shield text-2xl text-primary-600 dark:text-primary-400 mb-2"></i>
+                  <span class="text-sm font-medium">Admin</span>
+                  <div class="role-tooltip">
+                    <p>For platform administrators to manage the entire system</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Club Rep Fields (Conditional) -->
+          <div id="clubFields" class="space-y-4 hidden">
+            <div>
+              <label for="clubName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Club Name</label>
+              <input type="text" id="clubName" placeholder="Enter your club name" class="form-input">
+            </div>
+            
+            <div>
+              <label for="clubCode" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Club Access Code <span class="text-gray-500 dark:text-gray-400">(optional)</span></label>
+              <input type="text" id="clubCode" placeholder="If provided by admin" class="form-input">
+            </div>
+          </div>
+          
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <input type="checkbox" id="terms" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600" required>
+            </div>
+            <div class="ml-3 text-sm">
+              <label for="terms" class="text-gray-700 dark:text-gray-300">I agree to the <a href="#" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">Terms & Conditions</a> and <a href="#" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">Privacy Policy</a></label>
+            </div>
+          </div>
+          
+          <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-3 rounded-md text-sm font-medium transition-colors flex items-center justify-center">
+            <span id="registerBtnText">Create Account</span>
+            <i class="fas fa-spinner loading hidden ml-2"></i>
+          </button>
+          
+          <div class="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
+            Already have an account? <a href="#" id="switchToLogin" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">Login here</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginToggle = document.getElementById('loginToggle');
+    const registerToggle = document.getElementById('registerToggle');
+    const switchToRegister = document.getElementById('switchToRegister');
+    const switchToLogin = document.getElementById('switchToLogin');
+    const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+    const toggleRegisterPassword = document.getElementById('toggleRegisterPassword');
+    const loginPassword = document.getElementById('loginPassword');
+    const registerPassword = document.getElementById('registerPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+    const roleRadios = document.querySelectorAll('input[name="role"]');
+    const clubFields = document.getElementById('clubFields');
+    const navbar = document.querySelector('.navbar');
+    const themeToggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    // Theme Toggle
+    function toggleTheme() {
+      const newTheme = html.classList.contains('dark') ? 'light' : 'dark';
+      html.classList.remove('dark', 'light');
+      html.classList.add(newTheme);
+      localStorage.setItem('theme', newTheme);
+    }
+
+    // Check for saved theme preference
+    const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    html.classList.add(currentTheme);
+
+    themeToggle.addEventListener('click', toggleTheme);
+
+    // Toggle between login and register forms
+    function showLoginForm() {
+      loginForm.classList.remove('hidden');
+      registerForm.classList.add('hidden');
+      loginToggle.classList.add('active');
+      registerToggle.classList.remove('active');
+    }
+    
+    function showRegisterForm() {
+      loginForm.classList.add('hidden');
+      registerForm.classList.remove('hidden');
+      loginToggle.classList.remove('active');
+      registerToggle.classList.add('active');
+    }
+    
+    loginToggle.addEventListener('click', showLoginForm);
+    registerToggle.addEventListener('click', showRegisterForm);
+    switchToRegister.addEventListener('click', (e) => {
+      e.preventDefault();
+      showRegisterForm();
+    });
+    switchToLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      showLoginForm();
+    });
+    
+    // Toggle password visibility
+    function togglePasswordVisibility(inputField, toggleIcon) {
+      if (inputField.type === 'password') {
+        inputField.type = 'text';
+        toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        inputField.type = 'password';
+        toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+    
+    toggleLoginPassword.addEventListener('click', () => {
+      togglePasswordVisibility(loginPassword, toggleLoginPassword);
+    });
+    
+    toggleRegisterPassword.addEventListener('click', () => {
+      togglePasswordVisibility(registerPassword, toggleRegisterPassword);
+    });
+    
+    // Password strength indicator
+    registerPassword.addEventListener('input', () => {
+      const password = registerPassword.value;
+      let strength = 0;
+      
+      // Check for length
+      if (password.length >= 8) strength += 25;
+      
+      // Check for uppercase letters
+      if (/[A-Z]/.test(password)) strength += 25;
+      
+      // Check for numbers
+      if (/[0-9]/.test(password)) strength += 25;
+      
+      // Check for special characters
+      if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+      
+      // Update strength bar
+      passwordStrengthBar.style.width = `${strength}%`;
+      
+      // Update color based on strength
+      if (strength < 50) {
+        passwordStrengthBar.style.backgroundColor = '#ef4444'; // red
+      } else if (strength < 75) {
+        passwordStrengthBar.style.backgroundColor = '#f59e0b'; // amber
+      } else {
+        passwordStrengthBar.style.backgroundColor = '#10b981'; // emerald
+      }
+    });
+    
+    // Show/hide club fields based on role selection
+    roleRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'club-rep') {
+          clubFields.classList.remove('hidden');
+        } else {
+          clubFields.classList.add('hidden');
+        }
+      });
+    });
+    
+    // Form validation and submission
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Validate form
+      let isValid = true;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirmPass = document.getElementById('confirmPassword').value;
+      
+      // Email validation
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('emailError').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('emailError').classList.add('hidden');
+      }
+      
+      // Password validation
+      if (password.length < 8) {
+        document.getElementById('passwordError').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('passwordError').classList.add('hidden');
+      }
+      
+      // Confirm password validation
+      if (password !== confirmPass) {
+        document.getElementById('confirmPasswordError').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('confirmPasswordError').classList.add('hidden');
+      }
+      
+      // Terms checkbox validation
+      if (!document.getElementById('terms').checked) {
+        alert('Please agree to the Terms & Conditions');
+        isValid = false;
+      }
+      
+      if (isValid) {
+        // Show loading state
+        const registerBtnText = document.getElementById('registerBtnText');
+        const spinner = registerBtnText.nextElementSibling;
+        registerBtnText.textContent = 'Creating Account...';
+        spinner.classList.remove('hidden');
+        
+        // Simulate API call
+        setTimeout(() => {
+          // Hide loading state
+          registerBtnText.textContent = 'Account Created!';
+          spinner.classList.add('hidden');
+          
+          // Redirect to login after 1.5 seconds
+          setTimeout(() => {
+            showLoginForm();
+            registerBtnText.textContent = 'Create Account';
+            
+            // Reset form (in a real app, you wouldn't do this)
+            registerForm.reset();
+            passwordStrengthBar.style.width = '0%';
+            clubFields.classList.add('hidden');
+          }, 1500);
+        }, 2000);
+      }
+    });
+    
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Show loading state
+      const loginBtnText = document.getElementById('loginBtnText');
+      const spinner = loginBtnText.nextElementSibling;
+      loginBtnText.textContent = 'Logging In...';
+      spinner.classList.remove('hidden');
+      
+      // Get selected role
+      const role = document.getElementById('loginRole').value;
+      
+      // Simulate API call
+      setTimeout(() => {
+        // Hide loading state
+        loginBtnText.textContent = 'Login Successful!';
+        spinner.classList.add('hidden');
+        
+        // Redirect based on role after 1.5 seconds
+        setTimeout(() => {
+          switch(role) {
+            case 'student':
+              // For students, we'll reload the current page with a logged-in state
+              // In a real app, you would set a session cookie or token
+              sessionStorage.setItem('loggedIn', 'true');
+              sessionStorage.setItem('userRole', 'student');
+              window.location.href = 'index.html';
+              break;
+              
+            case 'club-rep':
+              // Redirect to club representative dashboard
+              sessionStorage.setItem('loggedIn', 'true');
+              sessionStorage.setItem('userRole', 'club-rep');
+              window.location.href = 'primaryadmindashboard.html';
+              break;
+              
+            case 'admin':
+              // Redirect to admin dashboard
+              sessionStorage.setItem('loggedIn', 'true');
+              sessionStorage.setItem('userRole', 'admin');
+              window.location.href = 'dashboard.html';
+              break;
+          }
+        }, 1500);
+      }, 2000);
+    });
+      
+    // Initialize with login form
+    showLoginForm();
+      
+    // Sticky Navbar Scroll Effect
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        navbar.classList.add('navbar-scrolled');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+      }
+    });
+
+    // Mobile menu toggle (if needed)
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    mobileMenuButton.addEventListener('click', () => {
+      // Add mobile menu functionality if needed
+      console.log('Mobile menu clicked');
+    });
+  </script>
+</body>
+</html>

@@ -4,10 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Events & Clubs Hub</title>
+    <!-- Theme initialization script - must come first -->
+    <script>
+        // Initialize theme immediately to prevent flash of wrong theme
+        (function() {
+            const storedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (storedTheme === 'dark' || (!storedTheme && systemDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
@@ -52,1756 +66,679 @@
             }
         }
     </script>
+    <style>
+        /* Custom styles */
+        .club-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .club-card:hover .club-overlay {
+            opacity: 1;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+        .toast {
+            transition: all 0.3s ease;
+        }
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        /* Prevent FOUC (Flash of Unstyled Content) */
+        html { visibility: hidden; opacity: 0; }
+        html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+    </style>
 </head>
 <body class="font-sans bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
-    <!-- Mobile Overlay for Admin -->
-    <div class="mobile-overlay hidden" id="mobileOverlay"></div>
-    
+    <!-- Include navbar -->
+    <div id="navbar-container"></div>
+
     <!-- Toast Notification -->
-    <div class="toast fixed top-4 right-4 z-50 hidden" id="toast">
+    <div class="toast fixed top-4 right-4 z-50 hidden opacity-0 invisible transform -translate-y-2" id="toast">
         <div class="flex items-center bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg">
             <i class="fas fa-check-circle mr-2"></i>
             <span id="toastMessage"></span>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center">
-                        <i class="fas fa-university text-primary-600 dark:text-primary-400 text-2xl mr-2"></i>
-                        <span class="text-xl font-heading font-bold text-gray-800 dark:text-white">CampusHub</span>
-                    </div>
-                    <div class="hidden md:ml-6 md:flex md:space-x-8">
-                        <a href="index.html" class="border-primary-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Home</a>
-                        <a href="events.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Events</a>
-                        <a href="clubs.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Clubs</a>
-                        <a href="#announcements" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Announcements</a>
-                        <a href="authPage.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Profile</a>
-                    </div>
-                </div>
-                <div class="hidden md:flex items-center space-x-4">
-                    <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:inline"></i>
-                    </button>
-                    <button id="auth-button" onclick="toggleAuthModal()" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Login</button>
-                    <button id="logout-button" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors hidden">Logout</button>
-                </div>
-                <div class="-mr-2 flex items-center md:hidden">
-                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
-                        <span class="sr-only">Open main menu</span>
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-lg">
-            <div class="pt-2 pb-3 space-y-1">
-                <a href="index.html" class="bg-primary-50 border-primary-500 text-primary-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Home</a>
-                <a href="events.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Events</a>
-                <a href="clubs.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Clubs</a>
-                <a href="#announcements" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Announcements</a>
-                <a href="authPage.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Profile</a>
-                <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
-                    <div class="flex items-center px-5 space-x-3">
-                        <button id="theme-toggle-mobile" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5">
-                            <i class="fas fa-moon dark:hidden"></i>
-                            <i class="fas fa-sun hidden dark:inline"></i>
-                        </button>
-                        <button onclick="toggleAuthModal()" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Login</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75 dark:bg-gray-900 dark:opacity-90"></div>
-            </div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="px-6 py-4">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="auth-modal-title">Login to CampusHub</h3>
-                        <button onclick="toggleAuthModal()" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="p-8">
-                    <div class="flex justify-center space-x-8 mb-8">
-                        <button id="loginToggle" class="text-lg font-medium text-gray-800 toggle-forms active">Login</button>
-                        <button id="registerToggle" class="text-lg font-medium text-gray-800 toggle-forms">Register</button>
-                    </div>
-                    <!-- Login Form -->
-                    <form id="loginForm" class="space-y-5">
-                        <div class="input-group">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" id="loginEmail" placeholder="Email Address" class="form-input pl-12" required>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="loginPassword" placeholder="Password" class="form-input pl-12" required>
-                            <i class="fas fa-eye password-toggle" id="toggleLoginPassword"></i>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <input type="checkbox" id="rememberMe" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600">
-                                <label for="rememberMe" class="ml-2 block text-sm text-gray-717 dark:text-gray-300">Remember me</label>
-                            </div>
-                            <a href="#" class="text-sm text-primary-600 hover:text-primary-800">Forgot password?</a>
-                        </div>
-                        <div>
-                            <label for="loginRole" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Role</label>
-                            <select id="loginRole" class="form-input">
-                                <option value="student">Student</option>
-                                <option value="club-rep">Club Representative</option>
-                                <option value="admin">Administrator</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn-primary w-full flex items-center justify-center">
-                            <span id="loginBtnText">Login</span>
-                            <i class="fas fa-spinner loading hidden ml-2"></i>
-                        </button>
-                        <div class="flex items-center justify-center space-x-4 my-4">
-                            <div class="h-px bg-gray-300 flex-1"></div>
-                            <span class="text-gray-500 text-sm">OR</span>
-                            <div class="h-px bg-gray-300 flex-1"></div>
-                        </div>
-                        <button type="button" class="btn-secondary w-full flex items-center justify-center">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo" class="w-5 h-5 mr-2">
-                            Continue with Google
-                        </button>
-                    </form>
-                    <!-- Register Form -->
-                    <form id="registerForm" class="space-y-5 hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
-                                <input type="text" id="firstName" placeholder="John" class="form-input" required>
-                            </div>
-                            <div>
-                                <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
-                                <input type="text" id="lastName" placeholder="Doe" class="form-input" required>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="registerEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
-                            <div class="input-group">
-                                <i class="fas fa-envelope"></i>
-                                <input type="email" id="registerEmail" placeholder="student@university.edu" class="form-input pl-12" required>
-                            </div>
-                            <p id="emailError" class="text-xs text-red-500 mt-1 hidden">Please enter a valid email address</p>
-                        </div>
-                        <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
-                            <div class="input-group">
-                                <i class="fas fa-phone"></i>
-                                <input type="tel" id="phone" placeholder="+1 (555) 123-4567" class="form-input pl-12">
-                            </div>
-                        </div>
-                        <div>
-                            <label for="registerPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-                            <div class="input-group">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" id="registerPassword" placeholder="Create a password" class="form-input pl-12" required>
-                                <i class="fas fa-eye password-toggle" id="toggleRegisterPassword"></i>
-                            </div>
-                            <div class="password-strength">
-                                <div class="password-strength-bar" id="passwordStrengthBar"></div>
-                            </div>
-                            <p id="passwordError" class="text-xs text-red-500 mt-1 hidden">Password must be at least 8 characters</p>
-                        </div>
-                        <div>
-                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
-                            <div class="input-group">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" id="confirmPassword" placeholder="Confirm your password" class="form-input pl-12" required>
-                            </div>
-                            <p id="confirmPasswordError" class="text-xs text-red-500 mt-1 hidden">Passwords do not match</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select Your Role</label>
-                            <div class="grid grid-cols-3 gap-2">
-                                <div class="relative">
-                                    <input type="radio" id="studentRole" name="role" value="student" class="hidden peer" checked>
-                                    <label for="studentRole" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 transition duration-200 role-option">
-                                        <i class="fas fa-user-graduate text-2xl text-primary-600 mb-2"></i>
-                                        <span class="text-sm font-medium">Student</span>
-                                        <div class="role-tooltip">
-                                            <p>For regular students to access campus events and resources</p>
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="relative">
-                                    <input type="radio" id="clubRole" name="role" value="club-rep" class="hidden peer">
-                                    <label for="clubRole" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 transition duration-200 role-option">
-                                        <i class="fas fa-users text-2xl text-primary-600 mb-2"></i>
-                                        <span class="text-sm font-medium">Club Rep</span>
-                                        <div class="role-tooltip">
-                                            <p>For club representatives to manage events and members</p>
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="relative">
-                                    <input type="radio" id="adminRole" name="role" value="admin" class="hidden peer">
-                                    <label for="adminRole" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 transition duration-200 role-option">
-                                        <i class="fas fa-user-shield text-2xl text-primary-600 mb-2"></i>
-                                        <span class="text-sm font-medium">Admin</span>
-                                        <div class="role-tooltip">
-                                            <p>For platform administrators to manage the entire system</p>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="clubFields" class="space-y-4 hidden">
-                            <div>
-                                <label for="clubName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Club Name</label>
-                                <input type="text" id="clubName" placeholder="Enter your club name" class="form-input">
-                            </div>
-                            <div>
-                                <label for="clubCode" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Club Access Code <span class="text-gray-500">(optional)</span></label>
-                                <input type="text" id="clubCode" placeholder="If provided by admin" class="form-input">
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                                <input type="checkbox" id="terms" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" required>
-                            </div>
-                            <div class="ml-3 text-sm">
-                                <label for="terms" class="text-gray-700 dark:text-gray-300">I agree to the <a href="#" class="text-primary-600 hover:text-primary-800">Terms & Conditions</a> and <a href="#" class="text-primary-600 hover:text-primary-800">Privacy Policy</a></label>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-primary w-full flex items-center justify-center">
-                            <span id="registerBtnText">Create Account</span>
-                            <i class="fas fa-spinner loading hidden ml-2"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Conditional Content: Admin Dashboard or Public Site -->
+    <!-- Main Content Container -->
     <div id="app-container">
-        <!-- Admin Dashboard -->
-        <div id="admin-dashboard" class="hidden flex h-screen overflow-hidden">
-            <!-- Sidebar Navigation -->
-            <nav class="sidebar w-64 shadow-2xl flex flex-col z-50 bg-white dark:bg-gray-800" id="sidebar">
-                <!-- Logo Section -->
-                <div class="p-6 flex items-center space-x-3 border-b border-gray-200/20">
-                    <div class="gradient-bg text-white p-3 rounded-xl shadow-lg">
-                        <i class="fas fa-calendar-alt text-xl"></i>
+        <!-- Hero Section -->
+        <section id="home" class="py-12 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-gray-800 dark:to-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+                    <div class="mb-12 lg:mb-0">
+                        <h1 class="text-4xl font-heading font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+                            <span class="block">Connect with</span>
+                            <span class="block text-primary-600 dark:text-primary-400">Campus Life</span>
+                        </h1>
+                        <p class="mt-6 text-lg text-gray-600 dark:text-gray-300">
+                            Discover events, join clubs, and stay updated with everything happening on campus.
+                            Your one-stop hub for student engagement and community building.
+                        </p>
+                        <div class="mt-8 flex flex-wrap gap-4">
+                            <a href="events.html" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                                Explore Events
+                            </a>
+                            <a href="clubs.html" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-primary-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                                Browse Clubs
+                            </a>
+                        </div>
                     </div>
-                    <div class="logo-text transition-all duration-300">
-                        <h2 class="font-bold text-xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">CampusHub</h2>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Admin Panel</p>
+                    <div class="relative">
+                        <div class="relative w-full rounded-xl overflow-hidden shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Students on campus" class="w-full h-auto">
+                            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-50"></div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Events Section -->
+        <section id="upcoming-events" class="py-12 bg-white dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">Upcoming Events</h2>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-600 dark:text-gray-300 mx-auto">
+                        Don't miss out on these exciting campus events happening soon.
+                    </p>
+                </div>
                 
-                <!-- User Profile Section -->
-                <div class="p-4 border-b border-gray-200/20">
-                    <div class="flex items-center space-x-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Event Card 1 -->
+                    <div class="event-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
                         <div class="relative">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="h-10 w-10 rounded-full ring-2 ring-indigo-500">
-                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                            <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Concert event" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2 bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                Music
+                            </div>
                         </div>
-                        <div class="nav-text transition-all duration-300">
-                            <p class="font-medium text-sm text-gray-900 dark:text-white" id="userName">Sarah Johnson</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Super Admin</p>
+                        <div class="p-6">
+                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                <i class="far fa-calendar-alt mr-1"></i>
+                                <span>May 15, 2023 • 6:00 PM</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Spring Music Festival</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                Join us for an evening of live music featuring our talented student performers.
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-map-marker-alt mr-1"></i> Main Quad
+                                </span>
+                                <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                    RSVP
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- Navigation Menu -->
-                <div class="flex-1 overflow-y-auto py-4">
-                    <div class="px-4 space-y-2">
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl active" data-page="dashboard">
-                            <i class="fas fa-tachometer-alt text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Dashboard</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="events">
-                            <i class="fas fa-calendar-day text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Manage Events</span>
-                            <span class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1" id="pendingEventsCount">12</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="clubs">
-                            <i class="fas fa-users text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Manage Clubs</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="announcements">
-                            <i class="fas fa-bullhorn text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Announcements</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="users">
-                            <i class="fas fa-user-cog text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">User Management</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="chat">
-                            <i class="fas fa-comments text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Club Chat Monitor</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="rsvp">
-                            <i class="fas fa-envelope text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">RSVP & Email Logs</span>
-                        </a>
                     </div>
                     
-                    <!-- Settings Section -->
-                    <div class="px-4 mt-8 space-y-2">
-                        <div class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">Settings</div>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="settings">
-                            <i class="fas fa-cog text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Settings</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="help">
-                            <i class="fas fa-question-circle text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Help & Support</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Logout Section -->
-                <div class="p-4 border-t border-gray-200/20">
-                    <button id="logoutBtn" class="nav-item flex items-center space-x-3 p-3 rounded-xl w-full text-left hover:bg-red-50 hover:text-red-600 transition-all duration-300 dark:hover:bg-red-900">
-                        <i class="fas fa-sign-out-alt text-lg text-gray-600 dark:text-gray-300"></i>
-                        <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Logout</span>
-                    </button>
-                </div>
-            </nav>
-            
-            <!-- Main Content -->
-            <div class="main-content flex-1 overflow-y-auto transition-all duration-300">
-                <!-- Top Navigation -->
-                <header class="card m-4 rounded-2xl shadow-lg bg-white dark:bg-gray-800">
-                    <div class="py-4 px-6 flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <button id="sidebarToggle" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none lg:hidden transition-colors">
-                                <i class="fas fa-bars text-xl"></i>
-                            </button>
-                            <button id="collapseSidebarBtn" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hidden lg:block transition-colors">
-                                <i class="fas fa-angle-double-left text-xl"></i>
-                            </button>
-                            <div>
-                                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent" id="pageTitle">Dashboard Overview</h1>
-                                <p class="text-sm text-gray-500 dark:text-gray-400" id="pageSubtitle">Welcome back! Here's what's happening today.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center space-x-4">
-                            <!-- Search Bar -->
-                            <div class="relative hidden md:block">
-                                <input type="text" id="searchInput" placeholder="Search events, clubs, users..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all w-64 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
-                                <i class="fas fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
-                            </div>
-                            
-                            <!-- Notifications -->
-                            <div class="relative">
-                                <button id="notificationBtn" class="relative p-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                                    <i class="fas fa-bell text-xl"></i>
-                                    <span class="notification-dot absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="notificationCount">3</span>
-                                </button>
-                                
-                                <!-- Notification Dropdown -->
-                                <div id="notificationDropdown" class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-600 py-2 z-50 opacity-0 invisible transition-all duration-300">
-                                    <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">
-                                        <h3 class="font-semibold text-gray-800 dark:text-white">Notifications</h3>
-                                    </div>
-                                    <div class="max-h-64 overflow-y-auto" id="notificationList">
-                                        <!-- Notifications will be populated here -->
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Profile Dropdown -->
-                            <div class="relative">
-                                <button id="profileBtn" class="flex items-center space-x-2 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="h-8 w-8 rounded-full ring-2 ring-indigo-500">
-                                    <span class="font-medium hidden md:block text-gray-800 dark:text-gray-100">Sarah Johnson</span>
-                                    <i class="fas fa-chevron-down text-sm text-gray-500 dark:text-gray-400"></i>
-                                </button>
-                                
-                                <!-- Profile Dropdown -->
-                                <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-600 py-2 z-50 opacity-0 invisible transition-all duration-300">
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <i class="fas fa-user mr-2"></i>Profile
-                                    </a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <i class="fas fa-cog mr-2"></i>Settings
-                                    </a>
-                                    <div class="border-t border-gray-200 dark:border-gray-600 my-1"></div>
-                                    <button id="logoutBtn2" class="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition-colors">
-                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </header>
-                
-                <!-- Page Content -->
-                <main class="p-4" id="pageContent">
-                    <!-- Dynamic content will be loaded here -->
-                </main>
-            </div>
-        </div>
-
-        <!-- Public Site Content -->
-        <main id="public-content">
-            <!-- Home Page -->
-            <section id="home" class="py-12 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-gray-800 dark:to-gray-900">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
-                        <div class="mb-12 lg:mb-0">
-                            <h1 class="text-4xl font-heading font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
-                                <span class="block">Connect with</span>
-                                <span class="block text-primary-600 dark:text-primary-400">Campus Life</span>
-                            </h1>
-                            <p class="mt-6 text-lg text-gray-600 dark:text-gray-300">
-                                Discover events, join clubs, and stay updated with everything happening on campus.
-                                Your one-stop hub for student engagement and community building.
-                            </p>
-                            <div class="mt-8 flex flex-wrap gap-4">
-                                <a href="events.html" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                                    Explore Events
-                                </a>
-                                <a href="clubs.html" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-primary-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                                    Browse Clubs
-                                </a>
-                            </div>
-                        </div>
+                    <!-- Event Card 2 -->
+                    <div class="event-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
                         <div class="relative">
-                            <div class="relative w-full rounded-xl overflow-hidden shadow-2xl">
-                                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Students on campus" class="w-full h-auto">
-                                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-50"></div>
+                            <img src="https://images.unsplash.com/photo-1551282102-0a5c7bdf7856?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Tech talk event" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2 bg-secondary-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                Tech
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                <i class="far fa-calendar-alt mr-1"></i>
+                                <span>May 18, 2023 • 4:00 PM</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">AI & Future of Work</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                Industry leaders discuss how artificial intelligence is transforming the workplace.
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-map-marker-alt mr-1"></i> Engineering Building 101
+                                </span>
+                                <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                    RSVP
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Event Card 3 -->
+                    <div class="event-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Career fair event" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                Career
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                <i class="far fa-calendar-alt mr-1"></i>
+                                <span>May 22, 2023 • 10:00 AM</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Annual Career Fair</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                Connect with top employers and explore internship and job opportunities.
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-map-marker-alt mr-1"></i> Student Union Ballroom
+                                </span>
+                                <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                    RSVP
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+                
+                <div class="mt-12 text-center">
+                    <a href="events.html" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">View All Events <i class="fas fa-arrow-right ml-1"></i></a>
+                </div>
+            </div>
+        </section>
 
-            <!-- Upcoming Events Section -->
-            <section id="upcoming-events" class="py-12 bg-white dark:bg-gray-800">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="text-center mb-12">
-                        <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">Upcoming Events</h2>
-                        <p class="mt-4 max-w-2xl text-xl text-gray-600 dark:text-gray-300 mx-auto">
-                            Don't miss out on these exciting campus events happening soon.
-                        </p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <!-- Event Card 1 -->
-                        <div class="event-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
-                            <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Concert event" class="w-full h-48 object-cover">
-                                <div class="absolute top-2 right-2 bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                    Music
-                                </div>
-                            </div>
-                            <div class="p-6">
-                                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                                    <i class="far fa-calendar-alt mr-1"></i>
-                                    <span>July 30, 2025 • 6:00 PM</span>
-                                </div>
-                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Summer Music Festival</h3>
-                                <p class="text-gray-600 dark:text-gray-300 mb-4">
-                                    Join us for an evening of live music featuring our talented student performers.
-                                </p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">
-                                        <i class="fas fa-map-marker-alt mr-1"></i> Main Quad
-                                    </span>
-                                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                        RSVP
+        <!-- Featured Clubs Section -->
+        <section id="featured-clubs" class="py-12 bg-gray-50 dark:bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">Featured Clubs</h2>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-600 dark:text-gray-300 mx-auto">
+                        Join one of our vibrant student organizations and find your community.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Club Card 1 -->
+                    <div class="club-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Robotics club" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div class="club-overlay absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-4">
+                                <p class="text-white text-sm mb-3">Meets every Wednesday at 5PM in the Engineering Building</p>
+                                <div class="flex space-x-2">
+                                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                        Join Club
+                                    </button>
+                                    <button class="bg-white hover:bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                        Learn More
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <!-- Event Card 2 -->
-                        <div class="event-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
-                            <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1551282102-0a5c7bdf7856?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Tech talk event" class="w-full h-48 object-cover">
-                                <div class="absolute top-2 right-2 bg-secondary-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                    Tech
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                                    <i class="fas fa-robot text-primary-600 dark:text-primary-400"></i>
                                 </div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Robotics Club</h3>
                             </div>
-                            <div class="p-6">
-                                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                                    <i class="far fa-calendar-alt mr-1"></i>
-                                    <span>August 2, 2025 • 4:00 PM</span>
-                                </div>
-                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">AI & Future of Work</h3>
-                                <p class="text-gray-600 dark:text-gray-300 mb-4">
-                                    Industry leaders discuss how artificial intelligence is transforming the workplace.
-                                </p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">
-                                        <i class="fas fa-map-marker-alt mr-1"></i> Engineering Building 101
-                                    </span>
-                                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                        RSVP
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">
+                                Building innovative robots and competing in national competitions.
+                            </p>
+                            <div class="mt-3 flex flex-wrap gap-1">
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Engineering</span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Competitive</span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">STEM</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Club Card 2 -->
+                    <div class="club-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Music club" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div class="club-overlay absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-4">
+                                <p class="text-white text-sm mb-3">Meets every Tuesday at 7PM in the Music Hall</p>
+                                <div class="flex space-x-2">
+                                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                        Join Club
+                                    </button>
+                                    <button class="bg-white hover:bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                        Learn More
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <!-- Event Card 3 -->
-                        <div class="event-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
-                            <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Career fair event" class="w-full h-48 object-cover">
-                                <div class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                    Career
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                                    <i class="fas fa-music text-primary-600 dark:text-primary-400"></i>
                                 </div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Music Society</h3>
                             </div>
-                            <div class="p-6">
-                                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                                    <i class="far fa-calendar-alt mr-1"></i>
-                                    <span>August 5, 2025 • 10:00 AM</span>
-                                </div>
-                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Annual Career Fair</h3>
-                                <p class="text-gray-600 dark:text-gray-300 mb-4">
-                                    Connect with top employers and explore internship and job opportunities.
-                                </p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">
-                                        <i class="fas fa-map-marker-alt mr-1"></i> Student Union Ballroom
-                                    </span>
-                                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                        RSVP
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">
+                                For musicians and music lovers to collaborate and perform.
+                            </p>
+                            <div class="mt-3 flex flex-wrap gap-1">
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Arts</span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Performance</span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Creative</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Club Card 3 -->
+                    <div class="club-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1547347298-4074fc3086f0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Debate club" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div class="club-overlay absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-4">
+                                <p class="text-white text-sm mb-3">Meets every Thursday at 6PM in the Humanities Building</p>
+                                <div class="flex space-x-2">
+                                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                        Join Club
+                                    </button>
+                                    <button class="bg-white hover:bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                        Learn More
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mt-12 text-center">
-                        <a href="events.html" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                            View All Events <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Featured Clubs Section -->
-            <section id="featured-clubs" class="py-12 bg-gray-50 dark:bg-gray-900">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="text-center mb-12">
-                        <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">Featured Clubs</h2>
-                        <p class="mt-4 max-w-2xl text-xl text-gray-600 dark:text-gray-300 mx-auto">
-                            Join one of our vibrant student organizations and find your community.
-                        </p>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <!-- Club Card 1 -->
-                        <div class="club-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative group">
-                            <div class="relative h-48 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Robotics club" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                                <div class="club-overlay absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-4">
-                                    <p class="text-white text-sm mb-3">Meets every Wednesday at 5PM in the Engineering Building</p>
-                                    <div class="flex space-x-2">
-                                        <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                            Join Club
-                                        </button>
-                                        <button class="bg-white hover:bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                            Learn More
-                                        </button>
-                                    </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                                    <i class="fas fa-comments text-primary-600 dark:text-primary-400"></i>
                                 </div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Debate Team</h3>
                             </div>
-                            <div class="p-4">
-                                <div class="flex items-center mb-2">
-                                    <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mr-3">
-                                        <i class="fas fa-robot text-primary-600 dark:text-primary-400"></i>
-                                    </div>
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Robotics Club</h3>
-                                </div>
-                                <p class="text-gray-600 dark:text-gray-300 text-sm">
-                                    Building innovative robots and competing in national competitions.
-                                </p>
-                                <div class="mt-3 flex flex-wrap gap-1">
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Engineering</span>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Competitive</span>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">STEM</span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Additional club cards would go here -->
-                    </div>
-                    <div class="mt-12 text-center">
-                        <a href="clubs.html" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                            Browse All Clubs <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <!-- How It Works Section -->
-            <section id="how-it-works" class="py-12 bg-white dark:bg-gray-800">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="text-center mb-12">
-                        <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">How It Works</h2>
-                        <p class="mt-4 max-w-2xl text-xl text-gray-600 dark:text-gray-300 mx-auto">
-                            Getting involved on campus has never been easier.
-                        </p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="text-center">
-                            <div class="mx-auto h-20 w-20 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mb-6">
-                                <i class="fas fa-user-plus text-primary-600 dark:text-primary-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Create an Account</h3>
-                            <p class="text-gray-600 dark:text-gray-300">
-                                Sign up with your student email to access all features of CampusHub.
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">
+                                Sharpen your public speaking and critical thinking skills.
                             </p>
-                        </div>
-                        <div class="text-center">
-                            <div class="mx-auto h-20 w-20 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mb-6">
-                                <i class="fas fa-search text-primary-600 dark:text-primary-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Explore Opportunities</h3>
-                            <p class="text-gray-600 dark:text-gray-300">
-                                Browse events and clubs that match your interests and schedule.
-                            </p>
-                        </div>
-                        <div class="text-center">
-                            <div class="mx-auto h-20 w-20 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mb-6">
-                                <i class="fas fa-calendar-check text-primary-600 dark:text-primary-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Get Involved</h3>
-                            <p class="text-gray-600 dark:text-gray-300">
-                                RSVP to events, join clubs, and connect with other students.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Events Page -->
-            <section id="events" class="py-12 bg-gray-50 dark:bg-gray-900">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-                        <div>
-                            <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">Upcoming Events</h2>
-                            <p class="mt-2 text-gray-600 dark:text-gray-300">
-                                Discover and participate in exciting campus activities
-                            </p>
-                        </div>
-                        <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
-                            <div class="relative">
-                                <select class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                                    <option>All Categories</option>
-                                    <option>Academic</option>
-                                    <option>Social</option>
-                                    <option>Sports</option>
-                                    <option>Arts</option>
-                                    <option>Career</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                    <i class="fas fa-chevron-down text-gray-400"></i>
-                                </div>
-                            </div>
-                            <div class="relative">
-                                <select class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                                    <option>This Month</option>
-                                    <option>Today</option>
-                                    <option>This Week</option>
-                                    <option>Next Month</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                    <i class="fas fa-chevron-down text-gray-400"></i>
-                                </div>
-                            </div>
-                            <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
-                                <i class="fas fa-plus mr-2"></i> Create Event
-                            </button>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                        <div class="lg:col-span-2">
-                            <!-- Calendar View -->
-                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">July 2025</h3>
-                                    <div class="flex space-x-2">
-                                        <button class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                                            <i class="fas fa-chevron-left text-gray-500 dark:text-gray-400"></i>
-                                        </button>
-                                        <button class="px-3 py-1 text-sm rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white">
-                                            Today
-                                        </button>
-                                        <button class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                                            <i class="fas fa-chevron-right text-gray-500 dark:text-gray-400"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
-                                    <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Sun</div>
-                                    <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Mon</div>
-                                    <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Tue</div>
-                                    <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Wed</div>
-                                    <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Thu</div>
-                                    <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Fri</div>
-                                    <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Sat</div>
-                                    <!-- Calendar days -->
-                                    <div class="bg-gray-50 dark:bg-gray-900 h-24 p-1"></div>
-                                    <div class="bg-gray-50 dark:bg-gray-900 h-24 p-1"></div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">1</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">2</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">3</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">4</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">5</div>
-                                    </div>
-                                    <!-- Week 2 -->
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">6</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">7</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">8</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">9</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">10</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">11</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">12</div>
-                                    </div>
-                                    <!-- Week 3 -->
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">13</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">14</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">15</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">16</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">17</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">18</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">19</div>
-                                    </div>
-                                    <!-- Week 4 -->
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">20</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">21</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">22</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">23</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">24</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">25</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">26</div>
-                                    </div>
-                                    <!-- Week 5 -->
-                                    <div class="bg-primary-50 dark:bg-primary-900 h-24 p-1 relative">
-                                        <div class="text-right">27</div>
-                                        <div class="absolute bottom-1 left-1 right-1 bg-primary-100 dark:bg-primary-800 rounded p-1 text-xs truncate">
-                                            Summer Music Festival
-                                        </div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">28</div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">29</div>
-                                    </div>
-                                    <div class="bg-primary-50 dark:bg-primary-900 h-24 p-1 relative">
-                                        <div class="text-right">30</div>
-                                        <div class="absolute bottom-1 left-1 right-1 bg-primary-100 dark:bg-primary-800 rounded p-1 text-xs truncate">
-                                            Summer Music Festival
-                                        </div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 h-24 p-1">
-                                        <div class="text-right">31</div>
-                                    </div>
-                                    <div class="bg-secondary-50 dark:bg-secondary-900 h-24 p-1 relative">
-                                        <div class="text-right">1</div>
-                                        <div class="absolute bottom-1 left-1 right-1 bg-secondary-100 dark:bg-secondary-800 rounded p-1 text-xs truncate">
-                                            AI & Future of Work
-                                        </div>
-                                    </div>
-                                    <div class="bg-yellow-50 dark:bg-yellow-900 h-24 p-1 relative">
-                                        <div class="text-right">2</div>
-                                        <div class="absolute bottom-1 left-1 right-1 bg-yellow-100 dark:bg-yellow-800 rounded p-1 text-xs truncate">
-                                            Annual Career Fair
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="lg:col-span-1">
-                            <!-- Upcoming Events List -->
-                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Upcoming Events</h3>
-                                </div>
-                                <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                                    <!-- Event 1 -->
-                                    <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <div class="flex items-start">
-                                            <div class="flex-shrink-0 bg-primary-100 dark:bg-primary-900 rounded-lg p-2 mr-4">
-                                                <div class="text-primary-600 dark:text-primary-300 font-bold text-lg">30</div>
-                                                <div class="text-primary-600 dark:text-primary-300 text-xs">JUL</div>
-                                            </div>
-                                            <div class="flex-1">
-                                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Summer Music Festival</h4>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                    <i class="far fa-clock mr-1"></i> 6:00 PM - 9:00 PM
-                                                </p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                    <i class="fas fa-map-marker-alt mr-1"></i> Main Quad
-                                                </p>
-                                                <div class="mt-2 flex justify-between items-center">
-                                                    <span class="text-xs bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-2 py-1 rounded-full">Music</span>
-                                                    <button class="text-xs bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md transition-colors">
-                                                        RSVP
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Event 2 -->
-                                    <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <div class="flex items-start">
-                                            <div class="flex-shrink-0 bg-secondary-100 dark:bg-secondary-900 rounded-lg p-2 mr-4">
-                                                <div class="text-secondary-600 dark:text-secondary-300 font-bold text-lg">2</div>
-                                                <div class="text-secondary-600 dark:text-secondary-300 text-xs">AUG</div>
-                                            </div>
-                                            <div class="flex-1">
-                                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">AI & Future of Work</h4>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                    <i class="far fa-clock mr-1"></i> 4:00 PM - 6:00 PM
-                                                </p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                    <i class="fas fa-map-marker-alt mr-1"></i> Engineering Building 101
-                                                </p>
-                                                <div class="mt-2 flex justify-between items-center">
-                                                    <span class="text-xs bg-secondary-100 dark:bg-secondary-900 text-secondary-800 dark:text-secondary-200 px-2 py-1 rounded-full">Tech</span>
-                                                    <button class="text-xs bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md transition-colors">
-                                                        RSVP
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Event 3 -->
-                                    <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <div class="flex items-start">
-                                            <div class="flex-shrink-0 bg-yellow-100 dark:bg-yellow-900 rounded-lg p-2 mr-4">
-                                                <div class="text-yellow-600 dark:text-yellow-300 font-bold text-lg">5</div>
-                                                <div class="text-yellow-600 dark:text-yellow-300 text-xs">AUG</div>
-                                            </div>
-                                            <div class="flex-1">
-                                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Annual Career Fair</h4>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                    <i class="far fa-clock mr-1"></i> 10:00 AM - 4:00 PM
-                                                </p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                    <i class="fas fa-map-marker-alt mr-1"></i> Student Union Ballroom
-                                                </p>
-                                                <div class="mt-2 flex justify-between items-center">
-                                                    <span class="text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded-full">Career</span>
-                                                    <button class="text-xs bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md transition-colors">
-                                                        RSVP
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 text-center">
-                                    <a href="events.html" class="text-sm font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
-                                        View all upcoming events
-                                    </a>
-                                </div>
+                            <div class="mt-3 flex flex-wrap gap-1">
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Academic</span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Competitive</span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Leadership</span>
                             </div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Event Card -->
-                        <div class="event-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
-                            <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Hackathon event" class="w-full h-48 object-cover">
-                                <div class="absolute top-2 right-2 bg-purple-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                    Hackathon
-                                </div>
-                            </div>
-                            <div class="p-6">
-                                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                                    <i class="far fa-calendar-alt mr-1"></i>
-                                    <span>August 8, 2025 • 9:00 AM</span>
-                                </div>
-                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">24-Hour Hackathon</h3>
-                                <p class="text-gray-600 dark:text-gray-300 mb-4">
-                                    Build innovative projects with fellow students and compete for prizes.
-                                </p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">
-                                        <i class="fas fa-map-marker-alt mr-1"></i> Computer Science Building
-                                    </span>
-                                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                        RSVP
+                    
+                    <!-- Club Card 4 -->
+                    <div class="club-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1474&q=80" alt="Environmental club" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div class="club-overlay absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-4">
+                                <p class="text-white text-sm mb-3">Meets every Monday at 5PM in the Science Center</p>
+                                <div class="flex space-x-2">
+                                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                        Join Club
+                                    </button>
+                                    <button class="bg-white hover:bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                        Learn More
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <!-- More event cards would go here -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- Clubs Page -->
-            <section id="clubs" class="py-12 bg-white dark:bg-gray-800">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-                        <div>
-                            <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">Student Clubs</h2>
-                            <p class="mt-2 text-gray-600 dark:text-gray-300">
-                                Find your community among our diverse student organizations
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                                    <i class="fas fa-leaf text-primary-600 dark:text-primary-400"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Green Campus</h3>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">
+                                Promoting sustainability and environmental awareness on campus.
                             </p>
-                        </div>
-                        <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
-                            <div class="relative flex-1 min-w-[200px]">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-search text-gray-400"></i>
-                                </div>
-                                <input type="text" id="club-search" class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" placeholder="Search clubs...">
+                            <div class="mt-3 flex flex-wrap gap-1">
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Sustainability</span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Activism</span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Community</span>
                             </div>
-                            <div class="relative">
-                                <select id="club-category" class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                                    <option value="">All Categories</option>
-                                    <option>Academic</option>
-                                    <option>Arts</option>
-                                    <option>Cultural</option>
-                                    <option>Sports</option>
-                                    <option>Service</option>
-                                    <option>STEM</option>
-                                    <option>Social</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                    <i class="fas fa-chevron-down text-gray-400"></i>
-                                </div>
-                            </div>
-                            <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
-                                <i class="fas fa-plus mr-2"></i> Create Club
-                            </button>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        <!-- Club Card -->
-                        <div class="club-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden relative group">
-                            <div class="relative h-48 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Photography club" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                                <div class="club-overlay absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-4">
-                                    <p class="text-white text-sm mb-3">Meets every Friday at 4PM in the Arts Center</p>
-                                    <div class="flex space-x-2">
-                                        <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                            Join Club
-                                        </button>
-                                        <button class="bg-white hover:bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                            Learn More
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-4">
-                                <div class="flex items-center mb-2">
-                                    <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-600 flex items-center justify-center mr-3">
-                                        <i class="fas fa-camera text-primary-600 dark:text-primary-400"></i>
-                                    </div>
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Photography Club</h3>
-                                </div>
-                                <p class="text-gray-600 dark:text-gray-300 text-sm">
-                                    For photography enthusiasts to share techniques and organize photo walks.
-                                </p>
-                                <div class="mt-3 flex flex-wrap gap-1">
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Arts</span>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Creative</span>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Photography</span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Additional Club Card -->
-                        <div class="club-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden relative group">
-                            <div class="relative h-48 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1516321310763-3830f5d7f6e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80" alt="Debate club" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                                <div class="club-overlay absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-4">
-                                    <p class="text-white text-sm mb-3">Meets every Tuesday at 6PM in the Lecture Hall</p>
-                                    <div class="flex space-x-2">
-                                        <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                            Join Club
-                                        </button>
-                                        <button class="bg-white hover:bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                            Learn More
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-4">
-                                <div class="flex items-center mb-2">
-                                    <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-600 flex items-center justify-center mr-3">
-                                        <i class="fas fa-gavel text-primary-600 dark:text-primary-400"></i>
-                                    </div>
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Debate Club</h3>
-                                </div>
-                                <p class="text-gray-600 dark:text-gray-300 text-sm">
-                                    Hone your public speaking and critical thinking                                     skills through competitive debates and discussions.
-                                </p>
-                                <div class="mt-3 flex flex-wrap gap-1">
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Academic</span>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Competitive</span>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Public Speaking</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Club Card 3 -->
-                        <div class="club-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden relative group">
-                            <div class="relative h-48 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1547347298-4074fc3086f0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Basketball club" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                                <div class="club-overlay absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-4">
-                                    <p class="text-white text-sm mb-3">Meets every Monday & Wednesday at 7PM in the Gym</p>
-                                    <div class="flex space-x-2">
-                                        <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                            Join Club
-                                        </button>
-                                        <button class="bg-white hover:bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                            Learn More
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-4">
-                                <div class="flex items-center mb-2">
-                                    <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-600 flex items-center justify-center mr-3">
-                                        <i class="fas fa-basketball-ball text-primary-600 dark:text-primary-400"></i>
-                                    </div>
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Basketball Club</h3>
-                                </div>
-                                <p class="text-gray-600 dark:text-gray-300 text-sm">
-                                    Competitive and recreational basketball for players of all skill levels.
-                                </p>
-                                <div class="mt-3 flex flex-wrap gap-1">
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Sports</span>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Competitive</span>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Team</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Club Card 4 -->
-                        <div class="club-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden relative group">
-                            <div class="relative h-48 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Cooking club" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                                <div class="club-overlay absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-4">
-                                    <p class="text-white text-sm mb-3">Meets every Thursday at 5PM in the Culinary Arts Center</p>
-                                    <div class="flex space-x-2">
-                                        <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                            Join Club
-                                        </button>
-                                        <button class="bg-white hover:bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                            Learn More
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-4">
-                                <div class="flex items-center mb-2">
-                                    <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-600 flex items-center justify-center mr-3">
-                                        <i class="fas fa-utensils text-primary-600 dark:text-primary-400"></i>
-                                    </div>
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Culinary Club</h3>
-                                </div>
-                                <p class="text-gray-600 dark:text-gray-300 text-sm">
-                                    Learn cooking techniques and explore cuisines from around the world.
-                                </p>
-                                <div class="mt-3 flex flex-wrap gap-1">
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Cooking</span>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Cultural</span>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Food</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="mt-12 flex items-center justify-between">
-                        <div class="text-sm text-gray-500 dark:text-gray-400">
-                            Showing <span class="font-medium">1</span> to <span class="font-medium">8</span> of <span class="font-medium">24</span> clubs
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                                Previous
-                            </button>
-                            <button class="px-3 py-1 rounded-md border border-primary-500 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors">
-                                1
-                            </button>
-                            <button class="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                                2
-                            </button>
-                            <button class="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                                3
-                            </button>
-                            <button class="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                                Next
-                            </button>
                         </div>
                     </div>
                 </div>
-            </section>
+                
+                <div class="mt-12 text-center">
+                    <a href="clubs.html" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">Browse All Clubs <i class="fas fa-arrow-right ml-1"></i></a>
+                </div>
+            </div>
+        </section>
 
-            <!-- Announcements Section -->
-            <section id="announcements" class="py-12 bg-gray-50 dark:bg-gray-900">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="text-center mb-12">
-                        <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">Campus Announcements</h2>
-                        <p class="mt-4 max-w-2xl text-xl text-gray-600 dark:text-gray-300 mx-auto">
-                            Important updates and news from the university administration
+        <!-- Announcements Section -->
+        <section id="announcements" class="py-16 bg-gray-50 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-12 text-center">Latest Announcements</h2>
+                
+                <div class="bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden max-w-4xl mx-auto">
+                    <!-- Announcement 1 -->
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-600">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-primary-100 dark:bg-primary-900 rounded-lg p-3 mr-4">
+                                <i class="fas fa-bullhorn text-primary-600 dark:text-primary-300"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">System Maintenance</h3>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">2 days ago</span>
+                                </div>
+                                <p class="text-gray-600 dark:text-gray-300 mt-2">The CampusHub platform will undergo scheduled maintenance this Saturday from 2:00 AM to 6:00 AM. During this time, the system will be unavailable.</p>
+                                <div class="mt-3 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-user mr-2"></i>
+                                    <span>Posted by IT Department</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Announcement 2 -->
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-600">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-green-100 dark:bg-green-900 rounded-lg p-3 mr-4">
+                                <i class="fas fa-calendar-check text-green-600 dark:text-green-300"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Registration Open for Fall Clubs</h3>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">1 week ago</span>
+                                </div>
+                                <p class="text-gray-600 dark:text-gray-300 mt-2">Registration for Fall semester clubs is now open! Visit the Clubs page to browse all available organizations and sign up by September 15th.</p>
+                                <div class="mt-3 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-user mr-2"></i>
+                                    <span>Posted by Student Activities</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Announcement 3 -->
+                    <div class="p-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-yellow-100 dark:bg-yellow-900 rounded-lg p-3 mr-4">
+                                <i class="fas fa-exclamation-triangle text-yellow-600 dark:text-yellow-300"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">COVID-19 Guidelines Update</h3>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">2 weeks ago</span>
+                                </div>
+                                <p class="text-gray-600 dark:text-gray-300 mt-2">Please review the updated campus guidelines for in-person events. Masks are recommended for large indoor gatherings.</p>
+                                <div class="mt-3 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-user mr-2"></i>
+                                    <span>Posted by Health Services</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-8">
+                    <a href="announcements.html" class="inline-flex items-center text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
+                        View All Announcements
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-12 bg-white dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">How It Works</h2>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-600 dark:text-gray-300 mx-auto">
+                        Getting involved on campus has never been easier.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="mx-auto h-20 w-20 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mb-6">
+                            <i class="fas fa-user-plus text-primary-600 dark:text-primary-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Create an Account</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            Sign up with your student email to access all features of CampusHub.
                         </p>
                     </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div class="lg:col-span-2">
-                            <!-- Featured Announcement -->
-                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-                                <div class="p-6">
-                                    <div class="flex items-center justify-between mb-4">
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
-                                            Important
-                                        </span>
-                                        <span class="text-sm text-gray-500 dark:text-gray-400">
-                                            July 25, 2025
-                                        </span>
-                                    </div>
-                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Fall Semester Registration Now Open</h3>
-                                    <p class="text-gray-600 dark:text-gray-300 mb-6">
-                                        Registration for the Fall 2025 semester is now open for all students. Please log in to the student portal to select your courses. The deadline for registration is August 15th. Late registration will incur additional fees.
-                                    </p>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Admin profile">
-                                            <div class="ml-3">
-                                                <p class="text-sm font-medium text-gray-900 dark:text-white">Dr. Michael Chen</p>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">Registrar's Office</p>
-                                            </div>
-                                        </div>
-                                        <button class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
-                                            Read More
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Additional Announcements -->
-                            <div class="mt-8 space-y-6">
-                                <!-- Announcement 1 -->
-                                <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                                    <div class="p-6">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <span class="text-sm text-gray-500 dark:text-gray-400">
-                                                July 22, 2025
-                                            </span>
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
-                                                Reminder
-                                            </span>
-                                        </div>
-                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Library Summer Hours</h3>
-                                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                                            The university library will be operating on reduced summer hours from July 1st to August 31st. Weekday hours are 9AM-6PM, closed on weekends.
-                                        </p>
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Librarian profile">
-                                                <div class="ml-2">
-                                                    <p class="text-xs font-medium text-gray-900 dark:text-white">Sarah Williams</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">Head Librarian</p>
-                                                </div>
-                                            </div>
-                                            <button class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 text-sm font-medium">
-                                                Details
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Announcement 2 -->
-                                <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                                    <div class="p-6">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <span class="text-sm text-gray-500 dark:text-gray-400">
-                                                July 18, 2025
-                                            </span>
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
-                                                Update
-                                            </span>
-                                        </div>
-                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Campus WiFi Upgrade Complete</h3>
-                                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                                            The campus-wide WiFi upgrade has been completed. Enjoy faster speeds and more reliable connections across all university buildings.
-                                        </p>
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/men/75.jpg" alt="IT profile">
-                                                <div class="ml-2">
-                                                    <p class="text-xs font-medium text-gray-900 dark:text-white">Raj Patel</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">IT Services</p>
-                                                </div>
-                                            </div>
-                                            <button class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 text-sm font-medium">
-                                                Details
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    
+                    <div class="text-center">
+                        <div class="mx-auto h-20 w-20 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mb-6">
+                            <i class="fas fa-search text-primary-600 dark:text-primary-400 text-2xl"></i>
                         </div>
-
-                        <!-- Quick Links Sidebar -->
-                        <div class="lg:col-span-1">
-                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-                                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Quick Links</h3>
-                                </div>
-                                <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                                    <a href="#" class="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 bg-primary-100 dark:bg-gray-700 rounded-md p-2">
-                                                <i class="fas fa-calendar-alt text-primary-600 dark:text-primary-400"></i>
-                                            </div>
-                                            <div class="ml-4">
-                                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Academic Calendar</h4>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">Important dates and deadlines</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 bg-primary-100 dark:bg-gray-700 rounded-md p-2">
-                                                <i class="fas fa-bus text-primary-600 dark:text-primary-400"></i>
-                                            </div>
-                                            <div class="ml-4">
-                                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Campus Shuttle Schedule</h4>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">Updated summer routes</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 bg-primary-100 dark:bg-gray-700 rounded-md p-2">
-                                                <i class="fas fa-utensils text-primary-600 dark:text-primary-400"></i>
-                                            </div>
-                                            <div class="ml-4">
-                                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Dining Hall Hours</h4>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">Summer operating schedule</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 bg-primary-100 dark:bg-gray-700 rounded-md p-2">
-                                                <i class="fas fa-book text-primary-600 dark:text-primary-400"></i>
-                                            </div>
-                                            <div class="ml-4">
-                                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Textbook Ordering</h4>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">Fall semester books now available</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 bg-primary-100 dark:bg-gray-700 rounded-md p-2">
-                                                <i class="fas fa-graduation-cap text-primary-600 dark:text-primary-400"></i>
-                                            </div>
-                                            <div class="ml-4">
-                                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Graduation Requirements</h4>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">Check your progress</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- Emergency Contacts -->
-                            <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-                                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Emergency Contacts</h3>
-                                </div>
-                                <div class="p-6">
-                                    <div class="space-y-4">
-                                        <div>
-                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Campus Security</h4>
-                                            <p class="text-sm text-gray-600 dark:text-gray-300">(555) 123-4567</p>
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Health Center</h4>
-                                            <p class="text-sm text-gray-600 dark:text-gray-300">(555) 123-4568</p>
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Counseling Services</h4>
-                                            <p class="text-sm text-gray-600 dark:text-gray-300">(555) 123-4569</p>
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">IT Help Desk</h4>
-                                            <p class="text-sm text-gray-600 dark:text-gray-300">(555) 123-4570</p>
-                                        </div>
-                                    </div>
-                                    <button class="mt-6 w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors flex items-center justify-center">
-                                        <i class="fas fa-phone-alt mr-2"></i> Emergency Call
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Footer -->
-            <footer class="bg-gray-800 dark:bg-gray-900 text-gray-300 py-12">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                        <div class="md:col-span-2">
-                            <div class="flex items-center mb-4">
-                                <i class="fas fa-university text-primary-400 text-2xl mr-2"></i>
-                                <span class="text-xl font-heading font-bold text-white">CampusHub</span>
-                            </div>
-                            <p class="text-gray-400 mb-4">
-                                Connecting students with campus life through events, clubs, and announcements.
-                            </p>
-                            <div class="flex space-x-4">
-                                <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                                <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                                <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                    <i class="fab fa-instagram"></i>
-                                </a>
-                                <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                    <i class="fab fa-linkedin-in"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="text-white font-semibold text-lg mb-4">Quick Links</h3>
-                            <ul class="space-y-2">
-                                <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
-                                <li><a href="events.html" class="text-gray-400 hover:text-white transition-colors">Events</a></li>
-                                <li><a href="clubs.html" class="text-gray-400 hover:text-white transition-colors">Clubs</a></li>
-                                <li><a href="#announcements" class="text-gray-400 hover:text-white transition-colors">Announcements</a></li>
-                                <li><a href="authPage.html" class="text-gray-400 hover:text-white transition-colors">Profile</a></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 class="text-white font-semibold text-lg mb-4">Contact Us</h3>
-                            <address class="not-italic text-gray-400 space-y-2">
-                                <p><i class="fas fa-map-marker-alt mr-2"></i> 123 University Ave, Campus Town</p>
-                                <p><i class="fas fa-phone-alt mr-2"></i> (555) 987-6543</p>
-                                <p><i class="fas fa-envelope mr-2"></i> info@campushub.edu</p>
-                            </address>
-                        </div>
-                    </div>
-                    <div class="mt-12 pt-8 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center">
-                        <p class="text-gray-400 text-sm">
-                            &copy; 2025 CampusHub. All rights reserved.
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Explore Opportunities</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            Browse events and clubs that match your interests and schedule.
                         </p>
-                        <div class="mt-4 md:mt-0 flex space-x-6">
-                            <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a>
-                            <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Terms of Service</a>
-                            <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Cookie Policy</a>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="mx-auto h-20 w-20 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center mb-6">
+                            <i class="fas fa-calendar-check text-primary-600 dark:text-primary-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Get Involved</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            RSVP to events, join clubs, and connect with other students.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="py-16 bg-gray-50 dark:bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-12 text-center">What Students Say</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="bg-white dark:bg-gray-700 rounded-xl shadow-md p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Student" class="h-12 w-12 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-semibold text-gray-900 dark:text-white">Jessica Chen</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Computer Science '25</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 italic">"CampusHub made it so easy to find clubs that matched my interests. I joined the Tech Club and have already attended three workshops that helped me improve my coding skills!"</p>
+                        <div class="mt-4 flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="bg-white dark:bg-gray-700 rounded-xl shadow-md p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Student" class="h-12 w-12 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-semibold text-gray-900 dark:text-white">Michael Rodriguez</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Business '26</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 italic">"I never missed an event since I started using CampusHub. The personalized recommendations and calendar integration are game-changers for staying organized."</p>
+                        <div class="mt-4 flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="bg-white dark:bg-gray-700 rounded-xl shadow-md p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Student" class="h-12 w-12 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-semibold text-gray-900 dark:text-white">Sarah Johnson</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Biology '24</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 italic">"As a club officer, CampusHub has simplified our event planning and member communication. The RSVP tracking and announcement features save us so much time!"</p>
+                        <div class="mt-4 flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
                         </div>
                     </div>
                 </div>
-            </footer>
-        </main>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="py-16 bg-primary-600 text-white dark:bg-primary-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl font-bold mb-6">Ready to Get Involved?</h2>
+                <p class="text-xl mb-8 max-w-3xl mx-auto">
+                    Join thousands of students who are discovering events, connecting with clubs, and making the most of their campus experience.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="authPage.html" class="bg-white text-primary-700 hover:bg-blue-100 dark:bg-blue-100 dark:text-blue-800 dark:hover:bg-white px-8 py-3 rounded-lg font-medium text-lg transition-colors">
+                        Sign Up Now
+                    </a>
+                    <a href="#" class="bg-transparent border-2 border-white hover:bg-white hover:text-primary-700 dark:border-blue-200 dark:hover:bg-blue-100 dark:hover:text-blue-800 px-8 py-3 rounded-lg font-medium text-lg transition-colors">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white pt-12 pb-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">CampusHub</h3>
+                        <p class="text-gray-400">Your one-stop platform for campus events, clubs, and student organizations.</p>
+                        <div class="flex space-x-4 mt-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                            <li><a href="events.html" class="text-gray-400 hover:text-white transition-colors">Events</a></li>
+                            <li><a href="clubs.html" class="text-gray-400 hover:text-white transition-colors">Clubs</a></li>
+                            <li><a href="#announcements" class="text-gray-400 hover:text-white transition-colors">Announcements</a></li>
+                            <li><a href="authPage.html" class="text-gray-400 hover:text-white transition-colors">Profile</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Resources</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Help Center</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+                        <p class="text-gray-400 mb-4">Subscribe to get updates on upcoming events and club activities.</p>
+                        <form class="flex">
+                            <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-lg focus:outline-none text-gray-800 w-full">
+                            <button type="submit" class="bg-primary-600 hover:bg-primary-700 px-4 py-2 rounded-r-lg transition-colors">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                    <p>&copy; 2025 CampusHub. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
-    <!-- JavaScript -->
     <script>
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
-        
-        function toggleTheme() {
-            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('color-theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('color-theme', 'dark');
-            }
-        }
-        
-        themeToggle.addEventListener('click', toggleTheme);
-        themeToggleMobile.addEventListener('click', toggleTheme);
-
-        // Mobile menu toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+        // Mark page as loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            document.documentElement.classList.add('loaded');
         });
 
-        // Auth modal toggle
-        const authModal = document.getElementById('auth-modal');
-        
-        function toggleAuthModal() {
-            authModal.classList.toggle('hidden');
-        }
-
-        // Toggle between login and register forms
-        const loginToggle = document.getElementById('loginToggle');
-        const registerToggle = document.getElementById('registerToggle');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const authModalTitle = document.getElementById('auth-modal-title');
-        
-        loginToggle.addEventListener('click', () => {
-            loginToggle.classList.add('active');
-            registerToggle.classList.remove('active');
-            loginForm.classList.remove('hidden');
-            registerForm.classList.add('hidden');
-            authModalTitle.textContent = 'Login to CampusHub';
-        });
-        
-        registerToggle.addEventListener('click', () => {
-            registerToggle.classList.add('active');
-            loginToggle.classList.remove('active');
-            registerForm.classList.remove('hidden');
-            loginForm.classList.add('hidden');
-            authModalTitle.textContent = 'Create an Account';
-        });
-
-        // Toggle password visibility
-        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
-        const loginPassword = document.getElementById('loginPassword');
-        const toggleRegisterPassword = document.getElementById('toggleRegisterPassword');
-        const registerPassword = document.getElementById('registerPassword');
-        
-        toggleLoginPassword.addEventListener('click', () => {
-            const type = loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
-            loginPassword.setAttribute('type', type);
-            toggleLoginPassword.classList.toggle('fa-eye-slash');
-        });
-        
-        toggleRegisterPassword.addEventListener('click', () => {
-            const type = registerPassword.getAttribute('type') === 'password' ? 'text' : 'password';
-            registerPassword.setAttribute('type', type);
-            toggleRegisterPassword.classList.toggle('fa-eye-slash');
-        });
-
-        // Password strength indicator
-        registerPassword.addEventListener('input', () => {
-            const strengthBar = document.getElementById('passwordStrengthBar');
-            const password = registerPassword.value;
-            let strength = 0;
-            
-            if (password.length >= 8) strength += 1;
-            if (password.match(/[a-z]/)) strength += 1;
-            if (password.match(/[A-Z]/)) strength += 1;
-            if (password.match(/[0-9]/)) strength += 1;
-            if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
-            
-            strengthBar.style.width = `${strength * 20}%`;
-            
-            if (strength < 2) {
-                strengthBar.style.backgroundColor = '#ef4444'; // red
-            } else if (strength < 4) {
-                strengthBar.style.backgroundColor = '#f59e0b'; // yellow
-            } else {
-                strengthBar.style.backgroundColor = '#10b981'; // green
-            }
-        });
-
-        // Role selection for registration
-        const roleRadios = document.querySelectorAll('input[name="role"]');
-        const clubFields = document.getElementById('clubFields');
-        
-        roleRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                if (radio.value === 'club-rep') {
-                    clubFields.classList.remove('hidden');
-                } else {
-                    clubFields.classList.add('hidden');
-                }
+        // Load navbar
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navbar-container').innerHTML = html;
+                // Load navbar.js after the navbar is inserted
+                const script = document.createElement('script');
+                script.src = 'navbar.js';
+                document.body.appendChild(script);
+            })
+            .catch(error => {
+                console.error('Error loading navbar:', error);
             });
-        });
 
-        // Form submission
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            const role = document.getElementById('loginRole').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
-            
-            // Simulate login
-            const loginBtnText = document.getElementById('loginBtnText');
-            const loadingIcon = document.querySelector('#loginForm .loading');
-            
-            loginBtnText.textContent = 'Logging in...';
-            loadingIcon.classList.remove('hidden');
-            
-            setTimeout(() => {
-                loadingIcon.classList.add('hidden');
-                loginBtnText.textContent = 'Login';
-                
-                // Show toast notification
-                showToast('Login successful! Redirecting...');
-                
-                // If admin role, show admin dashboard
-                if (role === 'admin') {
-                    document.getElementById('admin-dashboard').classList.remove('hidden');
-                    document.getElementById('public-content').classList.add('hidden');
-                    document.getElementById('auth-button').classList.add('hidden');
-                    document.getElementById('logout-button').classList.remove('hidden');
-                    toggleAuthModal();
-                }
-            }, 1500);
-        });
-        
-        registerForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const role = document.querySelector('input[name="role"]:checked').value;
-            const terms = document.getElementById('terms').checked;
-            
-            // Validate password match
-            if (password !== confirmPassword) {
-                document.getElementById('confirmPasswordError').classList.remove('hidden');
-                return;
-            } else {
-                document.getElementById('confirmPasswordError').classList.add('hidden');
-            }
-            
-            // Validate password length
-            if (password.length < 8) {
-                document.getElementById('passwordError').classList.remove('hidden');
-                return;
-            } else {
-                document.getElementById('passwordError').classList.add('hidden');
-            }
-            
-            // Validate email
-            if (!email.includes('@') || !email.includes('.')) {
-                document.getElementById('emailError').classList.remove('hidden');
-                return;
-            } else {
-                document.getElementById('emailError').classList.add('hidden');
-            }
-            
-            // Validate terms
-            if (!terms) {
-                return;
-            }
-            
-            // Simulate registration
-            const registerBtnText = document.getElementById('registerBtnText');
-            const loadingIcon = document.querySelector('#registerForm .loading');
-            
-            registerBtnText.textContent = 'Creating account...';
-            loadingIcon.classList.remove('hidden');
-            
-            setTimeout(() => {
-                loadingIcon.classList.add('hidden');
-                registerBtnText.textContent = 'Create Account';
-                
-                // Show toast notification
-                showToast('Account created successfully!');
-                
-                // Switch to login form
-                loginToggle.click();
-            }, 1500);
-        });
-
-        // Show toast notification
+        // Toast notification function
         function showToast(message) {
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toastMessage');
             
-            toastMessage.textContent = message;
-            toast.classList.remove('hidden');
-            
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 3000);
+            if (toast && toastMessage) {
+                toastMessage.textContent = message;
+                toast.classList.remove('hidden');
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.classList.add('hidden');
+                    }, 300);
+                }, 3000);
+            }
         }
-
-        // Admin dashboard functionality
-        document.addEventListener('DOMContentLoaded', () => {
-            // Only run if on admin dashboard
-            if (document.getElementById('admin-dashboard')) {
-                // Sidebar toggle
-                const sidebarToggle = document.getElementById('sidebarToggle');
-                const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
-                const sidebar = document.getElementById('sidebar');
-                const mobileOverlay = document.getElementById('mobileOverlay');
-                
-                sidebarToggle.addEventListener('click', () => {
-                    sidebar.classList.toggle('-translate-x-full');
-                    mobileOverlay.classList.toggle('hidden');
-                });
-                
-                collapseSidebarBtn.addEventListener('click', () => {
-                    sidebar.classList.toggle('w-20');
-                    sidebar.classList.toggle('w-64');
-                    
-                    // Toggle logo and nav text visibility
-                    document.querySelectorAll('.logo-text, .nav-text').forEach(el => {
-                        el.classList.toggle('opacity-0');
-                        el.classList.toggle('invisible');
-                    });
-                    
-                    // Change icon
-                    if (sidebar.classList.contains('w-20')) {
-                        collapseSidebarBtn.innerHTML = '<i class="fas fa-angle-double-right text-xl"></i>';
-                    } else {
-                        collapseSidebarBtn.innerHTML = '<i class="fas fa-angle-double-left text-xl"></i>';
-                    }
-                });
-                
-                mobileOverlay.addEventListener('click', () => {
-                    sidebar.classList.add('-translate-x-full');
-                    mobileOverlay.classList.add('hidden');
-                });
-                
-                // Notification dropdown
-                const notificationBtn = document.getElementById('notificationBtn');
-                const notificationDropdown = document.getElementById('notificationDropdown');
-                
-                notificationBtn.addEventListener('click', () => {
-                    notificationDropdown.classList.toggle('opacity-0');
-                    notificationDropdown.classList.toggle('invisible');
-                    notificationDropdown.classList.toggle('translate-y-0');
-                    notificationDropdown.classList.toggle('-translate-y-2');
-                });
-                
-                // Profile dropdown
-                const profileBtn = document.getElementById('profileBtn');
-                const profileDropdown = document.getElementById('profileDropdown');
-                
-                profileBtn.addEventListener('click', () => {
-                    profileDropdown.classList.toggle('opacity-0');
-                    profileDropdown.classList.toggle('invisible');
-                    profileDropdown.classList.toggle('translate-y-0');
-                    profileDropdown.classList.toggle('-translate-y-2');
-                });
-                
-                // Logout buttons
-                const logoutBtn = document.getElementById('logoutBtn');
-                const logoutBtn2 = document.getElementById('logoutBtn2');
-                
-                [logoutBtn, logoutBtn2].forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        document.getElementById('admin-dashboard').classList.add('hidden');
-                        document.getElementById('public-content').classList.remove('hidden');
-                        document.getElementById('auth-button').classList.remove('hidden');
-                        document.getElementById('logout-button').classList.add('hidden');
-                    });
-                });
-                
-                // Navigation items
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    item.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        
-                        // Remove active class from all items
-                        document.querySelectorAll('.nav-item').forEach(navItem => {
-                            navItem.classList.remove('active');
-                        });
-                        
-                        // Add active class to clicked item
-                        item.classList.add('active');
-                        
-                        // Update page title based on data-page attribute
-                        const page = item.getAttribute('data-page');
-                        const pageTitle = document.getElementById('pageTitle');
-                        const pageSubtitle = document.getElementById('pageSubtitle');
-                        
-                        switch(page) {
-                            case 'dashboard':
-                                pageTitle.textContent = 'Dashboard Overview';
-                                pageSubtitle.textContent = 'Welcome back! Here\'s what\'s happening today.';
-                                break;
-                            case 'events':
-                                pageTitle.textContent = 'Manage Events';
-                                pageSubtitle.textContent = 'View, approve, and manage campus events';
-                                break;
-                            case 'clubs':
-                                pageTitle.textContent = 'Manage Clubs';
-                                pageSubtitle.textContent = 'Oversee student organizations and activities';
-                                break;
-                            case 'announcements':
-                                pageTitle.textContent = 'Announcements';
-                                pageSubtitle.textContent = 'Create and manage campus-wide notices';
-                                break;
-                            case 'users':
-                                pageTitle.textContent = 'User Management';
-                                pageSubtitle.textContent = 'Manage student, club rep, and admin accounts';
-                                break;
-                            case 'chat':
-                                pageTitle.textContent = 'Club Chat Monitor';
-                                pageSubtitle.textContent = 'Monitor and moderate club discussions';
-                                break;
-                            case 'rsvp':
-                                pageTitle.textContent = 'RSVP & Email Logs';
-                                pageSubtitle.textContent = 'View event attendance and communication history';
-                                break;
-                            case 'settings':
-                                pageTitle.textContent = 'Settings';
-                                pageSubtitle.textContent = 'Configure platform preferences and options';
-                                break;
-                            case 'help':
-                                pageTitle.textContent = 'Help & Support';
-                                pageSubtitle.textContent = 'Get assistance with the admin dashboard';
-                                break;
+        
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            const eventsCtx = document.getElementById('eventsChart');
+            if (eventsCtx) {
+                new Chart(eventsCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                        datasets: [{
+                            label: 'Events Created',
+                            data: [12, 19, 15, 22, 18, 25, 30],
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }, {
+                            label: 'Events Attended',
+                            data: [8, 12, 10, 15, 14, 18, 22],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
-                    });
+                    }
                 });
             }
         });
