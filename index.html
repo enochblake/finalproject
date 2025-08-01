@@ -4,21 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Events & Clubs Hub</title>
-    <!-- Theme initialization script - must come first -->
-    <script>
-        // Initialize theme immediately to prevent flash of wrong theme
-        (function() {
-            const storedTheme = localStorage.getItem('theme');
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            if (storedTheme === 'dark' || (!storedTheme && systemDark)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        })();
-    </script>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -52,11 +37,7 @@
                             700: '#6d28d9',
                             800: '#5b21b6',
                             900: '#4c1d95',
-                        },
-                        accent: '#ec4899',
-                        success: '#10b981',
-                        dark: '#1e293b',
-                        light: '#f8fafc',
+                        }
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -77,7 +58,6 @@
         }
         .event-card:hover {
             transform: translateY(-5px);
-            transition: transform 0.3s ease;
         }
         .gradient-bg {
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
@@ -90,10 +70,6 @@
             visibility: visible;
             transform: translateY(0);
         }
-        
-        /* Prevent FOUC (Flash of Unstyled Content) */
-        html { visibility: hidden; opacity: 0; }
-        html.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
     </style>
 </head>
 <body class="font-sans bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
@@ -110,7 +86,7 @@
 
     <!-- Main Content Container -->
     <div id="app-container">
-        <!-- Hero Section -->
+        <!-- Main Content for Regular Users -->
         <section id="home" class="py-12 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-gray-800 dark:to-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
@@ -142,6 +118,7 @@
             </div>
         </section>
 
+        <!-- Featured Events Section -->
         <!-- Upcoming Events Section -->
         <section id="upcoming-events" class="py-12 bg-white dark:bg-gray-800">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -239,12 +216,12 @@
                 </div>
                 
                 <div class="mt-12 text-center">
-                    <a href="events.html" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">View All Events <i class="fas fa-arrow-right ml-1"></i></a>
+                    <a href="events.html" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">View All Events <i class="fas fa-arrow-right ml-1"></i>
                 </div>
             </div>
         </section>
 
-        <!-- Featured Clubs Section -->
+        <!-- Popular Clubs Section -->
         <section id="featured-clubs" class="py-12 bg-gray-50 dark:bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
@@ -393,11 +370,10 @@
                 </div>
                 
                 <div class="mt-12 text-center">
-                    <a href="clubs.html" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">Browse All Clubs <i class="fas fa-arrow-right ml-1"></i></a>
+                    <a href="clubs.html" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">Browse All Clubs <i class="fas fa-arrow-right ml-1"></i>
                 </div>
             </div>
         </section>
-
         <!-- Announcements Section -->
         <section id="announcements" class="py-16 bg-gray-50 dark:bg-gray-800">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -466,7 +442,7 @@
                 </div>
                 
                 <div class="text-center mt-8">
-                    <a href="announcements.html" class="inline-flex items-center text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
+                    <a href="announcements.html " class="inline-flex items-center text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
                         View All Announcements
                         <i class="fas fa-arrow-right ml-2"></i>
                     </a>
@@ -518,8 +494,433 @@
             </div>
         </section>
 
+        <!-- Events Page -->
+        <section id="events" class="py-12 bg-gray-50 dark:bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">Upcoming Events</h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">
+                            Discover and participate in exciting campus activities
+                        </p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
+                        <div class="relative">
+                            <select class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                                <option>All Categories</option>
+                                <option>Academic</option>
+                                <option>Social</option>
+                                <option>Sports</option>
+                                <option>Arts</option>
+                                <option>Career</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <select class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                                <option>This Month</option>
+                                <option>Today</option>
+                                <option>This Week</option>
+                                <option>Next Month</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </div>
+                        </div>
+                        <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Create Event
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="lg:col-span-2">
+                        <!-- Calendar View -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">May 2023</h3>
+                                <div class="flex space-x-2">
+                                    <button class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <i class="fas fa-chevron-left text-gray-500 dark:text-gray-400"></i>
+                                    </button>
+                                    <button class="px-3 py-1 text-sm rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white">
+                                        Today
+                                    </button>
+                                    <button class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <i class="fas fa-chevron-right text-gray-500 dark:text-gray-400"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
+                                <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Sun</div>
+                                <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Mon</div>
+                                <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Tue</div>
+                                <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Wed</div>
+                                <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Thu</div>
+                                <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Fri</div>
+                                <div class="bg-white dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Sat</div>
+                                
+                                <!-- Calendar days -->
+                                <div class="bg-gray-50 dark:bg-gray-900 h-24 p-1"></div>
+                                <div class="bg-gray-50 dark:bg-gray-900 h-24 p-1"></div>
+                                <div class="bg-gray-50 dark:bg-gray-900 h-24 p-1"></div>
+                                <div class="bg-gray-50 dark:bg-gray-900 h-24 p-1"></div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">1</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">2</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">3</div>
+                                </div>
+                                
+                                <!-- Week 2 -->
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">4</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">5</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">6</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">7</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">8</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">9</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">10</div>
+                                </div>
+                                
+                                <!-- Week 3 -->
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">11</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">12</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">13</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">14</div>
+                                </div>
+                                <div class="bg-primary-50 dark:bg-primary-900 h-24 p-1 relative">
+                                    <div class="text-right">15</div>
+                                    <div class="absolute bottom-1 left-1 right-1 bg-primary-100 dark:bg-primary-800 rounded p-1 text-xs truncate">
+                                        Spring Music Festival
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">16</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">17</div>
+                                </div>
+                                
+                                <!-- Week 4 -->
+                                <div class="bg-primary-50 dark:bg-primary-900 h-24 p-1 relative">
+                                    <div class="text-right">18</div>
+                                    <div class="absolute bottom-1 left-1 right-1 bg-primary-100 dark:bg-primary-800 rounded p-1 text-xs truncate">
+                                        AI & Future of Work
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">19</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">20</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">21</div>
+                                </div>
+                                <div class="bg-yellow-50 dark:bg-yellow-900 h-24 p-1 relative">
+                                    <div class="text-right">22</div>
+                                    <div class="absolute bottom-1 left-1 right-1 bg-yellow-100 dark:bg-yellow-800 rounded p-1 text-xs truncate">
+                                        Annual Career Fair
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">23</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">24</div>
+                                </div>
+                                
+                                <!-- Week 5 -->
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">25</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">26</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">27</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">28</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">29</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">30</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 h-24 p-1">
+                                    <div class="text-right">31</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:col-span-1">
+                        <!-- Upcoming Events List -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Today's Events</h3>
+                            </div>
+                            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                                <!-- Event 1 -->
+                                <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 bg-primary-100 dark:bg-primary-900 rounded-lg p-2 mr-4">
+                                            <div class="text-primary-600 dark:text-primary-300 font-bold text-lg">15</div>
+                                            <div class="text-primary-600 dark:text-primary-300 text-xs">MAY</div>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Spring Music Festival</h4>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                <i class="far fa-clock mr-1"></i> 6:00 PM - 9:00 PM
+                                            </p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                <i class="fas fa-map-marker-alt mr-1"></i> Main Quad
+                                            </p>
+                                            <div class="mt-2 flex justify-between items-center">
+                                                <span class="text-xs bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-2 py-1 rounded-full">Music</span>
+                                                <button class="text-xs bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md transition-colors">
+                                                    RSVP
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Event 2 -->
+                                <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 bg-secondary-100 dark:bg-secondary-900 rounded-lg p-2 mr-4">
+                                            <div class="text-secondary-600 dark:text-secondary-300 font-bold text-lg">18</div>
+                                            <div class="text-secondary-600 dark:text-secondary-300 text-xs">MAY</div>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">AI & Future of Work</h4>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                <i class="far fa-clock mr-1"></i> 4:00 PM - 6:00 PM
+                                            </p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                <i class="fas fa-map-marker-alt mr-1"></i> Engineering Building 101
+                                            </p>
+                                            <div class="mt-2 flex justify-between items-center">
+                                                <span class="text-xs bg-secondary-100 dark:bg-secondary-900 text-secondary-800 dark:text-secondary-200 px-2 py-1 rounded-full">Tech</span>
+                                                <button class="text-xs bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md transition-colors">
+                                                    RSVP
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Event 3 -->
+                                <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 bg-yellow-100 dark:bg-yellow-900 rounded-lg p-2 mr-4">
+                                            <div class="text-yellow-600 dark:text-yellow-300 font-bold text-lg">22</div>
+                                            <div class="text-yellow-600 dark:text-yellow-300 text-xs">MAY</div>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Annual Career Fair</h4>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                <i class="far fa-clock mr-1"></i> 10:00 AM - 4:00 PM
+                                            </p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                <i class="fas fa-map-marker-alt mr-1"></i> Student Union Ballroom
+                                            </p>
+                                            <div class="mt-2 flex justify-between items-center">
+                                                <span class="text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded-full">Career</span>
+                                                <button class="text-xs bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md transition-colors">
+                                                    RSVP
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 text-center">
+                                <a href="events.html " class="text-sm font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
+                                    View all upcoming events
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- All Events Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Event cards would be repeated here similar to the home page section -->
+                    <!-- For brevity, I'm showing just one example -->
+                    <div class="event-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Hackathon event" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2 bg-purple-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                Hackathon
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                <i class="far fa-calendar-alt mr-1"></i>
+                                <span>May 25, 2023 • 9:00 AM</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">24-Hour Hackathon</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                Build innovative projects with fellow students and compete for prizes.
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-map-marker-alt mr-1"></i> Computer Science Building
+                                </span>
+                                <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                    RSVP
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- More event cards would go here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Clubs Page -->
+        <section id="clubs" class="py-12 bg-white dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">Student Clubs</h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">
+                            Find your community among our diverse student organizations
+                        </p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
+                        <div class="relative flex-1 min-w-[200px]">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" id="club-search" class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" placeholder="Search clubs...">
+                        </div>
+                        <div class="relative">
+                            <select id="club-category" class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                                <option value="">All Categories</option>
+                                <option>Academic</option>
+                                <option>Arts</option>
+                                <option>Cultural</option>
+                                <option>Sports</option>
+                                <option>Service</option>
+                                <option>STEM</option>
+                                <option>Social</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </div>
+                        </div>
+                        <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Create Club
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Club cards would be repeated here similar to the home page section -->
+                    <!-- For brevity, I'm showing just one example -->
+                    <div class="club-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden relative group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Photography club" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div class="club-overlay absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-4">
+                                <p class="text-white text-sm mb-3">Meets every Friday at 4PM in the Arts Center</p>
+                                <div class="flex space-x-2">
+                                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                        Join Club
+                                    </button>
+                                    <button class="bg-white hover:bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                        Learn More
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-600 flex items-center justify-center mr-3">
+                                    <i class="fas fa-camera text-primary-600 dark:text-primary-400"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Photography Club</h3>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">
+                                For photography enthusiasts to share techniques and organize photo walks.
+                            </p>
+                            <div class="mt-3 flex flex-wrap gap-1">
+                                <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Arts</span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Creative</span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Photography</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- More club cards would go here -->
+                </div>
+                
+                <div class="mt-12 flex justify-center">
+                    <nav class="inline-flex rounded-md shadow">
+                        <ul class="flex">
+                            <li>
+                                <button class="px-3 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    Previous
+                                </button>
+                            </li>
+                            <li>
+                                <button class="px-3 py-2 border-t border-b border-gray-300 dark:border-gray-600 bg-primary-600 text-sm font-medium text-white">
+                                    1
+                                </button>
+                            </li>
+                            <li>
+                                <button class="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    2
+                                </button>
+                            </li>
+                            <li>
+                                <button class="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    3
+                                </button>
+                            </li>
+                            <li>
+                                <button class="px-3 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    Next
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
         <!-- Testimonials Section -->
-        <section class="py-16 bg-gray-50 dark:bg-gray-900">
+        <section class="py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-12 text-center">What Students Say</h2>
                 
@@ -584,90 +985,85 @@
             </div>
         </section>
 
-        <!-- Call to Action -->
-        <section class="py-16 bg-primary-600 text-white dark:bg-primary-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 class="text-3xl font-bold mb-6">Ready to Get Involved?</h2>
-                <p class="text-xl mb-8 max-w-3xl mx-auto">
-                    Join thousands of students who are discovering events, connecting with clubs, and making the most of their campus experience.
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="authPage.html" class="bg-white text-primary-700 hover:bg-blue-100 dark:bg-blue-100 dark:text-blue-800 dark:hover:bg-white px-8 py-3 rounded-lg font-medium text-lg transition-colors">
-                        Sign Up Now
-                    </a>
-                    <a href="#" class="bg-transparent border-2 border-white hover:bg-white hover:text-primary-700 dark:border-blue-200 dark:hover:bg-blue-100 dark:hover:text-blue-800 px-8 py-3 rounded-lg font-medium text-lg transition-colors">
-                        Learn More
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="bg-gray-800 text-white pt-12 pb-8">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div>
-                        <h3 class="text-lg font-semibold mb-4">CampusHub</h3>
-                        <p class="text-gray-400">Your one-stop platform for campus events, clubs, and student organizations.</p>
-                        <div class="flex space-x-4 mt-4">
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
-                        <ul class="space-y-2">
-                            <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
-                            <li><a href="events.html" class="text-gray-400 hover:text-white transition-colors">Events</a></li>
-                            <li><a href="clubs.html" class="text-gray-400 hover:text-white transition-colors">Clubs</a></li>
-                            <li><a href="#announcements" class="text-gray-400 hover:text-white transition-colors">Announcements</a></li>
-                            <li><a href="authPage.html" class="text-gray-400 hover:text-white transition-colors">Profile</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold mb-4">Resources</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Help Center</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
-                        <p class="text-gray-400 mb-4">Subscribe to get updates on upcoming events and club activities.</p>
-                        <form class="flex">
-                            <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-lg focus:outline-none text-gray-800 w-full">
-                            <button type="submit" class="bg-primary-600 hover:bg-primary-700 px-4 py-2 rounded-r-lg transition-colors">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                    <p>&copy; 2025 CampusHub. All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
+<!-- Call to Action -->
+<section class="py-16 bg-blue-600 text-white dark:bg-blue-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold mb-6">Ready to Get Involved?</h2>
+        <p class="text-xl mb-8 max-w-3xl mx-auto">
+            Join thousands of students who are discovering events, connecting with clubs, and making the most of their campus experience.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <a href="authPage.html" class="bg-white text-blue-700 hover:bg-blue-100 dark:bg-blue-100 dark:text-blue-800 dark:hover:bg-white px-8 py-3 rounded-lg font-medium text-lg transition-colors">
+                Sign Up Now
+            </a>
+            <a href="#" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-700 dark:border-blue-200 dark:hover:bg-blue-100 dark:hover:text-blue-800 px-8 py-3 rounded-lg font-medium text-lg transition-colors">
+                Learn More
+            </a>
+        </div>
     </div>
+</section>
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">CampusHub</h3>
+                    <p class="text-gray-400">Your one-stop platform for campus events, clubs, and student organizations.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="events.html" class="text-gray-400 hover:text-white transition-colors">Events</a></li>
+                        <li><a href="clubs.html" class="text-gray-400 hover:text-white transition-colors">Clubs</a></li>
+                        <li><a href="#announcements" class="text-gray-400 hover:text-white transition-colors">Announcements</a></li>
+                        <li><a href="authPage.html" class="text-gray-400 hover:text-white transition-colors">Profile</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Subscribe to get updates on upcoming events and club activities.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-lg focus:outline-none text-gray-800 w-full">
+                        <button type="submit" class="bg-primary-600 hover:bg-primary-700 px-4 py-2 rounded-r-lg transition-colors">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 CampusHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // Mark page as loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            document.documentElement.classList.add('loaded');
-        });
-
         // Load navbar
         fetch('navbar.html')
             .then(response => response.text())
@@ -677,9 +1073,6 @@
                 const script = document.createElement('script');
                 script.src = 'navbar.js';
                 document.body.appendChild(script);
-            })
-            .catch(error => {
-                console.error('Error loading navbar:', error);
             });
 
         // Toast notification function
