@@ -1,18 +1,24 @@
 // Theme Toggle Functionality
 const initTheme = () => {
     const themeToggleBtns = document.querySelectorAll('[data-theme-toggle]');
+    // Check for saved theme preference or use system preference
     const currentTheme = localStorage.getItem('theme') || 
                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
-    // Apply the current theme
+    // Apply the current theme to the document
     document.documentElement.classList.toggle('dark', currentTheme === 'dark');
 
-    // Update toggle button icons
-    themeToggleBtns.forEach(btn => {
+    // Update all toggle button icons
+    updateThemeToggleIcons(currentTheme);
+};
+
+// Update all theme toggle button icons
+const updateThemeToggleIcons = (theme) => {
+    document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
         const iconDark = btn.querySelector('[data-icon-dark]');
         const iconLight = btn.querySelector('[data-icon-light]');
         
-        if (currentTheme === 'dark') {
+        if (theme === 'dark') {
             iconDark?.classList.add('hidden');
             iconLight?.classList.remove('hidden');
         } else {
@@ -32,42 +38,38 @@ const setupThemeToggles = () => {
             // Update localStorage
             localStorage.setItem('theme', newTheme);
             
-            // Toggle the dark class
+            // Toggle the dark class on the document element
             document.documentElement.classList.toggle('dark', !isDark);
             
             // Update all toggle buttons
-            document.querySelectorAll('[data-theme-toggle]').forEach(toggleBtn => {
-                const iconDark = toggleBtn.querySelector('[data-icon-dark]');
-                const iconLight = toggleBtn.querySelector('[data-icon-light]');
-                
-                if (isDark) {
-                    iconDark?.classList.remove('hidden');
-                    iconLight?.classList.add('hidden');
-                } else {
-                    iconDark?.classList.add('hidden');
-                    iconLight?.classList.remove('hidden');
-                }
-            });
+            updateThemeToggleIcons(newTheme);
         });
     });
 };
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-    setupThemeToggles();
-    
-    // Mobile menu toggle
+// Mobile menu functionality
+const setupMobileMenu = () => {
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     
     if (mobileMenuButton && mobileMenu) {
         mobileMenuButton.addEventListener('click', () => {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
             mobileMenu.classList.toggle('hidden');
+            
+            // Update icon
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
         });
     }
-    
-    // Active link highlighting
+};
+
+// Active link highlighting
+const highlightActiveLink = () => {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav-link, .nav-link-mobile').forEach(link => {
         if (link.getAttribute('href') === currentPage) {
@@ -77,25 +79,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-300');
             }
             if (link.classList.contains('nav-link-mobile')) {
-                link.classList.add('bg-primary-50', 'border-primary-500', 'text-primary-700');
+                link.classList.add('bg-primary-50', 'dark:bg-gray-700', 'border-primary-500', 'text-primary-700', 'dark:text-primary-300');
             }
         }
     });
-    
-    // Auth button functionality
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    document.querySelectorAll('[data-auth-button]').forEach(btn => {
-        btn.classList.toggle('hidden', isLoggedIn);
-    });
-    document.querySelectorAll('[data-logout-button]').forEach(btn => {
-        btn.classList.toggle('hidden', !isLoggedIn);
-    });
-    
-    // Logout functionality
-    document.querySelectorAll('[data-logout-button]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            localStorage.setItem('isLoggedIn', 'false');
-            window.location.reload();
-        });
-    });
+};
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    setupThemeToggles();
+    setupMobileMenu();
+    highlightActiveLink();
+});
+
+// Listen for system theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem('theme')) { // Only if user hasn't set a preference
+        const newTheme = e.matches ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', newTheme === 'dark');
+        updateThemeToggleIcons(newTheme);
+    }
 });

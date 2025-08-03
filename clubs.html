@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Events & Clubs Hub - Events</title>
+    <title>Campus Events & Clubs Hub - Clubs</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -50,10 +50,61 @@
             }
         }
     </script>
+    <style>
+        .club-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .club-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .dark .club-card {
+            background-color: #1e293b;
+            color: #f8fafc;
+        }
+        .dark .club-card h3 {
+            color: #f8fafc;
+        }
+        .dark .club-card p {
+            color: #cbd5e1;
+        }
+        .dark .tag {
+            background-color: #334155;
+            color: #e2e8f0;
+        }
+        .dark .tag:hover {
+            background-color: #475569;
+        }
+        .password-strength-bar {
+            height: 4px;
+            width: 0;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        .role-tooltip {
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1e293b;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+            margin-bottom: 10px;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .role-option:hover .role-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
 </head>
 <body class="font-sans bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
     <!-- Header Section -->
-    <!-- Navigation -->
     <nav class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -63,9 +114,9 @@
                         <span class="text-xl font-heading font-bold text-gray-800 dark:text-white">CampusHub</span>
                     </div>
                     <div class="hidden md:ml-6 md:flex md:space-x-8">
-                        <a href="index.html" class="border-primary-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Home</a>
+                        <a href="index.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Home</a>
                         <a href="events.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Events</a>
-                        <a href="clubs.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Clubs</a>
+                        <a href="clubs.html" class="border-primary-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Clubs</a>
                         <a href="#announcements" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Announcements</a>
                         <a href="authPage.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Profile</a>
                     </div>
@@ -90,9 +141,9 @@
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-lg">
             <div class="pt-2 pb-3 space-y-1">
-                <a href="index.html" class="bg-primary-50 border-primary-500 text-primary-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Home</a>
+                <a href="index.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Home</a>
                 <a href="events.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Events</a>
-                <a href="clubs.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Clubs</a>
+                <a href="clubs.html" class="bg-primary-50 border-primary-500 text-primary-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Clubs</a>
                 <a href="#announcements" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Announcements</a>
                 <a href="authPage.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Profile</a>
                 <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
@@ -108,352 +159,17 @@
         </div>
     </nav>
 
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75 dark:bg-gray-900 dark:opacity-90"></div>
-            </div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="px-6 py-4">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="auth-modal-title">Login to CampusHub</h3>
-                        <button onclick="toggleAuthModal()" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="p-8">
-                    <div class="flex justify-center space-x-8 mb-8">
-                        <button id="loginToggle" class="text-lg font-medium text-gray-800 toggle-forms active">Login</button>
-                        <button id="registerToggle" class="text-lg font-medium text-gray-800 toggle-forms">Register</button>
-                    </div>
-                    <!-- Login Form -->
-                    <form id="loginForm" class="space-y-5">
-                        <div class="input-group">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" id="loginEmail" placeholder="Email Address" class="form-input pl-12" required>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="loginPassword" placeholder="Password" class="form-input pl-12" required>
-                            <i class="fas fa-eye password-toggle" id="toggleLoginPassword"></i>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <input type="checkbox" id="rememberMe" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600">
-                                <label for="rememberMe" class="ml-2 block text-sm text-gray-717 dark:text-gray-300">Remember me</label>
-                            </div>
-                            <a href="#" class="text-sm text-primary-600 hover:text-primary-800">Forgot password?</a>
-                        </div>
-                        <div>
-                            <label for="loginRole" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Role</label>
-                            <select id="loginRole" class="form-input">
-                                <option value="student">Student</option>
-                                <option value="club-rep">Club Representative</option>
-                                <option value="admin">Administrator</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn-primary w-full flex items-center justify-center">
-                            <span id="loginBtnText">Login</span>
-                            <i class="fas fa-spinner loading hidden ml-2"></i>
-                        </button>
-                        <div class="flex items-center justify-center space-x-4 my-4">
-                            <div class="h-px bg-gray-300 flex-1"></div>
-                            <span class="text-gray-500 text-sm">OR</span>
-                            <div class="h-px bg-gray-300 flex-1"></div>
-                        </div>
-                        <button type="button" class="btn-secondary w-full flex items-center justify-center">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo" class="w-5 h-5 mr-2">
-                            Continue with Google
-                        </button>
-                    </form>
-                    <!-- Register Form -->
-                    <form id="registerForm" class="space-y-5 hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
-                                <input type="text" id="firstName" placeholder="John" class="form-input" required>
-                            </div>
-                            <div>
-                                <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
-                                <input type="text" id="lastName" placeholder="Doe" class="form-input" required>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="registerEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
-                            <div class="input-group">
-                                <i class="fas fa-envelope"></i>
-                                <input type="email" id="registerEmail" placeholder="student@university.edu" class="form-input pl-12" required>
-                            </div>
-                            <p id="emailError" class="text-xs text-red-500 mt-1 hidden">Please enter a valid email address</p>
-                        </div>
-                        <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
-                            <div class="input-group">
-                                <i class="fas fa-phone"></i>
-                                <input type="tel" id="phone" placeholder="+1 (555) 123-4567" class="form-input pl-12">
-                            </div>
-                        </div>
-                        <div>
-                            <label for="registerPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-                            <div class="input-group">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" id="registerPassword" placeholder="Create a password" class="form-input pl-12" required>
-                                <i class="fas fa-eye password-toggle" id="toggleRegisterPassword"></i>
-                            </div>
-                            <div class="password-strength">
-                                <div class="password-strength-bar" id="passwordStrengthBar"></div>
-                            </div>
-                            <p id="passwordError" class="text-xs text-red-500 mt-1 hidden">Password must be at least 8 characters</p>
-                        </div>
-                        <div>
-                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
-                            <div class="input-group">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" id="confirmPassword" placeholder="Confirm your password" class="form-input pl-12" required>
-                            </div>
-                            <p id="confirmPasswordError" class="text-xs text-red-500 mt-1 hidden">Passwords do not match</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select Your Role</label>
-                            <div class="grid grid-cols-3 gap-2">
-                                <div class="relative">
-                                    <input type="radio" id="studentRole" name="role" value="student" class="hidden peer" checked>
-                                    <label for="studentRole" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 transition duration-200 role-option">
-                                        <i class="fas fa-user-graduate text-2xl text-primary-600 mb-2"></i>
-                                        <span class="text-sm font-medium">Student</span>
-                                        <div class="role-tooltip">
-                                            <p>For regular students to access campus events and resources</p>
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="relative">
-                                    <input type="radio" id="clubRole" name="role" value="club-rep" class="hidden peer">
-                                    <label for="clubRole" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 transition duration-200 role-option">
-                                        <i class="fas fa-users text-2xl text-primary-600 mb-2"></i>
-                                        <span class="text-sm font-medium">Club Rep</span>
-                                        <div class="role-tooltip">
-                                            <p>For club representatives to manage events and members</p>
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="relative">
-                                    <input type="radio" id="adminRole" name="role" value="admin" class="hidden peer">
-                                    <label for="adminRole" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 transition duration-200 role-option">
-                                        <i class="fas fa-user-shield text-2xl text-primary-600 mb-2"></i>
-                                        <span class="text-sm font-medium">Admin</span>
-                                        <div class="role-tooltip">
-                                            <p>For platform administrators to manage the entire system</p>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="clubFields" class="space-y-4 hidden">
-                            <div>
-                                <label for="clubName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Club Name</label>
-                                <input type="text" id="clubName" placeholder="Enter your club name" class="form-input">
-                            </div>
-                            <div>
-                                <label for="clubCode" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Club Access Code <span class="text-gray-500">(optional)</span></label>
-                                <input type="text" id="clubCode" placeholder="If provided by admin" class="form-input">
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                                <input type="checkbox" id="terms" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" required>
-                            </div>
-                            <div class="ml-3 text-sm">
-                                <label for="terms" class="text-gray-700 dark:text-gray-300">I agree to the <a href="#" class="text-primary-600 hover:text-primary-800">Terms & Conditions</a> and <a href="#" class="text-primary-600 hover:text-primary-800">Privacy Policy</a></label>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-primary w-full flex items-center justify-center">
-                            <span id="registerBtnText">Create Account</span>
-                            <i class="fas fa-spinner loading hidden ml-2"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Conditional Content: Admin Dashboard or Public Site -->
-    <div id="app-container">
-        <!-- Admin Dashboard -->
-        <div id="admin-dashboard" class="hidden flex h-screen overflow-hidden">
-            <!-- Sidebar Navigation -->
-            <nav class="sidebar w-64 shadow-2xl flex flex-col z-50 bg-white dark:bg-gray-800" id="sidebar">
-                <!-- Logo Section -->
-                <div class="p-6 flex items-center space-x-3 border-b border-gray-200/20">
-                    <div class="gradient-bg text-white p-3 rounded-xl shadow-lg">
-                        <i class="fas fa-calendar-alt text-xl"></i>
-                    </div>
-                    <div class="logo-text transition-all duration-300">
-                        <h2 class="font-bold text-xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">CampusHub</h2>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Admin Panel</p>
-                    </div>
-                </div>
-                
-                <!-- User Profile Section -->
-                <div class="p-4 border-b border-gray-200/20">
-                    <div class="flex items-center space-x-3">
-                        <div class="relative">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="h-10 w-10 rounded-full ring-2 ring-indigo-500">
-                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                        </div>
-                        <div class="nav-text transition-all duration-300">
-                            <p class="font-medium text-sm text-gray-900 dark:text-white" id="userName">Sarah Johnson</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Super Admin</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Navigation Menu -->
-                <div class="flex-1 overflow-y-auto py-4">
-                    <div class="px-4 space-y-2">
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl active" data-page="dashboard">
-                            <i class="fas fa-tachometer-alt text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Dashboard</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="events">
-                            <i class="fas fa-calendar-day text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Manage Events</span>
-                            <span class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1" id="pendingEventsCount">12</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="clubs">
-                            <i class="fas fa-users text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Manage Clubs</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="announcements">
-                            <i class="fas fa-bullhorn text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Announcements</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="users">
-                            <i class="fas fa-user-cog text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">User Management</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="chat">
-                            <i class="fas fa-comments text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Club Chat Monitor</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="rsvp">
-                            <i class="fas fa-envelope text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">RSVP & Email Logs</span>
-                        </a>
-                    </div>
-                    
-                    <!-- Settings Section -->
-                    <div class="px-4 mt-8 space-y-2">
-                        <div class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">Settings</div>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="settings">
-                            <i class="fas fa-cog text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Settings</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="help">
-                            <i class="fas fa-question-circle text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Help & Support</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Logout Section -->
-                <div class="p-4 border-t border-gray-200/20">
-                    <button id="logoutBtn" class="nav-item flex items-center space-x-3 p-3 rounded-xl w-full text-left hover:bg-red-50 hover:text-red-600 transition-all duration-300 dark:hover:bg-red-900">
-                        <i class="fas fa-sign-out-alt text-lg text-gray-600 dark:text-gray-300"></i>
-                        <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Logout</span>
-                    </button>
-                </div>
-            </nav>
-            
-            <!-- Main Content -->
-            <div class="main-content flex-1 overflow-y-auto transition-all duration-300">
-                <!-- Top Navigation -->
-                <header class="card m-4 rounded-2xl shadow-lg bg-white dark:bg-gray-800">
-                    <div class="py-4 px-6 flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <button id="sidebarToggle" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none lg:hidden transition-colors">
-                                <i class="fas fa-bars text-xl"></i>
-                            </button>
-                            <button id="collapseSidebarBtn" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hidden lg:block transition-colors">
-                                <i class="fas fa-angle-double-left text-xl"></i>
-                            </button>
-                            <div>
-                                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent" id="pageTitle">Dashboard Overview</h1>
-                                <p class="text-sm text-gray-500 dark:text-gray-400" id="pageSubtitle">Welcome back! Here's what's happening today.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center space-x-4">
-                            <!-- Search Bar -->
-                            <div class="relative hidden md:block">
-                                <input type="text" id="searchInput" placeholder="Search events, clubs, users..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all w-64 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
-                                <i class="fas fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
-                            </div>
-                            
-                            <!-- Notifications -->
-                            <div class="relative">
-                                <button id="notificationBtn" class="relative p-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                                    <i class="fas fa-bell text-xl"></i>
-                                    <span class="notification-dot absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="notificationCount">3</span>
-                                </button>
-                                
-                                <!-- Notification Dropdown -->
-                                <div id="notificationDropdown" class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-600 py-2 z-50 opacity-0 invisible transition-all duration-300">
-                                    <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">
-                                        <h3 class="font-semibold text-gray-800 dark:text-white">Notifications</h3>
-                                    </div>
-                                    <div class="max-h-64 overflow-y-auto" id="notificationList">
-                                        <!-- Notifications will be populated here -->
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Profile Dropdown -->
-                            <div class="relative">
-                                <button id="profileBtn" class="flex items-center space-x-2 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="h-8 w-8 rounded-full ring-2 ring-indigo-500">
-                                    <span class="font-medium hidden md:block text-gray-800 dark:text-gray-100">Sarah Johnson</span>
-                                    <i class="fas fa-chevron-down text-sm text-gray-500 dark:text-gray-400"></i>
-                                </button>
-                                
-                                <!-- Profile Dropdown -->
-                                <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-600 py-2 z-50 opacity-0 invisible transition-all duration-300">
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <i class="fas fa-user mr-2"></i>Profile
-                                    </a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <i class="fas fa-cog mr-2"></i>Settings
-                                    </a>
-                                    <div class="border-t border-gray-200 dark:border-gray-600 my-1"></div>
-                                    <button id="logoutBtn2" class="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition-colors">
-                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </header>
-                
-                <!-- Page Content -->
-                <main class="p-4" id="pageContent">
-                    <!-- Dynamic content will be loaded here -->
-                </main>
-            </div>
-        </div>
-
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8" role="main">
         <!-- Page Title and Filters -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div class="mb-4 md:mb-0">
-                <h1 class="text-3xl font-bold text-gray-800">Student Clubs Directory</h1>
-                <p class="text-gray-600">Find and join student organizations that match your interests</p>
+                <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Student Clubs Directory</h1>
+                <p class="text-gray-600 dark:text-gray-300">Find and join student organizations that match your interests</p>
             </div>
             <div class="flex flex-wrap gap-3">
                 <div class="relative">
-                    <select id="categoryFilter" class="appearance-none bg-white border border-gray-300 rounded-full px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm" aria-label="Filter by category">
+                    <select id="categoryFilter" class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm text-gray-800 dark:text-gray-100" aria-label="Filter by category">
                         <option value="all">All Categories</option>
                         <option value="Academic">Academic</option>
                         <option value="Cultural">Cultural</option>
@@ -463,12 +179,12 @@
                         <option value="Service">Service</option>
                         <option value="Business">Business</option>
                     </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
                         <i class="fas fa-chevron-down text-xs"></i>
                     </div>
                 </div>
                 <div class="relative">
-                    <select id="tagFilter" class="appearance-none bg-white border border-gray-300 rounded-full px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm" aria-label="Filter by tag">
+                    <select id="tagFilter" class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm text-gray-800 dark:text-gray-100" aria-label="Filter by tag">
                         <option value="all">All Tags</option>
                         <option value="Tech">Tech</option>
                         <option value="Coding">Coding</option>
@@ -493,25 +209,33 @@
                         <option value="Music">Music</option>
                         <option value="Performance">Performance</option>
                     </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
                         <i class="fas fa-chevron-down text-xs"></i>
                     </div>
                 </div>
                 <div class="relative">
-                    <select id="sortBy" class="appearance-none bg-white border border-gray-300 rounded-full px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm" aria-label="Sort clubs">
+                    <select id="sortBy" class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm text-gray-800 dark:text-gray-100" aria-label="Sort clubs">
                         <option value="name-asc">Sort: A-Z</option>
                         <option value="name-desc">Sort: Z-A</option>
                         <option value="members-asc">Members: Low to High</option>
                         <option value="members-desc">Members: High to Low</option>
                     </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
                         <i class="fas fa-chevron-down text-xs"></i>
                     </div>
                 </div>
-                <button id="toggleView" class="bg-white border border-gray-300 rounded-full px-4 py-2 focus:outline-none hover:bg-gray-50 transition" aria-label="Toggle list view">
-                    <i class="fas fa-list text-indigo-600"></i>
-                    <span class="ml-2 text-sm hidden md:inline">List View</span>
+                <button id="toggleView" class="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full px-4 py-2 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-600 transition" aria-label="Toggle list view">
+                    <i class="fas fa-list text-primary-600 dark:text-primary-400"></i>
+                    <span class="ml-2 text-sm hidden md:inline dark:text-gray-100">List View</span>
                 </button>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="mb-8">
+            <div class="relative max-w-md">
+                <input type="text" id="clubSearch" placeholder="Search clubs..." class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+                <i class="fas fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
             </div>
         </div>
 
@@ -522,33 +246,33 @@
 
         <!-- No Clubs Found Message -->
         <div id="noClubsMessage" class="hidden text-center py-12">
-            <i class="fas fa-users-slash text-5xl text-gray-300 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-700 mb-2">No clubs found</h3>
-            <p class="text-gray-500 mb-4">Try adjusting your search or filters</p>
-            <button id="resetFilters" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition" aria-label="Reset filters">Reset filters</button>
+            <i class="fas fa-users-slash text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">No clubs found</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-4">Try adjusting your search or filters</p>
+            <button id="resetFilters" class="bg-primary-600 text-white px-6 py-2 rounded-full hover:bg-primary-700 transition" aria-label="Reset filters">Reset filters</button>
         </div>
     </main>
 
     <!-- Club Details Modal -->
     <div id="clubModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none transition" role="dialog" aria-modal="true" aria-labelledby="clubModalTitle">
-        <div class="modal-content bg-white rounded-xl w-full max-w-4xl mx-4 overflow-hidden transform transition">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-xl w-full max-w-4xl mx-4 overflow-hidden transform transition max-h-[90vh] overflow-y-auto">
             <!-- Modal content will be inserted here by JavaScript -->
         </div>
     </div>
 
     <!-- Join Confirmation Modal -->
     <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none transition" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
-        <div class="bg-white rounded-xl w-full max-w-md mx-4 p-6 transform transition">
+        <div class="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md mx-4 p-6 transform transition">
             <div class="flex justify-between items-center mb-4">
-                <h3 id="confirmModalTitle" class="text-xl font-semibold text-gray-800">Join Club</h3>
-                <button id="closeConfirmModal" class="text-gray-500 hover:text-gray-700" aria-label="Close confirmation modal">
+                <h3 id="confirmModalTitle" class="text-xl font-semibold text-gray-800 dark:text-white">Join Club</h3>
+                <button id="closeConfirmModal" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" aria-label="Close confirmation modal">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <p class="text-gray-600 mb-6" id="confirmMessage">Are you sure you want to join this club?</p>
+            <p class="text-gray-600 dark:text-gray-300 mb-6" id="confirmMessage">Are you sure you want to join this club?</p>
             <div class="flex justify-end space-x-3">
-                <button id="cancelJoin" class="px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Cancel join">Cancel</button>
-                <button id="confirmJoin" class="px-4 py-2 rounded-full bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 transition" aria-label="Confirm join">Join Club</button>
+                <button id="cancelJoin" class="px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition" aria-label="Cancel join">Cancel</button>
+                <button id="confirmJoin" class="px-4 py-2 rounded-full bg-primary-600 text-sm font-medium text-white hover:bg-primary-700 transition" aria-label="Confirm join">Join Club</button>
             </div>
         </div>
     </div>
@@ -793,8 +517,10 @@
         const cancelJoin = document.getElementById('cancelJoin');
         const confirmJoin = document.getElementById('confirmJoin');
         const confirmMessage = document.getElementById('confirmMessage');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
 
         // Current club being processed for join action
         let currentClubId = null;
@@ -803,20 +529,38 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderClubs();
             setupEventListeners();
+            initDarkMode();
         });
+
+        // Initialize dark mode based on user preference
+        function initDarkMode() {
+            const isDark = localStorage.getItem('darkMode') === 'true' || 
+                          (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', isDark);
+        }
 
         // Toggle mobile menu
         function toggleMobileMenu() {
-            if (mobileMenu.classList.contains('hidden')) {
-                mobileMenu.classList.remove('hidden');
-                mobileMenu.classList.remove('translate-y-full');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-times text-xl"></i>';
-                mobileMenuBtn.setAttribute('aria-label', 'Close mobile menu');
+            mobileMenu.classList.toggle('hidden');
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            
+            if (isOpen) {
+                mobileMenuButton.innerHTML = '<i class="fas fa-times text-xl"></i>';
+                mobileMenuButton.setAttribute('aria-expanded', 'true');
             } else {
-                mobileMenu.classList.add('hidden');
-                mobileMenu.classList.add('translate-y-full');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
-                mobileMenuBtn.setAttribute('aria-label', 'Toggle mobile menu');
+                mobileMenuButton.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
             }
         }
 
@@ -833,27 +577,27 @@
             
             filteredClubs.forEach(club => {
                 const clubCard = document.createElement('div');
-                clubCard.className = 'club-card bg-white rounded-xl shadow-sm overflow-hidden transition duration-300 hover:cursor-pointer';
+                clubCard.className = 'club-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden transition duration-300 hover:cursor-pointer';
                 clubCard.setAttribute('role', 'article');
                 clubCard.setAttribute('aria-labelledby', `club-title-${club.id}`);
                 clubCard.innerHTML = `
                     <div class="h-48 overflow-hidden relative">
                         <img src="${club.logo}" alt="${club.name} logo" class="w-full h-full object-cover">
-                        <span class="absolute top-2 right-2 bg-white text-xs font-medium px-2 py-1 rounded-full">${club.category}</span>
+                        <span class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs font-medium px-2 py-1 rounded-full">${club.category}</span>
                     </div>
                     <div class="p-5">
-                        <h3 id="club-title-${club.id}" class="text-lg font-semibold text-gray-800 mb-2">${club.name}</h3>
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">${club.shortDescription}</p>
+                        <h3 id="club-title-${club.id}" class="text-lg font-semibold text-gray-800 dark:text-white mb-2">${club.name}</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">${club.shortDescription}</p>
                         <div class="flex flex-wrap gap-2 mb-4">
-                            ${club.tags.map(tag => `<span class="tag text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full hover:bg-gray-200 transition">#${tag}</span>`).join('')}
+                            ${club.tags.map(tag => `<span class="tag text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">#${tag}</span>`).join('')}
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-500"><i class="fas fa-users mr-1" aria-hidden="true"></i> ${club.members} members</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-400"><i class="fas fa-users mr-1" aria-hidden="true"></i> ${club.members} members</span>
                             <div class="flex space-x-2">
-                                <button data-club-id="${club.id}" class="view-more-btn px-3 py-1 rounded-full border border-gray-300 text-xs font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="View more about ${club.name}">
+                                <button data-club-id="${club.id}" class="view-more-btn px-3 py-1 rounded-full border border-gray-300 dark:border-gray-600 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition" aria-label="View more about ${club.name}">
                                     View More
                                 </button>
-                                <button data-club-id="${club.id}" class="join-btn px-3 py-1 rounded-full text-xs font-medium ${membershipStatus[club.id] ? 'bg-green-100 text-green-800' : 'bg-indigo-600 text-white'} hover:${membershipStatus[club.id] ? 'bg-green-200' : 'bg-indigo-700'} transition" aria-label="${membershipStatus[club.id] ? 'Leave' : 'Join'} ${club.name}">
+                                <button data-club-id="${club.id}" class="join-btn px-3 py-1 rounded-full text-xs font-medium ${membershipStatus[club.id] ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-800' : 'bg-primary-600 text-white hover:bg-primary-700'} transition" aria-label="${membershipStatus[club.id] ? 'Leave' : 'Join'} ${club.name}">
                                     ${membershipStatus[club.id] ? '<i class="fas fa-check-circle mr-1" aria-hidden="true"></i>Joined' : '<i class="fas fa-user-plus mr-1" aria-hidden="true"></i>Join'}
                                 </button>
                             </div>
@@ -888,7 +632,7 @@
                 const matchesSearch = 
                     club.name.toLowerCase().includes(searchTerm) ||
                     club.shortDescription.toLowerCase().includes(searchTerm) ||
-                    club.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                    club.tags.some(t => t.toLowerCase().includes(searchTerm));
                 
                 const matchesCategory = category === 'all' || club.category === category;
                 const matchesTag = tag === 'all' || club.tags.includes(tag);
@@ -924,7 +668,7 @@
             sortBy.addEventListener('change', filterAndSortClubs);
             
             // Mobile menu toggle
-            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            mobileMenuButton.addEventListener('click', toggleMobileMenu);
             
             // Reset filters
             resetFilters.addEventListener('click', () => {
@@ -954,6 +698,19 @@
                 toggleMembership(currentClubId);
                 closeConfirmModalFunc();
             });
+            
+            // Theme toggles
+            themeToggle.addEventListener('click', toggleDarkMode);
+            themeToggleMobile.addEventListener('click', toggleDarkMode);
+            
+            // Tag click event delegation
+            clubsGridView.addEventListener('click', (e) => {
+                if (e.target.classList.contains('tag')) {
+                    const tagText = e.target.textContent.replace('#', '');
+                    tagFilter.value = tagText;
+                    filterAndSortClubs();
+                }
+            });
         }
 
         // Show join confirmation modal
@@ -964,22 +721,25 @@
             if (isMember) {
                 confirmMessage.textContent = `Are you sure you want to leave ${clubName}?`;
                 confirmJoin.textContent = 'Leave Club';
+                confirmJoin.className = 'px-4 py-2 rounded-full bg-red-600 text-sm font-medium text-white hover:bg-red-700 transition';
                 confirmJoin.setAttribute('aria-label', `Leave ${clubName}`);
             } else {
                 confirmMessage.textContent = `Are you sure you want to join ${clubName}?`;
                 confirmJoin.textContent = 'Join Club';
+                confirmJoin.className = 'px-4 py-2 rounded-full bg-primary-600 text-sm font-medium text-white hover:bg-primary-700 transition';
                 confirmJoin.setAttribute('aria-label', `Join ${clubName}`);
             }
             
             confirmModal.classList.remove('pointer-events-none');
-            confirmModal.classList.add('pointer-events-auto');
             confirmModal.classList.remove('opacity-0');
+            confirmModal.classList.add('pointer-events-auto');
         }
 
         // Close confirm modal
         function closeConfirmModalFunc() {
             confirmModal.classList.add('pointer-events-none');
             confirmModal.classList.add('opacity-0');
+            confirmModal.classList.remove('pointer-events-auto');
             currentClubId = null;
         }
 
@@ -1004,8 +764,8 @@
             
             modalContent.innerHTML = `
                 <div class="relative">
-                    <button id="closeModal" class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 z-10" aria-label="Close club details modal">
-                        <i class="fas fa-times text-gray-600" aria-hidden="true"></i>
+                    <button id="closeModal" class="absolute top-4 right-4 bg-white dark:bg-gray-700 rounded-full p-2 shadow-md hover:bg-gray-100 dark:hover:bg-gray-600 z-10 transition" aria-label="Close club details modal">
+                        <i class="fas fa-times text-gray-600 dark:text-gray-300" aria-hidden="true"></i>
                     </button>
                     <div class="h-48 sm:h-64 overflow-hidden">
                         <img src="${club.banner}" alt="${club.name} banner" class="w-full h-full object-cover">
@@ -1013,16 +773,16 @@
                     <div class="p-6">
                         <div class="flex flex-col sm:flex-row sm:items-center mb-6">
                             <div class="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
-                                <img src="${club.logo}" alt="${club.name} logo" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md">
+                                <img src="${club.logo}" alt="${club.name} logo" class="w-20 h-20 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-md">
                             </div>
                             <div>
-                                <h2 id="clubModalTitle" class="text-2xl font-bold text-gray-800 mb-1">${club.name}</h2>
+                                <h2 id="clubModalTitle" class="text-2xl font-bold text-gray-800 dark:text-white mb-1">${club.name}</h2>
                                 <div class="flex flex-wrap items-center gap-4">
-                                    <span class="flex items-center text-gray-600">
+                                    <span class="flex items-center text-gray-600 dark:text-gray-300">
                                         <i class="fas fa-tag mr-2" aria-hidden="true"></i>
                                         ${club.category}
                                     </span>
-                                    <span class="flex items-center text-gray-600">
+                                    <span class="flex items-center text-gray-600 dark:text-gray-300">
                                         <i class="fas fa-users mr-2" aria-hidden="true"></i>
                                         ${club.members} members
                                     </span>
@@ -1031,34 +791,34 @@
                         </div>
                         
                         <div class="mb-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2">About</h3>
-                            <p class="text-gray-600">${club.description}</p>
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">About</h3>
+                            <p class="text-gray-600 dark:text-gray-300">${club.description}</p>
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Upcoming Events</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Upcoming Events</h3>
                                 ${club.upcomingEvents.length > 0 ? 
                                     `<div class="space-y-2">
                                         ${club.upcomingEvents.map(event => `
-                                            <div class="bg-gray-50 rounded-lg p-3">
-                                                <p class="font-medium text-gray-800">${event.title}</p>
-                                                <p class="text-sm text-gray-600">${formatDate(event.date)} • ${event.time}</p>
+                                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                                                <p class="font-medium text-gray-800 dark:text-white">${event.title}</p>
+                                                <p class="text-sm text-gray-600 dark:text-gray-300">${formatDate(event.date)} • ${event.time}</p>
                                             </div>
                                         `).join('')}
                                     </div>` : 
-                                    '<p class="text-gray-500">No upcoming events scheduled</p>'}
+                                    '<p class="text-gray-500 dark:text-gray-400">No upcoming events scheduled</p>'}
                             </div>
                             
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Club Officers</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Club Officers</h3>
                                 <div class="space-y-3">
                                     ${club.officers.map(officer => `
                                         <div class="flex items-center">
                                             <img src="${officer.avatar}" alt="${officer.name}" class="w-10 h-10 rounded-full mr-3">
                                             <div>
-                                                <p class="font-medium text-gray-800">${officer.name}</p>
-                                                <p class="text-sm text-gray-600">${officer.role}</p>
+                                                <p class="font-medium text-gray-800 dark:text-white">${officer.name}</p>
+                                                <p class="text-sm text-gray-600 dark:text-gray-300">${officer.role}</p>
                                             </div>
                                         </div>
                                     `).join('')}
@@ -1068,10 +828,10 @@
                         
                         ${club.gallery && club.gallery.length > 0 ? `
                         <div class="mb-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-3">Gallery</h3>
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Gallery</h3>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                 ${club.gallery.map(image => `
-                                    <div class="gallery-item h-32 overflow-hidden rounded-lg hover:shadow-md">
+                                    <div class="gallery-item h-32 overflow-hidden rounded-lg hover:shadow-md dark:hover:shadow-gray-700">
                                         <img src="${image}" alt="Club gallery image" class="w-full h-full object-cover">
                                     </div>
                                 `).join('')}
@@ -1079,40 +839,40 @@
                         </div>` : ''}
                         
                         <div class="mb-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Connect With Us</h3>
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Connect With Us</h3>
                             <div class="flex flex-wrap gap-3">
                                 ${club.socials.instagram ? `
-                                    <a href="https://instagram.com/${club.socials.instagram.replace('@', '')}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Follow on Instagram">
+                                    <a href="https://instagram.com/${club.socials.instagram.replace('@', '')}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition" aria-label="Follow on Instagram" target="_blank" rel="noopener noreferrer">
                                         <i class="fab fa-instagram mr-2 text-pink-600" aria-hidden="true"></i> Instagram
                                     </a>` : ''}
                                 ${club.socials.facebook ? `
-                                    <a href="https://${club.socials.facebook}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Follow on Facebook">
+                                    <a href="https://${club.socials.facebook}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition" aria-label="Follow on Facebook" target="_blank" rel="noopener noreferrer">
                                         <i class="fab fa-facebook mr-2 text-blue-600" aria-hidden="true"></i> Facebook
                                     </a>` : ''}
                                 ${club.socials.twitter ? `
-                                    <a href="https://twitter.com/${club.socials.twitter.replace('@', '')}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Follow on Twitter">
+                                    <a href="https://twitter.com/${club.socials.twitter.replace('@', '')}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition" aria-label="Follow on Twitter" target="_blank" rel="noopener noreferrer">
                                         <i class="fab fa-twitter mr-2 text-blue-400" aria-hidden="true"></i> Twitter
                                     </a>` : ''}
                                 ${club.socials.linkedin ? `
-                                    <a href="https://${club.socials.linkedin}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Follow on LinkedIn">
+                                    <a href="https://${club.socials.linkedin}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition" aria-label="Follow on LinkedIn" target="_blank" rel="noopener noreferrer">
                                         <i class="fab fa-linkedin mr-2 text-blue-700" aria-hidden="true"></i> LinkedIn
                                     </a>` : ''}
                                 ${club.socials.youtube ? `
-                                    <a href="https://${club.socials.youtube}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Follow on YouTube">
+                                    <a href="https://${club.socials.youtube}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition" aria-label="Follow on YouTube" target="_blank" rel="noopener noreferrer">
                                         <i class="fab fa-youtube mr-2 text-red-600" aria-hidden="true"></i> YouTube
                                     </a>` : ''}
                                 ${club.socials.email ? `
-                                    <a href="mailto:${club.socials.email}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Contact via Email">
-                                        <i class="fas fa-envelope mr-2 text-gray-600" aria-hidden="true"></i> Email
+                                    <a href="mailto:${club.socials.email}" class="flex items-center px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition" aria-label="Contact via Email">
+                                        <i class="fas fa-envelope mr-2 text-gray-600 dark:text-gray-400" aria-hidden="true"></i> Email
                                     </a>` : ''}
                             </div>
                         </div>
                         
                         <div class="flex flex-wrap gap-3">
-                            <button data-club-id="${club.id}" class="join-modal-btn px-6 py-3 rounded-full text-sm font-medium ${membershipStatus[club.id] ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-indigo-600 text-white hover:bg-indigo-700'} transition flex items-center" aria-label="${membershipStatus[club.id] ? 'Leave' : 'Join'} ${club.name}">
+                            <button data-club-id="${club.id}" class="join-modal-btn px-6 py-3 rounded-full text-sm font-medium ${membershipStatus[club.id] ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-800' : 'bg-primary-600 text-white hover:bg-primary-700'} transition flex items-center" aria-label="${membershipStatus[club.id] ? 'Leave' : 'Join'} ${club.name}">
                                 ${membershipStatus[club.id] ? '<i class="fas fa-check-circle mr-2" aria-hidden="true"></i>Joined' : '<i class="fas fa-user-plus mr-2" aria-hidden="true"></i>Join Club'}
                             </button>
-                            <button class="px-6 py-3 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition flex items-center" aria-label="Share ${club.name}">
+                            <button class="px-6 py-3 rounded-full border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center" aria-label="Share ${club.name}">
                                 <i class="fas fa-share-alt mr-2" aria-hidden="true"></i> Share
                             </button>
                         </div>
@@ -1122,8 +882,8 @@
             
             // Show modal
             clubModal.classList.remove('pointer-events-none');
-            clubModal.classList.add('pointer-events-auto');
             clubModal.classList.remove('opacity-0');
+            clubModal.classList.add('pointer-events-auto');
             
             // Add event listeners to modal buttons
             document.getElementById('closeModal').addEventListener('click', closeClubModal);
@@ -1136,12 +896,22 @@
                     showJoinConfirmation(clubId, club.name);
                 });
             }
+            
+            // Add click event to gallery items to view larger
+            document.querySelectorAll('.gallery-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const imgSrc = this.querySelector('img').src;
+                    // You could implement a lightbox here for larger viewing
+                    window.open(imgSrc, '_blank');
+                });
+            });
         }
 
         // Close club modal
         function closeClubModal() {
             clubModal.classList.add('pointer-events-none');
             clubModal.classList.add('opacity-0');
+            clubModal.classList.remove('pointer-events-auto');
         }
 
         // Format date as "Month Day, Year"
