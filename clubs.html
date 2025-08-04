@@ -137,7 +137,7 @@
                 </div>
             </div>
         </div>
-        
+       
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-lg">
             <div class="pt-2 pb-3 space-y-1">
@@ -278,8 +278,18 @@
     </div>
 
     <script>
-        // Sample club data with updated dates for 2025
-        const clubs = [
+        // API Configuration
+        const API_BASE_URL = 'https://your-api-endpoint.com/api';
+        const API_ENDPOINTS = {
+            clubs: '/clubs',
+            joinClub: '/clubs/join',
+            leaveClub: '/clubs/leave',
+            userMemberships: '/user/memberships',
+            userProfile: '/user/profile'
+        };
+
+        // Mock Data (fallback)
+        const mockClubs = [
             {
                 id: 1,
                 name: "Tech Innovators",
@@ -495,15 +505,20 @@
             }
         ];
 
-        // Load membership status from localStorage or initialize empty
+        // User state
+        let user = {
+            id: null,
+            name: 'Guest',
+            email: null,
+            memberships: [],
+            profileComplete: false
+        };
+
+        // UI State
         let membershipStatus = JSON.parse(localStorage.getItem('membershipStatus')) || {};
+        let clubsData = [];
 
-        // Save membership status to localStorage
-        function saveMembershipStatus() {
-            localStorage.setItem('membershipStatus', JSON.stringify(membershipStatus));
-        }
-
-        // DOM elements
+        // DOM Elements
         const clubsGridView = document.getElementById('clubsGridView');
         const noClubsMessage = document.getElementById('noClubsMessage');
         const clubModal = document.getElementById('clubModal');
@@ -521,60 +536,240 @@
         const mobileMenu = document.getElementById('mobile-menu');
         const themeToggle = document.getElementById('theme-toggle');
         const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+        const authButton = document.getElementById('auth-button');
+        const logoutButton = document.getElementById('logout-button');
 
         // Current club being processed for join action
         let currentClubId = null;
 
         // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuthStatus();
+            await loadClubsData();
             renderClubs();
             setupEventListeners();
             initDarkMode();
         });
 
-        // Initialize dark mode based on user preference
-        function initDarkMode() {
-            const isDark = localStorage.getItem('darkMode') === 'true' || 
-                          (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
+        // Check authentication status
+        async function checkAuthStatus() {
+            try {
+                // Try to fetch from API
+                const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.userProfile}`, {
+                    credentials: 'include'
+                });
+               
+                if (response.ok) {
+                    const data = await response.json();
+                    user = {
+                        id: data.id,
+                        name: data.name,
+                        email: data.email,
+                        memberships: data.memberships || [],
+                        profileComplete: data.profileComplete
+                    };
+                   
+                    // Update UI for authenticated user
+                    authButton.classList.add('hidden');
+                    logoutButton.classList.remove('hidden');
+                   
+                    // Load memberships
+                    await loadUserMemberships();
+                    return;
+                }
+            } catch (error) {
+                console.error('Error checking auth status:', error);
+            }
+           
+            // Fallback to local storage if API fails
+            const localUser = JSON.parse(localStorage.getItem('user'));
+            if (localUser) {
+                user = {
+                    id: localUser.id,
+                    name: localUser.name,
+                    email: localUser.email,
+                    memberships: localUser.memberships || [],
+                    profileComplete: localUser.profileComplete
+                };
+               
+                // Load memberships from local storage
+                membershipStatus = user.memberships.reduce((acc, clubId) => {
+                    acc[clubId] = true;
+                    return acc;
+                }, {});
+               
+                saveMembershipStatus();
             }
         }
 
-        // Toggle dark mode
-        function toggleDarkMode() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('darkMode', isDark);
-        }
-
-        // Toggle mobile menu
-        function toggleMobileMenu() {
-            mobileMenu.classList.toggle('hidden');
-            const isOpen = !mobileMenu.classList.contains('hidden');
-            
-            if (isOpen) {
-                mobileMenuButton.innerHTML = '<i class="fas fa-times text-xl"></i>';
-                mobileMenuButton.setAttribute('aria-expanded', 'true');
-            } else {
-                mobileMenuButton.innerHTML = '<i class="fas fa-bars text-xl"></i>';
-                mobileMenuButton.setAttribute('aria-expanded', 'false');
+        // Load clubs data
+        async function loadClubsData() {
+            try {
+                // Try to fetch from API
+                const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.clubs}`);
+               
+                if (response.ok) {
+                    clubsData = await response.json();
+                    return;
+                }
+            } catch (error) {
+                console.error('Error loading clubs data:', error);
             }
+           
+            // Fallback to mock data
+            clubsData = mockClubs;
         }
 
-        // Render club cards
-        function renderClubs(filteredClubs = clubs) {
+        // Load user memberships
+        async function loadUserMemberships() {
+            if (!user.id) return;
+           
+            try {
+                // Try to fetch from API
+                const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.userMemberships}/${user.id}`, {
+                    credentials: 'include'
+                });
+               
+                if (response.ok) {
+                    const data = await response.json();
+                    user.memberships = data.memberships || [];
+                   
+                    // Update membership status
+                    membershipStatus = user.memberships.reduce((acc, clubId) => {
+                        acc[clubId] = true;
+                        return acc;
+                    }, {});
+                   
+                    saveMembershipStatus();
+                    return;
+                }
+            } catch (error) {
+                console.error('Error loading user memberships:', error);
+            }
+           
+            // Fallback to local storage
+            const localMemberships = JSON.parse(localStorage.getItem('userMemberships')) || [];
+            user.memberships = localMemberships;
+           
+            membershipStatus = localMemberships.reduce((acc, clubId) => {
+                acc[clubId] = true;
+                return acc;
+            }, {});
+           
+            saveMembershipStatus();
+        }
+
+        // Toggle membership (join/leave club)
+        async function toggleMembership(clubId) {
+            if (!user.id) {
+                alert('Please login to join clubs');
+                return;
+            }
+           
+            const isMember = membershipStatus[clubId];
+            const endpoint = isMember ? API_ENDPOINTS.leaveClub : API_ENDPOINTS.joinClub;
+           
+            try {
+                // Try to update via API
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        clubId: clubId
+                    }),
+                    credentials: 'include'
+                });
+               
+                if (response.ok) {
+                    // Update local state
+                    membershipStatus[clubId] = !isMember;
+                    const club = clubsData.find(c => c.id === clubId);
+                   
+                    if (membershipStatus[clubId]) {
+                        club.members += 1;
+                        user.memberships.push(clubId);
+                    } else {
+                        club.members = Math.max(club.members - 1, 0);
+                        user.memberships = user.memberships.filter(id => id !== clubId);
+                    }
+                   
+                    // Update profile in localStorage
+                    localStorage.setItem('user', JSON.stringify(user));
+                    localStorage.setItem('userMemberships', JSON.stringify(user.memberships));
+                    saveMembershipStatus();
+                   
+                    // Show success message
+                    const action = isMember ? 'left' : 'joined';
+                    showToast(`Successfully ${action} ${club.name}!`, 'success');
+                   
+                    // Update UI
+                    filterAndSortClubs();
+                    return;
+                }
+            } catch (error) {
+                console.error('Error updating membership:', error);
+            }
+           
+            // Fallback to local storage if API fails
+            membershipStatus[clubId] = !isMember;
+            const club = clubsData.find(c => c.id === clubId);
+           
+            if (membershipStatus[clubId]) {
+                club.members += 1;
+                user.memberships.push(clubId);
+            } else {
+                club.members = Math.max(club.members - 1, 0);
+                user.memberships = user.memberships.filter(id => id !== clubId);
+            }
+           
+            // Update profile in localStorage
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('userMemberships', JSON.stringify(user.memberships));
+            saveMembershipStatus();
+           
+            // Show success message
+            const action = isMember ? 'left' : 'joined';
+            showToast(`Successfully ${action} ${club.name}! (offline)`, 'success');
+           
+            // Update UI
+            filterAndSortClubs();
+        }
+
+        // Save membership status to localStorage
+        function saveMembershipStatus() {
+            localStorage.setItem('membershipStatus', JSON.stringify(membershipStatus));
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 px-4 py-3 rounded-md shadow-lg text-white ${
+                type === 'success' ? 'bg-green-500' :
+                type === 'error' ? 'bg-red-500' :
+                type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+            }`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+           
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Render clubs
+        function renderClubs(filteredClubs = clubsData) {
             clubsGridView.innerHTML = '';
-            
+           
             if (filteredClubs.length === 0) {
                 noClubsMessage.classList.remove('hidden');
                 return;
             } else {
                 noClubsMessage.classList.add('hidden');
             }
-            
+           
             filteredClubs.forEach(club => {
                 const clubCard = document.createElement('div');
                 clubCard.className = 'club-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden transition duration-300 hover:cursor-pointer';
@@ -604,19 +799,19 @@
                         </div>
                     </div>
                 `;
-                
+               
                 // Add click event to open modal
                 clubCard.querySelector('.view-more-btn').addEventListener('click', (e) => {
                     e.stopPropagation();
                     openClubModal(club);
                 });
-                
+               
                 // Add click event to join button
                 clubCard.querySelector('.join-btn').addEventListener('click', (e) => {
                     e.stopPropagation();
                     showJoinConfirmation(club.id, club.name);
                 });
-                
+               
                 clubsGridView.appendChild(clubCard);
             });
         }
@@ -627,19 +822,19 @@
             const category = categoryFilter.value;
             const tag = tagFilter.value;
             const sortOption = sortBy.value;
-            
-            let filteredClubs = clubs.filter(club => {
-                const matchesSearch = 
+           
+            let filteredClubs = clubsData.filter(club => {
+                const matchesSearch =
                     club.name.toLowerCase().includes(searchTerm) ||
                     club.shortDescription.toLowerCase().includes(searchTerm) ||
                     club.tags.some(t => t.toLowerCase().includes(searchTerm));
-                
+               
                 const matchesCategory = category === 'all' || club.category === category;
                 const matchesTag = tag === 'all' || club.tags.includes(tag);
-                
+               
                 return matchesSearch && matchesCategory && matchesTag;
             });
-            
+           
             // Sort clubs
             switch(sortOption) {
                 case 'name-asc':
@@ -655,7 +850,7 @@
                     filteredClubs.sort((a, b) => b.members - a.members);
                     break;
             }
-            
+           
             renderClubs(filteredClubs);
         }
 
@@ -666,10 +861,10 @@
             categoryFilter.addEventListener('change', filterAndSortClubs);
             tagFilter.addEventListener('change', filterAndSortClubs);
             sortBy.addEventListener('change', filterAndSortClubs);
-            
+           
             // Mobile menu toggle
             mobileMenuButton.addEventListener('click', toggleMobileMenu);
-            
+           
             // Reset filters
             resetFilters.addEventListener('click', () => {
                 clubSearch.value = '';
@@ -678,7 +873,7 @@
                 sortBy.value = 'name-asc';
                 filterAndSortClubs();
             });
-            
+           
             // Close modals when clicking outside
             window.addEventListener('click', (e) => {
                 if (e.target === clubModal) {
@@ -688,21 +883,21 @@
                     closeConfirmModalFunc();
                 }
             });
-            
+           
             // Close confirm modal buttons
             closeConfirmModal.addEventListener('click', closeConfirmModalFunc);
             cancelJoin.addEventListener('click', closeConfirmModalFunc);
-            
+           
             // Confirm join button
             confirmJoin.addEventListener('click', () => {
                 toggleMembership(currentClubId);
                 closeConfirmModalFunc();
             });
-            
+           
             // Theme toggles
             themeToggle.addEventListener('click', toggleDarkMode);
             themeToggleMobile.addEventListener('click', toggleDarkMode);
-            
+           
             // Tag click event delegation
             clubsGridView.addEventListener('click', (e) => {
                 if (e.target.classList.contains('tag')) {
@@ -717,7 +912,7 @@
         function showJoinConfirmation(clubId, clubName) {
             currentClubId = clubId;
             const isMember = membershipStatus[clubId];
-            
+           
             if (isMember) {
                 confirmMessage.textContent = `Are you sure you want to leave ${clubName}?`;
                 confirmJoin.textContent = 'Leave Club';
@@ -729,7 +924,7 @@
                 confirmJoin.className = 'px-4 py-2 rounded-full bg-primary-600 text-sm font-medium text-white hover:bg-primary-700 transition';
                 confirmJoin.setAttribute('aria-label', `Join ${clubName}`);
             }
-            
+           
             confirmModal.classList.remove('pointer-events-none');
             confirmModal.classList.remove('opacity-0');
             confirmModal.classList.add('pointer-events-auto');
@@ -743,25 +938,10 @@
             currentClubId = null;
         }
 
-        // Toggle membership status
-        function toggleMembership(clubId) {
-            membershipStatus[clubId] = !membershipStatus[clubId];
-            const club = clubs.find(c => c.id === clubId);
-            
-            if (membershipStatus[clubId]) {
-                club.members += 1;
-            } else {
-                club.members = Math.max(club.members - 1, 0);
-            }
-            
-            saveMembershipStatus();
-            filterAndSortClubs();
-        }
-
         // Open club modal
         function openClubModal(club) {
             const modalContent = document.querySelector('#clubModal .modal-content');
-            
+           
             modalContent.innerHTML = `
                 <div class="relative">
                     <button id="closeModal" class="absolute top-4 right-4 bg-white dark:bg-gray-700 rounded-full p-2 shadow-md hover:bg-gray-100 dark:hover:bg-gray-600 z-10 transition" aria-label="Close club details modal">
@@ -789,16 +969,16 @@
                                 </div>
                             </div>
                         </div>
-                        
+                       
                         <div class="mb-6">
                             <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">About</h3>
                             <p class="text-gray-600 dark:text-gray-300">${club.description}</p>
                         </div>
-                        
+                       
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Upcoming Events</h3>
-                                ${club.upcomingEvents.length > 0 ? 
+                                ${club.upcomingEvents.length > 0 ?
                                     `<div class="space-y-2">
                                         ${club.upcomingEvents.map(event => `
                                             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
@@ -806,10 +986,10 @@
                                                 <p class="text-sm text-gray-600 dark:text-gray-300">${formatDate(event.date)} • ${event.time}</p>
                                             </div>
                                         `).join('')}
-                                    </div>` : 
+                                    </div>` :
                                     '<p class="text-gray-500 dark:text-gray-400">No upcoming events scheduled</p>'}
                             </div>
-                            
+                           
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Club Officers</h3>
                                 <div class="space-y-3">
@@ -825,7 +1005,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+                       
                         ${club.gallery && club.gallery.length > 0 ? `
                         <div class="mb-6">
                             <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Gallery</h3>
@@ -837,7 +1017,7 @@
                                 `).join('')}
                             </div>
                         </div>` : ''}
-                        
+                       
                         <div class="mb-6">
                             <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Connect With Us</h3>
                             <div class="flex flex-wrap gap-3">
@@ -867,7 +1047,7 @@
                                     </a>` : ''}
                             </div>
                         </div>
-                        
+                       
                         <div class="flex flex-wrap gap-3">
                             <button data-club-id="${club.id}" class="join-modal-btn px-6 py-3 rounded-full text-sm font-medium ${membershipStatus[club.id] ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-800' : 'bg-primary-600 text-white hover:bg-primary-700'} transition flex items-center" aria-label="${membershipStatus[club.id] ? 'Leave' : 'Join'} ${club.name}">
                                 ${membershipStatus[club.id] ? '<i class="fas fa-check-circle mr-2" aria-hidden="true"></i>Joined' : '<i class="fas fa-user-plus mr-2" aria-hidden="true"></i>Join Club'}
@@ -879,24 +1059,24 @@
                     </div>
                 </div>
             `;
-            
+           
             // Show modal
             clubModal.classList.remove('pointer-events-none');
             clubModal.classList.remove('opacity-0');
             clubModal.classList.add('pointer-events-auto');
-            
+           
             // Add event listeners to modal buttons
             document.getElementById('closeModal').addEventListener('click', closeClubModal);
-            
+           
             const joinBtn = document.querySelector('.join-modal-btn');
             if (joinBtn) {
                 joinBtn.addEventListener('click', function() {
                     const clubId = parseInt(this.getAttribute('data-club-id'));
-                    const club = clubs.find(c => c.id === clubId);
+                    const club = clubsData.find(c => c.id === clubId);
                     showJoinConfirmation(clubId, club.name);
                 });
             }
-            
+           
             // Add click event to gallery items to view larger
             document.querySelectorAll('.gallery-item').forEach(item => {
                 item.addEventListener('click', function() {
@@ -914,10 +1094,48 @@
             clubModal.classList.remove('pointer-events-auto');
         }
 
+        // Initialize dark mode
+        function initDarkMode() {
+            const isDark = localStorage.getItem('darkMode') === 'true' ||
+                          (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+           
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', isDark);
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+            const isOpen = !mobileMenu.classList.contains('hidden');
+           
+            if (isOpen) {
+                mobileMenuButton.innerHTML = '<i class="fas fa-times text-xl"></i>';
+                mobileMenuButton.setAttribute('aria-expanded', 'true');
+            } else {
+                mobileMenuButton.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
+            }
+        }
+
         // Format date as "Month Day, Year"
         function formatDate(dateString) {
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Toggle auth modal (placeholder - implement as needed)
+        function toggleAuthModal() {
+            // Implementation depends on your auth system
+            window.location.href = 'authPage.html';
         }
     </script>
 </body>

@@ -67,7 +67,7 @@
                         <a href="events.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Events</a>
                         <a href="clubs.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Clubs</a>
                         <a href="#announcements" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Announcements</a>
-                        <a href="authPage.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Profile</a>
+                        <a href="profile.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium nav-link">Profile</a>
                     </div>
                 </div>
                 <div class="hidden md:flex items-center space-x-4">
@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        
+       
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-lg">
             <div class="pt-2 pb-3 space-y-1">
@@ -94,7 +94,7 @@
                 <a href="events.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Events</a>
                 <a href="clubs.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Clubs</a>
                 <a href="#announcements" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Announcements</a>
-                <a href="authPage.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Profile</a>
+                <a href="profile.html" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium nav-link-mobile">Profile</a>
                 <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
                     <div class="flex items-center px-5 space-x-3">
                         <button id="theme-toggle-mobile" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5">
@@ -279,170 +279,6 @@
         </div>
     </div>
 
-    <!-- Conditional Content: Admin Dashboard or Public Site -->
-    <div id="app-container">
-        <!-- Admin Dashboard -->
-        <div id="admin-dashboard" class="hidden flex h-screen overflow-hidden">
-            <!-- Sidebar Navigation -->
-            <nav class="sidebar w-64 shadow-2xl flex flex-col z-50 bg-white dark:bg-gray-800" id="sidebar">
-                <!-- Logo Section -->
-                <div class="p-6 flex items-center space-x-3 border-b border-gray-200/20">
-                    <div class="gradient-bg text-white p-3 rounded-xl shadow-lg">
-                        <i class="fas fa-calendar-alt text-xl"></i>
-                    </div>
-                    <div class="logo-text transition-all duration-300">
-                        <h2 class="font-bold text-xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">CampusHub</h2>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Admin Panel</p>
-                    </div>
-                </div>
-                
-                <!-- User Profile Section -->
-                <div class="p-4 border-b border-gray-200/20">
-                    <div class="flex items-center space-x-3">
-                        <div class="relative">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="h-10 w-10 rounded-full ring-2 ring-indigo-500">
-                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                        </div>
-                        <div class="nav-text transition-all duration-300">
-                            <p class="font-medium text-sm text-gray-900 dark:text-white" id="userName">Sarah Johnson</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Super Admin</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Navigation Menu -->
-                <div class="flex-1 overflow-y-auto py-4">
-                    <div class="px-4 space-y-2">
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl active" data-page="dashboard">
-                            <i class="fas fa-tachometer-alt text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Dashboard</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="events">
-                            <i class="fas fa-calendar-day text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Manage Events</span>
-                            <span class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1" id="pendingEventsCount">12</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="clubs">
-                            <i class="fas fa-users text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Manage Clubs</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="announcements">
-                            <i class="fas fa-bullhorn text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Announcements</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="users">
-                            <i class="fas fa-user-cog text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">User Management</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="chat">
-                            <i class="fas fa-comments text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Club Chat Monitor</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="rsvp">
-                            <i class="fas fa-envelope text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">RSVP & Email Logs</span>
-                        </a>
-                    </div>
-                    
-                    <!-- Settings Section -->
-                    <div class="px-4 mt-8 space-y-2">
-                        <div class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">Settings</div>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="settings">
-                            <i class="fas fa-cog text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Settings</span>
-                        </a>
-                        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl" data-page="help">
-                            <i class="fas fa-question-circle text-lg text-gray-600 dark:text-gray-300"></i>
-                            <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Help & Support</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Logout Section -->
-                <div class="p-4 border-t border-gray-200/20">
-                    <button id="logoutBtn" class="nav-item flex items-center space-x-3 p-3 rounded-xl w-full text-left hover:bg-red-50 hover:text-red-600 transition-all duration-300 dark:hover:bg-red-900">
-                        <i class="fas fa-sign-out-alt text-lg text-gray-600 dark:text-gray-300"></i>
-                        <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Logout</span>
-                    </button>
-                </div>
-            </nav>
-            
-            <!-- Main Content -->
-            <div class="main-content flex-1 overflow-y-auto transition-all duration-300">
-                <!-- Top Navigation -->
-                <header class="card m-4 rounded-2xl shadow-lg bg-white dark:bg-gray-800">
-                    <div class="py-4 px-6 flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <button id="sidebarToggle" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none lg:hidden transition-colors">
-                                <i class="fas fa-bars text-xl"></i>
-                            </button>
-                            <button id="collapseSidebarBtn" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hidden lg:block transition-colors">
-                                <i class="fas fa-angle-double-left text-xl"></i>
-                            </button>
-                            <div>
-                                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent" id="pageTitle">Dashboard Overview</h1>
-                                <p class="text-sm text-gray-500 dark:text-gray-400" id="pageSubtitle">Welcome back! Here's what's happening today.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center space-x-4">
-                            <!-- Search Bar -->
-                            <div class="relative hidden md:block">
-                                <input type="text" id="searchInput" placeholder="Search events, clubs, users..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all w-64 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
-                                <i class="fas fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
-                            </div>
-                            
-                            <!-- Notifications -->
-                            <div class="relative">
-                                <button id="notificationBtn" class="relative p-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                                    <i class="fas fa-bell text-xl"></i>
-                                    <span class="notification-dot absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="notificationCount">3</span>
-                                </button>
-                                
-                                <!-- Notification Dropdown -->
-                                <div id="notificationDropdown" class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-600 py-2 z-50 opacity-0 invisible transition-all duration-300">
-                                    <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">
-                                        <h3 class="font-semibold text-gray-800 dark:text-white">Notifications</h3>
-                                    </div>
-                                    <div class="max-h-64 overflow-y-auto" id="notificationList">
-                                        <!-- Notifications will be populated here -->
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Profile Dropdown -->
-                            <div class="relative">
-                                <button id="profileBtn" class="flex items-center space-x-2 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="h-8 w-8 rounded-full ring-2 ring-indigo-500">
-                                    <span class="font-medium hidden md:block text-gray-800 dark:text-gray-100">Sarah Johnson</span>
-                                    <i class="fas fa-chevron-down text-sm text-gray-500 dark:text-gray-400"></i>
-                                </button>
-                                
-                                <!-- Profile Dropdown -->
-                                <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-600 py-2 z-50 opacity-0 invisible transition-all duration-300">
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <i class="fas fa-user mr-2"></i>Profile
-                                    </a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <i class="fas fa-cog mr-2"></i>Settings
-                                    </a>
-                                    <div class="border-t border-gray-200 dark:border-gray-600 my-1"></div>
-                                    <button id="logoutBtn2" class="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition-colors">
-                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </header>
-                
-                <!-- Page Content -->
-                <main class="p-4" id="pageContent">
-                    <!-- Dynamic content will be loaded here -->
-                </main>
-            </div>
-        </div>
-
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 class="text-3xl font-heading font-bold text-gray-900 dark:text-white mb-4">Upcoming Events</h1>
@@ -501,7 +337,7 @@
             <!-- Calendar view will be inserted here -->
         </div>
     </div>
-    
+   
     <!-- Event Details Modal -->
     <div class="fixed inset-0 z-50 hidden overflow-y-auto" id="eventModal">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -593,10 +429,10 @@
             </div>
         </div>
     </div>
-    
+   
     <script>
-        // Sample event data
-        const events = [
+        // Sample event data (mock data)
+        const mockEvents = [
             {
                 id: 1,
                 title: "Tech Workshop: Intro to Web Development",
@@ -670,10 +506,16 @@
                 type: "social"
             }
         ];
-        
-        // RSVP status for each event (simulating user data)
-        const rsvpStatus = {};
-        
+       
+        // API Configuration
+        const API_BASE_URL = 'https://your-api-endpoint.com/api';
+        const EVENTS_ENDPOINT = '/events';
+        const RSVP_ENDPOINT = '/rsvp';
+       
+        // User state (simulating authentication)
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let rsvpStatus = JSON.parse(localStorage.getItem('rsvpStatus')) || {};
+       
         // DOM Elements
         const eventsContainer = document.getElementById('eventsContainer');
         const calendarContainer = document.getElementById('calendarContainer');
@@ -687,17 +529,93 @@
         const eventModal = document.getElementById('eventModal');
         const closeModal = document.getElementById('closeModal');
         const modalRsvpBtn = document.getElementById('modalRsvpBtn');
-        
+        const authButton = document.getElementById('auth-button');
+        const logoutButton = document.getElementById('logout-button');
+       
         // Current view state
         let currentView = 'grid';
         let currentEventId = null;
-        
+        let events = [];
+       
         // Initialize the page
-        function init() {
+        async function init() {
+            updateAuthUI();
+            try {
+                // Try to fetch events from API first
+                events = await fetchEvents();
+                console.log('Events loaded from API');
+            } catch (error) {
+                console.error('Failed to fetch events from API, using mock data:', error);
+                // Fall back to mock data if API fails
+                events = mockEvents;
+            }
             renderEvents(events);
             setupEventListeners();
         }
-        
+       
+        // Fetch events from API
+        async function fetchEvents() {
+            try {
+                const response = await fetch(`${API_BASE_URL}${EVENTS_ENDPOINT}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                throw error;
+            }
+        }
+       
+        // Update RSVP status via API
+        async function updateRsvpStatus(eventId, attending) {
+            if (!currentUser) {
+                toggleAuthModal();
+                return false;
+            }
+           
+            try {
+                const response = await fetch(`${API_BASE_URL}${RSVP_ENDPOINT}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentUser.token}`
+                    },
+                    body: JSON.stringify({
+                        eventId,
+                        userId: currentUser.id,
+                        attending
+                    })
+                });
+               
+                if (!response.ok) {
+                    throw new Error('Failed to update RSVP status');
+                }
+               
+                const data = await response.json();
+                return data.success;
+            } catch (error) {
+                console.error('Error updating RSVP:', error);
+                // Fall back to local storage if API fails
+                rsvpStatus[eventId] = attending;
+                localStorage.setItem('rsvpStatus', JSON.stringify(rsvpStatus));
+                return true;
+            }
+        }
+       
+        // Update authentication UI based on login state
+        function updateAuthUI() {
+            if (currentUser) {
+                authButton.classList.add('hidden');
+                logoutButton.classList.remove('hidden');
+                document.querySelector('a[href="profile.html"]').textContent = currentUser.name.split(' ')[0];
+            } else {
+                authButton.classList.remove('hidden');
+                logoutButton.classList.add('hidden');
+                document.querySelector('a[href="profile.html"]').textContent = 'Profile';
+            }
+        }
+       
         // Set up all event listeners
         function setupEventListeners() {
             // Search and filter inputs
@@ -705,16 +623,16 @@
             eventTypeFilter.addEventListener('change', filterEvents);
             dateFilter.addEventListener('change', filterEvents);
             organizerFilter.addEventListener('change', filterEvents);
-            
+           
             // View toggle buttons
             gridViewBtn.addEventListener('click', () => toggleView('grid'));
             listViewBtn.addEventListener('click', () => toggleView('list'));
             calendarViewBtn.addEventListener('click', () => toggleView('calendar'));
-            
+           
             // Modal controls
             closeModal.addEventListener('click', closeEventModal);
             modalRsvpBtn.addEventListener('click', toggleRsvp);
-            
+           
             // Close modal when clicking outside content
             eventModal.addEventListener('click', (e) => {
                 if (e.target === eventModal) {
@@ -733,45 +651,123 @@
             const themeToggleMobile = document.getElementById('theme-toggle-mobile');
             themeToggle.addEventListener('click', toggleTheme);
             themeToggleMobile.addEventListener('click', toggleTheme);
+           
+            // Logout button
+            logoutButton.addEventListener('click', logout);
+           
+            // Auth form submissions
+            document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
+            document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
         }
 
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
             localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
         }
+       
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+           
+            // Simulate API call
+            try {
+                // In a real app, you would call your authentication API here
+                // const response = await fetch('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+                // const user = await response.json();
+               
+                // For demo purposes, we'll simulate a successful login
+                currentUser = {
+                    id: 'user123',
+                    name: 'Demo User',
+                    email: email,
+                    token: 'simulated-jwt-token',
+                    role: 'student'
+                };
+               
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                toggleAuthModal();
+                renderEvents(events); // Refresh to update RSVP buttons
+            } catch (error) {
+                alert('Login failed. Please check your credentials.');
+            }
+        }
+       
+        // Handle registration
+        async function handleRegister(e) {
+            e.preventDefault();
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+           
+            // Simulate API call
+            try {
+                // In a real app, you would call your registration API here
+                // const response = await fetch('/api/register', { method: 'POST', body: JSON.stringify({ firstName, lastName, email, password }) });
+                // const user = await response.json();
+               
+                // For demo purposes, we'll simulate a successful registration
+                currentUser = {
+                    id: 'user123',
+                    name: `${firstName} ${lastName}`,
+                    email: email,
+                    token: 'simulated-jwt-token',
+                    role: 'student'
+                };
+               
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                toggleAuthModal();
+                renderEvents(events); // Refresh to update RSVP buttons
+            } catch (error) {
+                alert('Registration failed. Please try again.');
+            }
+        }
+       
+        // Handle logout
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateAuthUI();
+            renderEvents(events); // Refresh to update RSVP buttons
+        }
 
         // Render events to the page
         function renderEvents(eventsToRender) {
             eventsContainer.innerHTML = '';
-            
+           
             if (eventsToRender.length === 0) {
                 eventsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center col-span-full">No events found matching your criteria.</p>';
                 return;
             }
-            
+           
             eventsToRender.forEach(event => {
                 const eventCard = createEventCard(event);
                 eventsContainer.appendChild(eventCard);
             });
         }
-        
+       
         // Create an event card element
         function createEventCard(event) {
             const eventDate = new Date(event.date);
-            const formattedDate = eventDate.toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric', 
-                year: 'numeric' 
+            const formattedDate = eventDate.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
             });
-            const formattedTime = eventDate.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
+            const formattedTime = eventDate.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
             });
-            
+           
             const isAttending = rsvpStatus[event.id] || false;
-            
+            const canRSVP = currentUser !== null;
+           
             const card = document.createElement('div');
-            card.className = currentView === 'list' 
+            card.className = currentView === 'list'
                 ? 'bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg'
                 : 'bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg';
             card.dataset.id = event.id;
@@ -795,29 +791,31 @@
                     <div class="flex flex-wrap gap-2 mb-4">
                         ${event.tags.map(tag => `<span class="bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs px-2 py-1 rounded-full">#${tag}</span>`).join('')}
                     </div>
-                    <button class="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors ${isAttending ? 'bg-success hover:bg-success/90' : ''}" data-id="${event.id}">
+                    <button class="w-full ${canRSVP ? 'bg-primary-600 hover:bg-primary-700' : 'bg-gray-400 cursor-not-allowed'} text-white px-4 py-2 rounded-lg font-medium transition-colors ${isAttending ? 'bg-success hover:bg-success/90' : ''}" data-id="${event.id}" ${!canRSVP ? 'title="Please login to RSVP"' : ''}>
                         ${isAttending ? '<i class="fas fa-check mr-2"></i>Attending' : 'RSVP'}
                     </button>
                 </div>
             `;
-            
+           
             // Add click event to open modal
             card.addEventListener('click', (e) => {
                 if (!e.target.closest('button')) {
                     openEventModal(event);
                 }
             });
-            
+           
             // Add RSVP button event
             const rsvpBtn = card.querySelector('button');
-            rsvpBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleRsvp(e.target.dataset.id);
-            });
-            
+            if (canRSVP) {
+                rsvpBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleRsvp(e.target.dataset.id);
+                });
+            }
+           
             return card;
         }
-        
+       
         // Render calendar view
         function renderCalendar(eventsToRender) {
             calendarContainer.innerHTML = `
@@ -830,10 +828,10 @@
             // This is a placeholder for demonstration
             eventsToRender.forEach(event => {
                 const eventDate = new Date(event.date);
-                const formattedDate = eventDate.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric' 
+                const formattedDate = eventDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
                 });
                 const div = document.createElement('div');
                 div.className = 'p-2 border-b border-gray-200 dark:border-gray-600';
@@ -845,26 +843,26 @@
                 calendarContainer.appendChild(div);
             });
         }
-        
+       
         // Filter events based on search and filter criteria
         function filterEvents() {
             const searchTerm = searchInput.value.toLowerCase();
             const selectedType = eventTypeFilter.value;
             const selectedDate = dateFilter.value;
             const selectedOrganizer = organizerFilter.value;
-            
+           
             const filteredEvents = events.filter(event => {
-                const matchesSearch = 
+                const matchesSearch =
                     event.title.toLowerCase().includes(searchTerm) ||
                     event.description.toLowerCase().includes(searchTerm) ||
                     event.tags.some(tag => tag.toLowerCase().includes(searchTerm));
-                
+               
                 const matchesType = selectedType ? event.type === selectedType : true;
-                
+               
                 const eventDate = new Date(event.date);
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-                
+               
                 let matchesDate = true;
                 if (selectedDate === 'today') {
                     matchesDate = eventDate.toDateString() === today.toDateString();
@@ -873,36 +871,36 @@
                     endOfWeek.setDate(today.getDate() + 7);
                     matchesDate = eventDate >= today && eventDate <= endOfWeek;
                 } else if (selectedDate === 'month') {
-                    matchesDate = eventDate.getMonth() === today.getMonth() && 
+                    matchesDate = eventDate.getMonth() === today.getMonth() &&
                                   eventDate.getFullYear() === today.getFullYear();
                 } else if (selectedDate === 'upcoming') {
                     matchesDate = eventDate >= today;
                 }
-                
-                const matchesOrganizer = selectedOrganizer ? 
+               
+                const matchesOrganizer = selectedOrganizer ?
                     event.organizer.toLowerCase().includes(selectedOrganizer) : true;
-                
+               
                 return matchesSearch && matchesType && matchesDate && matchesOrganizer;
             });
-            
+           
             if (currentView === 'calendar') {
                 renderCalendar(filteredEvents);
             } else {
                 renderEvents(filteredEvents);
             }
         }
-        
+       
         // Toggle between grid, list, and calendar views
         function toggleView(view) {
             currentView = view;
-            
+           
             gridViewBtn.classList.remove('bg-primary-600', 'text-white', 'active');
             listViewBtn.classList.remove('bg-primary-600', 'text-white', 'active');
             calendarViewBtn.classList.remove('bg-primary-600', 'text-white', 'active');
             gridViewBtn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-100', 'border', 'border-gray-200', 'dark:border-gray-600');
             listViewBtn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-100', 'border', 'border-gray-200', 'dark:border-gray-600');
             calendarViewBtn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-100', 'border', 'border-gray-200', 'dark:border-gray-600');
-            
+           
             if (view === 'grid') {
                 gridViewBtn.classList.add('bg-primary-600', 'text-white', 'active');
                 gridViewBtn.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-100', 'border', 'border-gray-200', 'dark:border-gray-600');
@@ -923,117 +921,164 @@
                 eventsContainer.classList.add('hidden');
                 calendarContainer.classList.remove('hidden');
             }
-            
+           
             filterEvents();
         }
-        
+       
         // Open event details modal
         function openEventModal(event) {
             currentEventId = event.id;
-            
+           
             document.getElementById('modalEventTitle').textContent = event.title;
             document.getElementById('modalEventImage').src = event.image;
             const eventDate = new Date(event.date);
-            document.getElementById('modalEventDate').textContent = `${eventDate.toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric', 
-                year: 'numeric' 
-            })} • ${eventDate.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
+            document.getElementById('modalEventDate').textContent = `${eventDate.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            })} • ${eventDate.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
             })}`;
             document.getElementById('modalEventLocation').textContent = event.location;
             document.getElementById('modalEventOrganizer').textContent = event.organizer;
             document.getElementById('modalEventDescription').innerHTML = `<p>${event.description}</p>`;
-            
+           
             const tagsContainer = document.getElementById('modalEventTags');
             tagsContainer.innerHTML = event.tags.map(tag => `<span class="bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs px-2 py-1 rounded-full">#${tag}</span>`).join('');
-            
-            modalRsvpBtn.innerHTML = rsvpStatus[event.id] 
+           
+            const canRSVP = currentUser !== null;
+            modalRsvpBtn.innerHTML = rsvpStatus[event.id]
                 ? '<i class="fas fa-check mr-2"></i>Attending'
                 : '<span>RSVP</span><i class="fas fa-spinner loading hidden ml-2"></i>';
             modalRsvpBtn.classList.toggle('bg-success', rsvpStatus[event.id]);
             modalRsvpBtn.classList.toggle('hover:bg-success/90', rsvpStatus[event.id]);
-            modalRsvpBtn.classList.toggle('bg-primary-600', !rsvpStatus[event.id]);
-            modalRsvpBtn.classList.toggle('hover:bg-primary-700', !rsvpStatus[event.id]);
-            
+            modalRsvpBtn.classList.toggle('bg-primary-600', !rsvpStatus[event.id] && canRSVP);
+            modalRsvpBtn.classList.toggle('hover:bg-primary-700', !rsvpStatus[event.id] && canRSVP);
+            modalRsvpBtn.classList.toggle('bg-gray-400', !canRSVP);
+            modalRsvpBtn.classList.toggle('cursor-not-allowed', !canRSVP);
+            modalRsvpBtn.disabled = !canRSVP;
+            if (!canRSVP) {
+                modalRsvpBtn.title = "Please login to RSVP";
+            }
+           
             eventModal.classList.remove('hidden');
-            
+           
             // Start countdown timer
             startCountdown(event.date);
         }
-        
+       
         // Close event modal
         function closeEventModal() {
             eventModal.classList.add('hidden');
             currentEventId = null;
             clearInterval(window.countdownInterval);
         }
-        
+       
         // Toggle RSVP status
-        function toggleRsvp(eventId = currentEventId) {
-            rsvpStatus[eventId] = !rsvpStatus[eventId];
-            const isAttending = rsvpStatus[eventId];
-            
-            // Update modal button
-            if (eventId === currentEventId) {
-                modalRsvpBtn.innerHTML = isAttending 
-                    ? '<i class="fas fa-check mr-2"></i>Attending'
-                    : '<span>RSVP</span><i class="fas fa-spinner loading hidden ml-2"></i>';
-                modalRsvpBtn.classList.toggle('bg-success', isAttending);
-                modalRsvpBtn.classList.toggle('hover:bg-success/90', isAttending);
-                modalRsvpBtn.classList.toggle('bg-primary-600', !isAttending);
-                modalRsvpBtn.classList.toggle('hover:bg-primary-700', !isAttending);
+        async function toggleRsvp(eventId = currentEventId) {
+            if (!currentUser) {
+                toggleAuthModal();
+                return;
             }
-            
-            // Update event card button
-            const eventCard = document.querySelector(`[data-id="${eventId}"]`);
-            if (eventCard) {
-                const rsvpBtn = eventCard.querySelector('button');
-                rsvpBtn.innerHTML = isAttending 
-                    ? '<i class="fas fa-check mr-2"></i>Attending'
-                    : 'RSVP';
-                rsvpBtn.classList.toggle('bg-success', isAttending);
-                rsvpBtn.classList.toggle('hover:bg-success/90', isAttending);
-                rsvpBtn.classList.toggle('bg-primary-600', !isAttending);
-                rsvpBtn.classList.toggle('hover:bg-primary-700', !isAttending);
+           
+            const newStatus = !rsvpStatus[eventId];
+           
+            // Show loading state
+            const rsvpBtn = document.querySelector(`[data-id="${eventId}"] button`);
+            const modalBtn = document.getElementById('modalRsvpBtn');
+           
+            if (rsvpBtn) {
+                rsvpBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing';
+                rsvpBtn.disabled = true;
+            }
+           
+            if (modalBtn && eventId === currentEventId) {
+                modalBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing';
+                modalBtn.disabled = true;
+            }
+           
+            // Update RSVP status via API or fallback to local storage
+            const success = await updateRsvpStatus(eventId, newStatus);
+           
+            if (success) {
+                rsvpStatus[eventId] = newStatus;
+                localStorage.setItem('rsvpStatus', JSON.stringify(rsvpStatus));
+               
+                // Update UI
+                if (rsvpBtn) {
+                    rsvpBtn.innerHTML = newStatus
+                        ? '<i class="fas fa-check mr-2"></i>Attending'
+                        : 'RSVP';
+                    rsvpBtn.classList.toggle('bg-success', newStatus);
+                    rsvpBtn.classList.toggle('hover:bg-success/90', newStatus);
+                    rsvpBtn.classList.toggle('bg-primary-600', !newStatus);
+                    rsvpBtn.classList.toggle('hover:bg-primary-700', !newStatus);
+                    rsvpBtn.disabled = false;
+                }
+               
+                if (modalBtn && eventId === currentEventId) {
+                    modalBtn.innerHTML = newStatus
+                        ? '<i class="fas fa-check mr-2"></i>Attending'
+                        : '<span>RSVP</span><i class="fas fa-spinner loading hidden ml-2"></i>';
+                    modalBtn.classList.toggle('bg-success', newStatus);
+                    modalBtn.classList.toggle('hover:bg-success/90', newStatus);
+                    modalBtn.classList.toggle('bg-primary-600', !newStatus);
+                    modalBtn.classList.toggle('hover:bg-primary-700', !newStatus);
+                    modalBtn.disabled = false;
+                }
+            } else {
+                alert('Failed to update RSVP status. Please try again.');
+                if (rsvpBtn) {
+                    rsvpBtn.innerHTML = rsvpStatus[eventId]
+                        ? '<i class="fas fa-check mr-2"></i>Attending'
+                        : 'RSVP';
+                    rsvpBtn.disabled = false;
+                }
+                if (modalBtn && eventId === currentEventId) {
+                    modalBtn.innerHTML = rsvpStatus[eventId]
+                        ? '<i class="fas fa-check mr-2"></i>Attending'
+                        : '<span>RSVP</span><i class="fas fa-spinner loading hidden ml-2"></i>';
+                    modalBtn.disabled = false;
+                }
             }
         }
-        
+       
         // Start countdown timer for event
         function startCountdown(eventDate) {
             clearInterval(window.countdownInterval);
-            
+           
             const updateCountdown = () => {
                 const now = new Date();
                 const timeDiff = new Date(eventDate) - now;
-                
+               
                 if (timeDiff <= 0) {
                     document.getElementById('countdownTimer').innerHTML = '<p class="text-red-500 dark:text-red-400">Event has started!</p>';
                     clearInterval(window.countdownInterval);
                     return;
                 }
-                
+               
                 const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-                
+               
                 document.getElementById('days').textContent = String(days).padStart(2, '0');
                 document.getElementById('hours').textContent = String(hours).padStart(2, '0');
                 document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
                 document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
             };
-            
+           
             updateCountdown();
             window.countdownInterval = setInterval(updateCountdown, 1000);
         }
 
-        // Initialize auth modal toggle (placeholder, as auth logic is in index.html)
+        // Initialize auth modal toggle
         function toggleAuthModal() {
-            window.location.href = 'authPage.html';
+            const authModal = document.getElementById('auth-modal');
+            authModal.classList.toggle('hidden');
         }
-        
+       
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', init);
     </script>

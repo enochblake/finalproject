@@ -24,22 +24,22 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        
+       
         .urgent-tag {
             animation: pulse 2s infinite;
         }
-        
+       
         @keyframes pulse {
             0% { opacity: 0.8; }
             50% { opacity: 1; }
             100% { opacity: 0.8; }
         }
-        
+       
         .modal-overlay {
             background-color: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
         }
-        
+       
         .tag-exam { background-color: #f59e0b; }
         .tag-deadline { background-color: #ef4444; }
         .tag-update { background-color: #3b82f6; }
@@ -58,7 +58,7 @@
                         <span class="ml-2 text-xl font-bold text-gray-800 dark:text-white">Campus Hub</span>
                     </div>
                     <nav class="hidden md:flex space-x-6" aria-label="Main navigation">
-                        <a href="Laho.html" class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium transition">Home</a>
+                        <a href="index.html" class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium transition">Home</a>
                         <a href="events.html" class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium transition">Events</a>
                         <a href="clubs.html" class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium transition">Clubs</a>
                         <a href="announcements.html" class="text-indigo-600 dark:text-indigo-400 inline-flex items-center px-1 pt-1 border-b-2 border-indigo-500 text-sm font-medium" aria-current="page">Announcements</a>
@@ -82,7 +82,7 @@
                 </div>
             </div>
         </div>
-        
+       
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-lg transition-all">
             <div class="container mx-auto px-4 py-3">
@@ -116,7 +116,7 @@
                 <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Announcements</h1>
                 <p class="text-gray-600 dark:text-gray-300">Stay updated with campus news and important notices</p>
             </div>
-            
+           
             <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full md:w-auto">
                 <div class="relative">
                     <select id="categoryFilter" class="appearance-none pl-3 pr-8 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-sm" aria-label="Filter by category">
@@ -128,7 +128,7 @@
                     </select>
                     <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 dark:text-gray-500" aria-hidden="true"></i>
                 </div>
-                
+               
                 <div class="relative">
                     <select id="sortFilter" class="appearance-none pl-3 pr-8 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-sm" aria-label="Sort announcements">
                         <option value="newest">Newest First</option>
@@ -136,13 +136,27 @@
                     </select>
                     <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 dark:text-gray-500" aria-hidden="true"></i>
                 </div>
-                
+               
                 <button id="filterButton" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-sm" aria-label="Apply filters">
                     <i class="fas fa-filter mr-2" aria-hidden="true"></i> Apply Filters
                 </button>
             </div>
         </div>
-        
+       
+        <!-- Loading State -->
+        <div id="loadingIndicator" class="hidden flex justify-center items-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+            <span class="ml-3 text-gray-600 dark:text-gray-300">Loading announcements...</span>
+        </div>
+       
+        <!-- Error State -->
+        <div id="errorMessage" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 dark:bg-red-900 dark:border-red-700 dark:text-red-100">
+            <p id="errorText"></p>
+            <button id="retryButton" class="mt-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:bg-red-700 dark:hover:bg-red-800 text-sm">
+                Retry
+            </button>
+        </div>
+       
         <!-- Featured Announcements -->
         <div id="featuredSection" class="mb-8">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
@@ -152,14 +166,14 @@
                 <!-- Featured announcements will be inserted here by JavaScript -->
             </div>
         </div>
-        
+       
         <!-- All Announcements -->
         <div>
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">All Announcements</h2>
             <div id="announcementsContainer" class="grid grid-cols-1 gap-6">
                 <!-- Announcements will be inserted here by JavaScript -->
             </div>
-            
+           
             <div class="mt-8 flex justify-center">
                 <button id="loadMoreButton" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 text-sm" aria-label="Load more announcements">
                     Load More Announcements
@@ -167,7 +181,7 @@
             </div>
         </div>
     </main>
-    
+   
     <!-- Announcement Detail Modal -->
     <div id="announcementModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
         <div class="modal-overlay absolute inset-0 bg-gray-500 opacity-75 dark:bg-gray-900 dark:opacity-90"></div>
@@ -183,7 +197,7 @@
                             <i class="fas fa-times text-gray-500 dark:text-gray-300" aria-hidden="true"></i>
                         </button>
                     </div>
-                    
+                   
                     <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-6">
                         <div class="flex items-center mr-4">
                             <i class="fas fa-user-circle mr-2" aria-hidden="true"></i>
@@ -194,19 +208,19 @@
                             <span id="modalDate"></span>
                         </div>
                     </div>
-                    
+                   
                     <div id="modalContent" class="prose max-w-none text-gray-700 dark:text-gray-300 mb-6"></div>
-                    
+                   
                     <div id="modalAttachments" class="mb-6">
                         <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-2">Attachments:</h3>
                         <div class="flex flex-wrap gap-3"></div>
                     </div>
-                    
+                   
                     <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
                         <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-3">Contact Information:</h3>
                         <div id="modalContact" class="flex flex-col space-y-2 text-gray-700 dark:text-gray-300"></div>
                     </div>
-                    
+                   
                     <div class="mt-6 flex justify-end space-x-3">
                         <button id="saveAnnouncementButton" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 text-sm" aria-label="Save announcement">
                             <i class="far fa-bookmark mr-2" aria-hidden="true"></i> Save
@@ -221,120 +235,124 @@
     </div>
 
     <script>
-        // Mock announcement data
-        const announcements = [
-            {
-                id: 1,
-                title: "Final Exam Schedule Released",
-                summary: "The final exams for Semester 2 have been published. Check the academic portal for your personalized schedule.",
-                author: "Academic Office",
-                tags: ["exam", "deadline"],
-                timestamp: "2025-05-25T10:30:00Z",
-                content: "The full timetable for Semester 2 final exams is now available on the academic portal. Please log in to view your personalized schedule. Exams will begin on June 10th and conclude on June 25th. Remember to bring your student ID to all exams. Any conflicts or special accommodations must be reported to the Academic Office by May 30th.",
-                isFeatured: true,
-                attachments: [
-                    { name: "Exam Schedule.pdf", type: "pdf", url: "#" }
-                ],
-                contact: "Email: exams@campus.edu | Phone: (555) 123-4567"
-            },
-            {
-                id: 2,
-                title: "Campus Career Fair 2025",
-                summary: "Annual career fair featuring top employers from various industries. Register now to secure your spot!",
-                author: "Career Services",
-                tags: ["event", "opportunity"],
-                timestamp: "2025-05-20T14:15:00Z",
-                content: "We're excited to announce our annual Campus Career Fair will take place on June 5th from 9:00 AM to 4:00 PM in the Student Union Building. Over 100 employers from various industries will be attending, offering internships and full-time positions. Students from all majors are encouraged to attend. Please register in advance through the Career Services portal to secure your spot and upload your resume for employer preview. Business casual attire is recommended.",
-                isFeatured: true,
-                attachments: [
-                    { name: "Participating Companies.pdf", type: "pdf", url: "#" },
-                    { name: "Career Fair Tips.pdf", type: "pdf", url: "#" }
-                ],
-                contact: "Email: careers@campus.edu | Phone: (555) 987-6543"
-            },
-            {
-                id: 3,
-                title: "Library Extended Hours During Finals",
-                summary: "The main library will be open 24/7 during the final exam period from June 1-25.",
-                author: "University Library",
-                tags: ["update"],
-                timestamp: "2025-05-18T09:45:00Z",
-                content: "To support students during finals, the main library will extend its hours to operate 24/7 from June 1st through June 25th. Additional study spaces have been set up on the 2nd floor, and free coffee will be available from 8:00 PM to 2:00 AM. Please remember to keep noise levels down in designated quiet zones. Library staff will be available during regular hours (8:00 AM to 10:00 PM) for assistance.",
-                isFeatured: false,
-                attachments: [],
-                contact: "Email: library@campus.edu | Phone: (555) 456-7890"
-            },
-            {
-                id: 4,
-                title: "URGENT: Network Maintenance Tonight",
-                summary: "Campus Wi-Fi and online services will be unavailable from 11 PM to 3 AM for critical maintenance.",
-                author: "IT Services",
-                tags: ["urgent", "update"],
-                timestamp: "2025-05-22T16:20:00Z",
-                content: "Critical network maintenance is scheduled for tonight from 11:00 PM to 3:00 AM. During this time, all campus Wi-Fi, online portals, and digital services will be unavailable. Please save your work and log out of all systems before 11:00 PM. This maintenance is necessary to upgrade our network infrastructure and improve performance. We apologize for any inconvenience and appreciate your understanding.",
-                isFeatured: true,
-                attachments: [],
-                contact: "Email: itsupport@campus.edu | Phone: (555) 789-0123 (24/7 support)"
-            },
-            {
-                id: 5,
-                title: "Photography Club Exhibition",
-                summary: "Join us for the annual student photography exhibition this Friday at the Arts Center.",
-                author: "Photography Club",
-                tags: ["event", "club"],
-                timestamp: "2025-05-15T12:00:00Z",
-                content: "The Photography Club is proud to present our annual student exhibition this Friday, May 26th, from 5:00 PM to 8:00 PM at the Arts Center Gallery. Over 50 pieces from student photographers will be on display, covering various themes and techniques. Light refreshments will be served. This is a great opportunity to support your fellow students and appreciate their creative work. Admission is free and open to all students, faculty, and staff.",
-                isFeatured: false,
-                attachments: [
-                    { name: "Exhibition Poster.jpg", type: "image", url: "#" }
-                ],
-                contact: "Email: photo.club@campus.edu | Instagram: @campusphotoclub"
-            },
-            {
-                id: 6,
-                title: "Summer Internship Applications Due",
-                summary: "Deadline for summer internship applications through the Career Center is May 30th.",
-                author: "Career Services",
-                tags: ["deadline", "opportunity"],
-                timestamp: "2025-05-10T11:10:00Z",
-                content: "The deadline to apply for summer internships facilitated through the Career Center is fast approaching. All applications must be submitted by May 30th at 11:59 PM. We have over 200 internship opportunities available across various industries. To apply, visit the Career Center portal, complete your profile, and submit your resume and cover letter for positions of interest. Drop-in resume reviews are available daily from 1:00 PM to 4:00 PM this week.",
-                isFeatured: false,
-                attachments: [
-                    { name: "Internship Guide.pdf", type: "pdf", url: "#" }
-                ],
-                contact: "Email: internships@campus.edu | Phone: (555) 234-5678"
-            },
-            {
-                id: 7,
-                title: "New Mental Health Resources Available",
-                summary: "Counseling Services has launched new online resources and support groups for students.",
-                author: "Student Wellness Center",
-                tags: ["update"],
-                timestamp: "2025-05-05T13:25:00Z",
-                content: "The Student Wellness Center is pleased to announce new mental health resources available to all students. We've launched an online portal with self-help tools, guided meditation sessions, and educational materials. Additionally, we're offering new support groups focusing on stress management, anxiety, and building resilience. All services are confidential and free of charge. Visit our website to explore the new resources or schedule an appointment with a counselor.",
-                isFeatured: false,
-                attachments: [
-                    { name: "Wellness Resources Guide.pdf", type: "pdf", url: "#" },
-                    { name: "Support Group Schedule.pdf", type: "pdf", url: "#" }
-                ],
-                contact: "Email: counseling@campus.edu | Phone: (555) 345-6789 (24/7 crisis line available)"
-            },
-            {
-                id: 8,
-                title: "Computer Science Club Hackathon",
-                summary: "Annual 24-hour hackathon hosted by the CS Club - sign up by June 1st!",
-                author: "Computer Science Club",
-                tags: ["event", "club"],
-                timestamp: "2025-05-01T10:05:00Z",
-                content: "The Computer Science Club is excited to announce our annual 24-hour Hackathon, taking place on June 15-16 in the Engineering Building. This year's theme is 'Tech for Social Good'. Form teams of 2-4 members and compete to build innovative solutions to real-world problems. Prizes include tech gadgets, internship opportunities, and funding for project development. No experience necessary - workshops will be provided for beginners. Registration closes June 1st.",
-                isFeatured: false,
-                attachments: [
-                    { name: "Hackathon Rules.pdf", type: "pdf", url: "#" },
-                    { name: "Past Projects.pdf", type: "pdf", url: "#" }
-                ],
-                contact: "Email: cs.club@campus.edu | Discord: CampusCSClub"
-            }
-        ];
+        // Configuration
+        const config = {
+            useMockData: true, // Set to false to use API calls
+            apiEndpoint: 'https://api.example.com/announcements',
+            mockData: [
+                {
+                    id: 1,
+                    title: "Final Exam Schedule Released",
+                    summary: "The final exams for Semester 2 have been published. Check the academic portal for your personalized schedule.",
+                    author: "Academic Office",
+                    tags: ["exam", "deadline"],
+                    timestamp: "2025-05-25T10:30:00Z",
+                    content: "The full timetable for Semester 2 final exams is now available on the academic portal. Please log in to view your personalized schedule. Exams will begin on June 10th and conclude on June 25th. Remember to bring your student ID to all exams. Any conflicts or special accommodations must be reported to the Academic Office by May 30th.",
+                    isFeatured: true,
+                    attachments: [
+                        { name: "Exam Schedule.pdf", type: "pdf", url: "#" }
+                    ],
+                    contact: "Email: exams@campus.edu | Phone: (555) 123-4567"
+                },
+                {
+                    id: 2,
+                    title: "Campus Career Fair 2025",
+                    summary: "Annual career fair featuring top employers from various industries. Register now to secure your spot!",
+                    author: "Career Services",
+                    tags: ["event", "opportunity"],
+                    timestamp: "2025-05-20T14:15:00Z",
+                    content: "We're excited to announce our annual Campus Career Fair will take place on June 5th from 9:00 AM to 4:00 PM in the Student Union Building. Over 100 employers from various industries will be attending, offering internships and full-time positions. Students from all majors are encouraged to attend. Please register in advance through the Career Services portal to secure your spot and upload your resume for employer preview. Business casual attire is recommended.",
+                    isFeatured: true,
+                    attachments: [
+                        { name: "Participating Companies.pdf", type: "pdf", url: "#" },
+                        { name: "Career Fair Tips.pdf", type: "pdf", url: "#" }
+                    ],
+                    contact: "Email: careers@campus.edu | Phone: (555) 987-6543"
+                },
+                {
+                    id: 3,
+                    title: "Library Extended Hours During Finals",
+                    summary: "The main library will be open 24/7 during the final exam period from June 1-25.",
+                    author: "University Library",
+                    tags: ["update"],
+                    timestamp: "2025-05-18T09:45:00Z",
+                    content: "To support students during finals, the main library will extend its hours to operate 24/7 from June 1st through June 25th. Additional study spaces have been set up on the 2nd floor, and free coffee will be available from 8:00 PM to 2:00 AM. Please remember to keep noise levels down in designated quiet zones. Library staff will be available during regular hours (8:00 AM to 10:00 PM) for assistance.",
+                    isFeatured: false,
+                    attachments: [],
+                    contact: "Email: library@campus.edu | Phone: (555) 456-7890"
+                },
+                {
+                    id: 4,
+                    title: "URGENT: Network Maintenance Tonight",
+                    summary: "Campus Wi-Fi and online services will be unavailable from 11 PM to 3 AM for critical maintenance.",
+                    author: "IT Services",
+                    tags: ["urgent", "update"],
+                    timestamp: "2025-05-22T16:20:00Z",
+                    content: "Critical network maintenance is scheduled for tonight from 11:00 PM to 3:00 AM. During this time, all campus Wi-Fi, online portals, and digital services will be unavailable. Please save your work and log out of all systems before 11:00 PM. This maintenance is necessary to upgrade our network infrastructure and improve performance. We apologize for any inconvenience and appreciate your understanding.",
+                    isFeatured: true,
+                    attachments: [],
+                    contact: "Email: itsupport@campus.edu | Phone: (555) 789-0123 (24/7 support)"
+                },
+                {
+                    id: 5,
+                    title: "Photography Club Exhibition",
+                    summary: "Join us for the annual student photography exhibition this Friday at the Arts Center.",
+                    author: "Photography Club",
+                    tags: ["event", "club"],
+                    timestamp: "2025-05-15T12:00:00Z",
+                    content: "The Photography Club is proud to present our annual student exhibition this Friday, May 26th, from 5:00 PM to 8:00 PM at the Arts Center Gallery. Over 50 pieces from student photographers will be on display, covering various themes and techniques. Light refreshments will be served. This is a great opportunity to support your fellow students and appreciate their creative work. Admission is free and open to all students, faculty, and staff.",
+                    isFeatured: false,
+                    attachments: [
+                        { name: "Exhibition Poster.jpg", type: "image", url: "#" }
+                    ],
+                    contact: "Email: photo.club@campus.edu | Instagram: @campusphotoclub"
+                },
+                {
+                    id: 6,
+                    title: "Summer Internship Applications Due",
+                    summary: "Deadline for summer internship applications through the Career Center is May 30th.",
+                    author: "Career Services",
+                    tags: ["deadline", "opportunity"],
+                    timestamp: "2025-05-10T11:10:00Z",
+                    content: "The deadline to apply for summer internships facilitated through the Career Center is fast approaching. All applications must be submitted by May 30th at 11:59 PM. We have over 200 internship opportunities available across various industries. To apply, visit the Career Center portal, complete your profile, and submit your resume and cover letter for positions of interest. Drop-in resume reviews are available daily from 1:00 PM to 4:00 PM this week.",
+                    isFeatured: false,
+                    attachments: [
+                        { name: "Internship Guide.pdf", type: "pdf", url: "#" }
+                    ],
+                    contact: "Email: internships@campus.edu | Phone: (555) 234-5678"
+                },
+                {
+                    id: 7,
+                    title: "New Mental Health Resources Available",
+                    summary: "Counseling Services has launched new online resources and support groups for students.",
+                    author: "Student Wellness Center",
+                    tags: ["update"],
+                    timestamp: "2025-05-05T13:25:00Z",
+                    content: "The Student Wellness Center is pleased to announce new mental health resources available to all students. We've launched an online portal with self-help tools, guided meditation sessions, and educational materials. Additionally, we're offering new support groups focusing on stress management, anxiety, and building resilience. All services are confidential and free of charge. Visit our website to explore the new resources or schedule an appointment with a counselor.",
+                    isFeatured: false,
+                    attachments: [
+                        { name: "Wellness Resources Guide.pdf", type: "pdf", url: "#" },
+                        { name: "Support Group Schedule.pdf", type: "pdf", url: "#" }
+                    ],
+                    contact: "Email: counseling@campus.edu | Phone: (555) 345-6789 (24/7 crisis line available)"
+                },
+                {
+                    id: 8,
+                    title: "Computer Science Club Hackathon",
+                    summary: "Annual 24-hour hackathon hosted by the CS Club - sign up by June 1st!",
+                    author: "Computer Science Club",
+                    tags: ["event", "club"],
+                    timestamp: "2025-05-01T10:05:00Z",
+                    content: "The Computer Science Club is excited to announce our annual 24-hour Hackathon, taking place on June 15-16 in the Engineering Building. This year's theme is 'Tech for Social Good'. Form teams of 2-4 members and compete to build innovative solutions to real-world problems. Prizes include tech gadgets, internship opportunities, and funding for project development. No experience necessary - workshops will be provided for beginners. Registration closes June 1st.",
+                    isFeatured: false,
+                    attachments: [
+                        { name: "Hackathon Rules.pdf", type: "pdf", url: "#" },
+                        { name: "Past Projects.pdf", type: "pdf", url: "#" }
+                    ],
+                    contact: "Email: cs.club@campus.edu | Discord: CampusCSClub"
+                }
+            ]
+        };
 
         // DOM Elements
         const announcementsContainer = document.getElementById('announcementsContainer');
@@ -351,10 +369,14 @@
         const themeToggleMobile = document.getElementById('theme-toggle-mobile');
         const desktopSearch = document.getElementById('desktopSearch');
         const mobileSearch = document.getElementById('mobileSearch');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const retryButton = document.getElementById('retryButton');
 
         // State
         let displayedAnnouncements = 4;
-        let filteredAnnouncements = [...announcements];
+        let filteredAnnouncements = [];
         let currentFilters = {
             category: 'all',
             sort: 'newest'
@@ -363,9 +385,67 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initializeTheme();
-            renderAnnouncements();
             setupEventListeners();
+            loadAnnouncements();
         });
+
+        // Load announcements from either mock data or API
+        function loadAnnouncements() {
+            showLoading();
+            hideError();
+           
+            if (config.useMockData) {
+                // Use mock data
+                setTimeout(() => {
+                    filteredAnnouncements = [...config.mockData];
+                    renderAnnouncements();
+                    hideLoading();
+                }, 500); // Simulate network delay
+            } else {
+                // Fetch from API
+                fetch(config.apiEndpoint)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        filteredAnnouncements = data;
+                        renderAnnouncements();
+                        hideLoading();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching announcements:', error);
+                        showError('Failed to load announcements. Please check your connection and try again.');
+                        hideLoading();
+                    });
+            }
+        }
+
+        // Show loading state
+        function showLoading() {
+            loadingIndicator.classList.remove('hidden');
+            announcementsContainer.innerHTML = '';
+            featuredSection.querySelector('.grid').innerHTML = '';
+            loadMoreButton.style.display = 'none';
+        }
+
+        // Hide loading state
+        function hideLoading() {
+            loadingIndicator.classList.add('hidden');
+        }
+
+        // Show error message
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+
+        // Hide error message
+        function hideError() {
+            errorMessage.classList.add('hidden');
+        }
 
         // Initialize theme based on localStorage or system preference
         function initializeTheme() {
@@ -390,26 +470,31 @@
             // Clear containers
             announcementsContainer.innerHTML = '';
             featuredSection.querySelector('.grid').innerHTML = '';
-            
+           
             // Filter and sort announcements
             filterAndSortAnnouncements();
-            
-            // Render featured announcements
+           
+            // Show featured section only if there are featured announcements
             const featured = filteredAnnouncements.filter(a => a.isFeatured);
             if (featured.length > 0) {
+                featuredSection.style.display = 'block';
                 featured.forEach(announcement => {
                     featuredSection.querySelector('.grid').appendChild(createAnnouncementCard(announcement));
                 });
             } else {
                 featuredSection.style.display = 'none';
             }
-            
+           
             // Render regular announcements
             const regular = filteredAnnouncements.filter(a => !a.isFeatured).slice(0, displayedAnnouncements);
-            regular.forEach(announcement => {
-                announcementsContainer.appendChild(createAnnouncementCard(announcement));
-            });
-            
+            if (regular.length > 0) {
+                regular.forEach(announcement => {
+                    announcementsContainer.appendChild(createAnnouncementCard(announcement));
+                });
+            } else {
+                announcementsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center py-8">No announcements found matching your criteria.</p>';
+            }
+           
             // Show/hide load more button
             if (filteredAnnouncements.filter(a => !a.isFeatured).length <= displayedAnnouncements) {
                 loadMoreButton.style.display = 'none';
@@ -423,17 +508,17 @@
             const card = document.createElement('div');
             card.className = 'announcement-card bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 dark:bg-gray-800 dark:border-gray-600 transition-all hover:cursor-pointer';
             card.dataset.id = announcement.id;
-            
+           
             // Format date
             const date = new Date(announcement.timestamp);
-            const formattedDate = date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'short', 
+            const formattedDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
                 day: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit'
             });
-            
+           
             // Determine tag colors
             const tagColors = {
                 urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
@@ -444,7 +529,7 @@
                 club: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
                 update: 'tag-update text-white'
             };
-            
+           
             // Create tags
             let tagsHTML = '';
             announcement.tags.forEach(tag => {
@@ -455,7 +540,7 @@
                     </span>
                 `;
             });
-            
+           
             card.innerHTML = `
                 <div class="p-6">
                     <div class="flex justify-between items-start">
@@ -469,9 +554,9 @@
                             <i class="far fa-bookmark text-gray-400 dark:text-gray-500" aria-hidden="true"></i>
                         </button>
                     </div>
-                    
+                   
                     <p class="text-gray-600 dark:text-gray-300 mb-4">${announcement.summary}</p>
-                    
+                   
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between">
                         <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2 sm:mb-0">
                             <i class="fas fa-user-circle mr-2" aria-hidden="true"></i>
@@ -484,14 +569,14 @@
                     </div>
                 </div>
             `;
-            
+           
             // Add click event to open modal
             card.addEventListener('click', (e) => {
                 if (!e.target.closest('.save-button')) {
                     openAnnouncementModal(announcement);
                 }
             });
-            
+           
             return card;
         }
 
@@ -499,24 +584,24 @@
         function openAnnouncementModal(announcement) {
             // Format date
             const date = new Date(announcement.timestamp);
-            const formattedDate = date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
+            const formattedDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
                 day: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit'
             });
-            
+           
             // Set modal content
             document.getElementById('modalTitle').textContent = announcement.title;
             document.getElementById('modalAuthor').textContent = announcement.author;
             document.getElementById('modalDate').textContent = formattedDate;
             document.getElementById('modalContent').innerHTML = announcement.content.replace(/\n/g, '<br>');
-            
+           
             // Set tags
             const tagsContainer = document.getElementById('modalTags');
             tagsContainer.innerHTML = '';
-            
+           
             const tagColors = {
                 urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 urgent-tag',
                 deadline: 'tag-deadline text-white',
@@ -526,19 +611,19 @@
                 club: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
                 update: 'tag-update text-white'
             };
-            
+           
             announcement.tags.forEach(tag => {
                 const tagElement = document.createElement('span');
                 tagElement.className = `text-xs font-semibold px-2 py-1 rounded-full ${tagColors[tag] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'}`;
                 tagElement.textContent = `#${tag.charAt(0).toUpperCase() + tag.slice(1)}`;
                 tagsContainer.appendChild(tagElement);
             });
-            
+           
             // Set attachments
             const attachmentsContainer = document.getElementById('modalAttachments').querySelector('div');
             attachmentsContainer.innerHTML = '';
-            
-            if (announcement.attachments.length > 0) {
+           
+            if (announcement.attachments && announcement.attachments.length > 0) {
                 announcement.attachments.forEach(attachment => {
                     const attachmentElement = document.createElement('a');
                     attachmentElement.href = attachment.url;
@@ -553,11 +638,11 @@
             } else {
                 document.getElementById('modalAttachments').innerHTML = '<p class="text-gray-500 dark:text-gray-400">No attachments available</p>';
             }
-            
+           
             // Set contact info
             const contactContainer = document.getElementById('modalContact');
             contactContainer.innerHTML = '';
-            
+           
             if (announcement.contact) {
                 announcement.contact.split('|').forEach(contact => {
                     const contactElement = document.createElement('div');
@@ -569,7 +654,7 @@
                     contactContainer.appendChild(contactElement);
                 });
             }
-            
+           
             // Show modal
             announcementModal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -585,13 +670,13 @@
         function filterAndSortAnnouncements() {
             // Filter by category
             if (currentFilters.category === 'all') {
-                filteredAnnouncements = [...announcements];
+                filteredAnnouncements = [...filteredAnnouncements];
             } else {
-                filteredAnnouncements = announcements.filter(announcement => 
+                filteredAnnouncements = filteredAnnouncements.filter(announcement =>
                     announcement.tags.includes(currentFilters.category)
                 );
             }
-            
+           
             // Sort
             if (currentFilters.sort === 'newest') {
                 filteredAnnouncements.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -604,20 +689,20 @@
         function setupEventListeners() {
             // Close modal
             closeModalButton.addEventListener('click', closeAnnouncementModal);
-            
+           
             // Modal overlay click
             announcementModal.addEventListener('click', (e) => {
                 if (e.target === announcementModal) {
                     closeAnnouncementModal();
                 }
             });
-            
+           
             // Load more button
             loadMoreButton.addEventListener('click', () => {
                 displayedAnnouncements += 4;
                 renderAnnouncements();
             });
-            
+           
             // Filter button
             filterButton.addEventListener('click', () => {
                 currentFilters.category = categoryFilter.value;
@@ -625,7 +710,7 @@
                 displayedAnnouncements = 4;
                 renderAnnouncements();
             });
-            
+           
             // Mobile menu toggle
             mobileMenuButton.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
@@ -633,38 +718,43 @@
                 mobileMenuButton.innerHTML = `<i class="fas fa-${isOpen ? 'times' : 'bars'} text-xl"></i>`;
                 mobileMenuButton.setAttribute('aria-label', isOpen ? 'Close mobile menu' : 'Toggle mobile menu');
             });
-            
+           
             // Dark mode toggle
             themeToggle.addEventListener('click', toggleDarkMode);
             themeToggleMobile.addEventListener('click', toggleDarkMode);
-            
+           
             // Save announcement (simulated)
             document.addEventListener('click', (e) => {
                 if (e.target.closest('.save-button')) {
                     e.stopPropagation();
                     const button = e.target.closest('.save-button');
                     const icon = button.querySelector('i');
-                    
+                   
                     icon.classList.toggle('far');
                     icon.classList.toggle('fas');
                     icon.classList.toggle('text-gray-400');
                     icon.classList.toggle('text-yellow-400');
-                    
+                   
                     // Simulate save action
                     const id = button.dataset.id;
                     console.log(`Announcement ${id} saved/unsaved`);
                 }
             });
-            
+           
             // Share button in modal
             document.getElementById('shareAnnouncementButton').addEventListener('click', () => {
                 alert('Share functionality would be implemented here!');
             });
 
+            // Retry button
+            retryButton.addEventListener('click', loadAnnouncements);
+
             // Search functionality
             function handleSearch() {
                 const searchTerm = this.value.toLowerCase();
-                filteredAnnouncements = announcements.filter(announcement => 
+                filteredAnnouncements = config.useMockData ? [...config.mockData] : [...filteredAnnouncements];
+               
+                filteredAnnouncements = filteredAnnouncements.filter(announcement =>
                     announcement.title.toLowerCase().includes(searchTerm) ||
                     announcement.summary.toLowerCase().includes(searchTerm) ||
                     announcement.content.toLowerCase().includes(searchTerm) ||

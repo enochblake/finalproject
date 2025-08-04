@@ -92,18 +92,18 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400">Admin Dashboard</p>
                 </div>
             </div>
-            
+           
             <!-- Admin Profile Section -->
             <div class="p-4 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex items-center space-x-3">
-                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Admin Avatar" class="h-10 w-10 rounded-full ring-2 ring-indigo-500">
+                    <img id="adminAvatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Admin Avatar" class="h-10 w-10 rounded-full ring-2 ring-indigo-500">
                     <div class="nav-text transition-all duration-300">
-                        <p class="font-medium text-sm text-gray-900 dark:text-white">Sarah Johnson</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Super Admin</p>
+                        <p id="adminName" class="font-medium text-sm text-gray-900 dark:text-white">Sarah Johnson</p>
+                        <p id="adminRole" class="text-xs text-gray-500 dark:text-gray-400">Super Admin</p>
                     </div>
                 </div>
             </div>
-            
+           
             <!-- Navigation Menu -->
             <div class="flex-1 overflow-y-auto py-4">
                 <div class="px-4 space-y-2">
@@ -114,7 +114,7 @@
                     <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700" data-page="events">
                         <i class="fas fa-calendar-day text-lg text-gray-600 dark:text-gray-300"></i>
                         <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Manage Events</span>
-                        <span class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1" id="pendingEventsCount">12</span>
+                        <span class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1" id="pendingEventsCount">0</span>
                     </a>
                     <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700" data-page="clubs">
                         <i class="fas fa-users text-lg text-gray-600 dark:text-gray-300"></i>
@@ -137,7 +137,7 @@
                         <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">RSVP & Email Logs</span>
                     </a>
                 </div>
-                
+               
                 <!-- Settings Section -->
                 <div class="px-4 mt-8 space-y-2">
                     <div class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">Settings</div>
@@ -151,16 +151,16 @@
                     </a>
                 </div>
             </div>
-            
+           
             <!-- Logout Section -->
             <div class="p-4 border-t border-gray-200 dark:border-gray-700">
-                <button id="logoutBtn" class="nav-item flex items-center space-x-3 p-3 rounded-xl w-full text-left hover:bg-red-50 hover:text-red-600 transition-all duration-300 dark:hover:bg-red-900">
+                <button id="logoutBtn" class="nav-item flex items-center space-x-3 p-3 rounded-xl w-full text-left hover:bg-red-50 hover:text-red-600 transition-colors duration-300 dark:hover:bg-red-900">
                     <i class="fas fa-sign-out-alt text-lg text-gray-600 dark:text-gray-300"></i>
                     <span class="nav-text transition-all duration-300 text-gray-600 dark:text-gray-300">Logout</span>
                 </button>
             </div>
         </nav>
-        
+       
         <!-- Main Content -->
         <div class="main-content flex-1 overflow-y-auto transition-all duration-300">
             <!-- Top Navigation -->
@@ -178,21 +178,21 @@
                             <p class="text-sm text-gray-500 dark:text-gray-400" id="pageSubtitle">Welcome back! Here's what's happening today.</p>
                         </div>
                     </div>
-                    
+                   
                     <div class="flex items-center space-x-4">
                         <!-- Search Bar -->
                         <div class="relative hidden md:block">
                             <input type="text" id="searchInput" placeholder="Search events, clubs, users..." class="pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all w-64 dark:bg-gray-700 dark:text-white">
                             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
-                        
+                       
                         <!-- Notifications -->
                         <div class="relative">
                             <button id="notificationBtn" class="relative p-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                                 <i class="fas fa-bell text-xl"></i>
-                                <span class="notification-dot absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="notificationCount">3</span>
+                                <span class="notification-dot absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="notificationCount">0</span>
                             </button>
-                            
+                           
                             <!-- Notification Dropdown -->
                             <div id="notificationDropdown" class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-600 py-2 z-50 opacity-0 invisible transition-all duration-300">
                                 <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">
@@ -203,12 +203,12 @@
                                 </div>
                             </div>
                         </div>
-                        
+                       
                         <!-- Profile Dropdown -->
                         <div class="relative">
                             <button id="profileBtn" class="flex items-center space-x-2 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="h-8 w-8 rounded-full ring-2 ring-indigo-500">
-                                <span class="font-medium hidden md:block text-gray-800 dark:text-gray-100">Sarah Johnson</span>
+                                <img id="profileAvatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="h-8 w-8 rounded-full ring-2 ring-indigo-500">
+                                <span id="profileName" class="font-medium hidden md:block text-gray-800 dark:text-gray-100">Sarah Johnson</span>
                                 <i class="fas fa-chevron-down text-sm text-gray-500 dark:text-gray-400"></i>
                             </button>
                             <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-600 py-2 z-50 opacity-0 invisible transition-all duration-300">
@@ -227,15 +227,15 @@
                     </div>
                 </div>
             </header>
-            
+           
             <!-- Page Content -->
             <main class="p-4">
                 <!-- Dashboard Page -->
                 <div id="dashboard-page" class="admin-page active">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" id="statsCards">
                         <!-- Stats Cards will be populated by JavaScript -->
                     </div>
-                    
+                   
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="card lg:col-span-2">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h3>
@@ -243,7 +243,7 @@
                                 <!-- Recent activity will be populated by JavaScript -->
                             </div>
                         </div>
-                        
+                       
                         <div class="card">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
                             <div class="space-y-3">
@@ -525,7 +525,7 @@
                                 </div>
                             </form>
                         </div>
-                        
+                       
                         <div class="card lg:col-span-1">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Email Settings</h3>
                             <form class="space-y-4">
@@ -543,16 +543,16 @@
                                 </div>
                             </form>
                         </div>
-                        
+                       
                         <div class="card lg:col-span-1">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Security Settings</h3>
                             <form class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password Policy</label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password Policy                                    </label>
                                     <select class="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-600 dark:text-white sm:text-sm">
-                                        <option>Low (6 characters minimum)</option>
-                                        <option selected>Medium (8 characters, 1 special)</option>
-                                        <option>High (10 characters, 2 special)</option>
+                                        <option>Basic (6 characters minimum)</option>
+                                        <option selected>Standard (8 characters, 1 number)</option>
+                                        <option>Strong (10 characters, mixed case, special chars)</option>
                                     </select>
                                 </div>
                                 <div>
@@ -561,12 +561,17 @@
                                         <option>15 minutes</option>
                                         <option selected>30 minutes</option>
                                         <option>1 hour</option>
-                                        <option>4 hours</option>
+                                        <option>2 hours</option>
                                     </select>
                                 </div>
-                                <div class="flex items-center">
-                                    <input type="checkbox" id="enable2fa" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700" checked>
-                                    <label for="enable2fa" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Enable Two-Factor Authentication</label>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="two-factor-auth" name="two-factor-auth" type="checkbox" class="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-600">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="two-factor-auth" class="font-medium text-gray-700 dark:text-gray-300">Require Two-Factor Authentication</label>
+                                        <p class="text-gray-500 dark:text-gray-400">For all admin accounts</p>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -575,59 +580,46 @@
 
                 <!-- Help & Support Page -->
                 <div id="help-page" class="admin-page">
-                    <div class="card">
-                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Help & Support</h2>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Documentation</h3>
-                                <div class="space-y-2">
-                                    <a href="#" class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                                        <i class="fas fa-book text-blue-500 dark:text-blue-400 mr-3"></i>
-                                        <span class="font-medium">Admin User Guide</span>
-                                    </a>
-                                    <a href="#" class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                                        <i class="fas fa-video text-purple-500 dark:text-purple-400 mr-3"></i>
-                                        <span class="font-medium">Video Tutorials</span>
-                                    </a>
-                                    <a href="#" class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                                        <i class="fas fa-question-circle text-green-500 dark:text-green-400 mr-3"></i>
-                                        <span class="font-medium">FAQs</span>
-                                    </a>
-                                </div>
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Help & Support</h2>
+                        <p class="text-gray-600 dark:text-gray-300">Find answers to common questions and get support</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="card lg:col-span-2">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Frequently Asked Questions</h3>
+                            <div class="space-y-4" id="faqAccordion">
+                                <!-- FAQ items will be populated by JavaScript -->
                             </div>
-                            
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Contact Support</h3>
-                                <div class="space-y-4">
-                                    <div class="flex items-start">
-                                        <i class="fas fa-envelope text-yellow-500 dark:text-yellow-400 mt-1 mr-3"></i>
-                                        <div>
-                                            <p class="font-medium">Email Support</p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">support@campushub.edu</p>
-                                            <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Typically responds within 24 hours</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start">
-                                        <i class="fas fa-phone-alt text-red-500 dark:text-red-400 mt-1 mr-3"></i>
-                                        <div>
-                                            <p class="font-medium">Phone Support</p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">(555) 123-4567</p>
-                                            <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Mon-Fri, 9am-5pm EST</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start">
-                                        <i class="fas fa-comments text-indigo-500 dark:text-indigo-400 mt-1 mr-3"></i>
-                                        <div>
-                                            <p class="font-medium">Live Chat</p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">Available during business hours</p>
-                                            <button class="mt-2 bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                                Start Chat
-                                            </button>
-                                        </div>
-                                    </div>
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact Support</h3>
+                            <form class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Name</label>
+                                    <input type="text" class="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-600 dark:text-white sm:text-sm">
                                 </div>
-                            </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                                    <input type="email" class="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-600 dark:text-white sm:text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
+                                    <select class="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-600 dark:text-white sm:text-sm">
+                                        <option>General Inquiry</option>
+                                        <option>Technical Support</option>
+                                        <option>Feature Request</option>
+                                        <option>Bug Report</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
+                                    <textarea rows="4" class="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-600 dark:text-white sm:text-sm"></textarea>
+                                </div>
+                                <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                    Send Message
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -639,834 +631,764 @@
     <div id="toastContainer" class="fixed bottom-4 right-4 space-y-2 z-50"></div>
 
     <script>
-        // Main App Controller
-        class AdminApp {
-            constructor() {
-                this.sidebarCollapsed = false;
-                this.currentPage = 'dashboard';
-                this.adminData = {
-                    name: "Sarah Johnson",
-                    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-                    role: "Super Admin"
-                };
-                this.notifications = [
-                    {
-                        id: 1,
-                        title: "New event requires approval",
-                        message: "Music Club has submitted a new event for review",
-                        timestamp: "10 minutes ago",
-                        read: false,
-                        type: "event"
-                    },
-                    {
-                        id: 2,
-                        title: "New club registration",
-                        message: "Photography Club has requested registration",
-                        timestamp: "2 hours ago",
-                        read: false,
-                        type: "club"
-                    },
-                    {
-                        id: 3,
-                        title: "System maintenance",
-                        message: "Scheduled maintenance tonight at 2am",
-                        timestamp: "1 day ago",
-                        read: true,
-                        type: "system"
-                    }
-                ];
-                this.activityLog = [
-                    {
-                        id: 1,
-                        user: "Michael Chen",
-                        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-                        action: "Created new club 'Debate Society'",
-                        timestamp: "2 hours ago"
-                    },
-                    {
-                        id: 2,
-                        user: "Sarah Johnson",
-                        avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-                        action: "Approved event 'Summer Music Festival'",
-                        timestamp: "5 hours ago"
-                    },
-                    {
-                        id: 3,
-                        user: "System",
-                        avatar: "",
-                        action: "Performed nightly backup",
-                        timestamp: "1 day ago"
-                    }
-                ];
-                this.clubs = [
-                    {
-                        id: 1,
-                        name: "Music Club",
-                        category: "Arts",
-                        members: 45,
-                        status: "active",
-                        president: "Sarah Johnson"
-                    },
-                    {
-                        id: 2,
-                        name: "Debate Society",
-                        category: "Academic",
-                        members: 32,
-                        status: "active",
-                        president: "Michael Chen"
-                    },
-                    {
-                        id: 3,
-                        name: "Photography Club",
-                        category: "Arts",
-                        members: 28,
-                        status: "pending",
-                        president: "Emily Davis"
-                    }
-                ];
-                this.events = [
-                    {
-                        id: 1,
-                        title: "Summer Music Festival",
-                        club: "Music Club",
-                        date: "2024-07-30T18:00",
-                        status: "approved",
-                        rsvps: 120
-                    },
-                    {
-                        id: 2,
-                        title: "Debate Tournament",
-                        club: "Debate Society",
-                        date: "2024-08-15T16:00",
-                        status: "pending",
-                        rsvps: 45
-                    }
-                ];
-                this.users = [
-                    {
-                        id: 1,
-                        name: "Sarah Johnson",
-                        email: "sarah.johnson@campushub.edu",
-                        role: "super_admin",
-                        status: "active",
-                        lastLogin: "Today, 9:42 AM"
-                    },
-                    {
-                        id: 2,
-                        name: "Michael Chen",
-                        email: "michael.chen@campushub.edu",
-                        role: "admin",
-                        status: "active",
-                        lastLogin: "Yesterday, 4:15 PM"
-                    },
-                    {
-                        id: 3,
-                        name: "Emily Davis",
-                        email: "emily.davis@campushub.edu",
-                        role: "club_admin",
-                        status: "active",
-                        lastLogin: "2 days ago"
-                    }
-                ];
-                this.init();
+        // Mock Data Initialization
+        const mockData = {
+            admin: {
+                name: "Sarah Johnson",
+                role: "Super Admin",
+                avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+            },
+            stats: [
+                { title: "Total Events", value: 124, change: "+12%", icon: "calendar-day", color: "indigo" },
+                { title: "Active Clubs", value: 36, change: "+5%", icon: "users", color: "green" },
+                { title: "Pending Approvals", value: 8, change: "-2%", icon: "clock", color: "yellow" },
+                { title: "Total Users", value: 2453, change: "+18%", icon: "user-friends", color: "purple" }
+            ],
+            recentActivity: [
+                { id: 1, user: "Alex Morgan", action: "created a new event", target: "Coding Workshop", time: "5 mins ago", avatar: "https://randomuser.me/api/portraits/men/32.jpg" },
+                { id: 2, user: "Taylor Swift", action: "joined the club", target: "Music Society", time: "23 mins ago", avatar: "https://randomuser.me/api/portraits/women/33.jpg" },
+                { id: 3, user: "Jamie Lee", action: "requested approval for", target: "Basketball Tournament", time: "1 hour ago", avatar: "https://randomuser.me/api/portraits/women/45.jpg" },
+                { id: 4, user: "Chris Evans", action: "posted an announcement", target: "Campus Cleanup Day", time: "2 hours ago", avatar: "https://randomuser.me/api/portraits/men/22.jpg" },
+                { id: 5, user: "Dana White", action: "updated club information", target: "Debate Club", time: "3 hours ago", avatar: "https://randomuser.me/api/portraits/women/28.jpg" }
+            ],
+            events: [
+                { id: 1, name: "Annual Science Fair", club: "Science Club", date: "2023-05-15", time: "10:00 AM", status: "approved", rsvps: 124 },
+                { id: 2, name: "Basketball Tournament", club: "Sports Club", date: "2023-05-18", time: "2:00 PM", status: "pending", rsvps: 56 },
+                { id: 3, name: "Coding Workshop", club: "Tech Club", date: "2023-05-20", time: "4:00 PM", status: "approved", rsvps: 89 },
+                { id: 4, name: "Music Festival", club: "Music Society", date: "2023-05-22", time: "6:00 PM", status: "approved", rsvps: 210 },
+                { id: 5, name: "Debate Competition", club: "Debate Club", date: "2023-05-25", time: "11:00 AM", status: "pending", rsvps: 34 }
+            ],
+            clubs: [
+                { id: 1, name: "Science Club", category: "Academic", members: 145, status: "active" },
+                { id: 2, name: "Sports Club", category: "Sports", members: 210, status: "active" },
+                { id: 3, name: "Tech Club", category: "Academic", members: 98, status: "active" },
+                { id: 4, name: "Music Society", category: "Arts", members: 176, status: "active" },
+                { id: 5, name: "Debate Club", category: "Academic", members: 67, status: "inactive" }
+            ],
+            announcements: [
+                { id: 1, title: "System Maintenance", author: "Sarah Johnson", date: "2023-05-10", status: "active" },
+                { id: 2, title: "New Features Released", author: "Admin Team", date: "2023-05-08", status: "active" },
+                { id: 3, title: "Upcoming Events", author: "Event Committee", date: "2023-05-05", status: "expired" },
+                { id: 4, title: "Club Registration Deadline", author: "Sarah Johnson", date: "2023-05-01", status: "expired" }
+            ],
+            users: [
+                { id: 1, name: "Sarah Johnson", email: "sarah@campushub.edu", role: "super_admin", status: "active", avatar: "https://randomuser.me/api/portraits/women/44.jpg" },
+                { id: 2, name: "Alex Morgan", email: "alex@campushub.edu", role: "club_admin", status: "active", avatar: "https://randomuser.me/api/portraits/men/32.jpg" },
+                { id: 3, name: "Taylor Swift", email: "taylor@campushub.edu", role: "club_admin", status: "active", avatar: "https://randomuser.me/api/portraits/women/33.jpg" },
+                { id: 4, name: "Jamie Lee", email: "jamie@campushub.edu", role: "club_member", status: "active", avatar: "https://randomuser.me/api/portraits/women/45.jpg" },
+                { id: 5, name: "Chris Evans", email: "chris@campushub.edu", role: "club_member", status: "inactive", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }
+            ],
+            notifications: [
+                { id: 1, title: "New event requires approval", message: "Basketball Tournament needs your review", time: "10 mins ago", read: false },
+                { id: 2, title: "New club registration", message: "Photography Club has requested approval", time: "2 hours ago", read: false },
+                { id: 3, title: "System update available", message: "Version 2.3.1 is ready to install", time: "1 day ago", read: true },
+                { id: 4, title: "New user registered", message: "Dana White has joined as club admin", time: "2 days ago", read: true }
+            ],
+            faqs: [
+                { id: 1, question: "How do I approve a new event?", answer: "Navigate to the Events page, click on the pending event, and use the Approve button." },
+                { id: 2, question: "Can I add multiple club admins?", answer: "Yes, you can assign multiple admins to each club from the User Management page." },
+                { id: 3, question: "How do I reset a user's password?", answer: "Go to User Management, find the user, and click the 'Reset Password' option." },
+                { id: 4, question: "Where can I see system logs?", answer: "System logs are available to super admins in the Settings page under Advanced Options." }
+            ]
+        };
+
+        // API Endpoints (mock for this example)
+        const apiEndpoints = {
+            getStats: '/api/admin/stats',
+            getRecentActivity: '/api/admin/activity',
+            getEvents: '/api/admin/events',
+            getClubs: '/api/admin/clubs',
+            getAnnouncements: '/api/admin/announcements',
+            getUsers: '/api/admin/users',
+            getNotifications: '/api/admin/notifications',
+            getFAQs: '/api/admin/faqs'
+        };
+
+        // DOM Elements
+        const elements = {
+            sidebar: document.getElementById('sidebar'),
+            sidebarToggle: document.getElementById('sidebarToggle'),
+            collapseSidebarBtn: document.getElementById('collapseSidebarBtn'),
+            adminAvatar: document.getElementById('adminAvatar'),
+            adminName: document.getElementById('adminName'),
+            adminRole: document.getElementById('adminRole'),
+            profileAvatar: document.getElementById('profileAvatar'),
+            profileName: document.getElementById('profileName'),
+            notificationBtn: document.getElementById('notificationBtn'),
+            notificationDropdown: document.getElementById('notificationDropdown'),
+            notificationList: document.getElementById('notificationList'),
+            notificationCount: document.getElementById('notificationCount'),
+            profileBtn: document.getElementById('profileBtn'),
+            profileDropdown: document.getElementById('profileDropdown'),
+            logoutBtn: document.getElementById('logoutBtn'),
+            logoutBtn2: document.getElementById('logoutBtn2'),
+            pageTitle: document.getElementById('pageTitle'),
+            pageSubtitle: document.getElementById('pageSubtitle'),
+            pendingEventsCount: document.getElementById('pendingEventsCount'),
+            statsCards: document.getElementById('statsCards'),
+            recentActivityList: document.getElementById('recentActivityList'),
+            eventsTableBody: document.getElementById('eventsTableBody'),
+            clubsTableBody: document.getElementById('clubsTableBody'),
+            announcementsTableBody: document.getElementById('announcementsTableBody'),
+            usersTableBody: document.getElementById('usersTableBody'),
+            activeClubsList: document.getElementById('activeClubsList'),
+            chatMessagesContainer: document.getElementById('chatMessagesContainer'),
+            rsvpTableBody: document.getElementById('rsvpTableBody'),
+            faqAccordion: document.getElementById('faqAccordion'),
+            toastContainer: document.getElementById('toastContainer'),
+            adminPages: document.querySelectorAll('.admin-page'),
+            navLinks: document.querySelectorAll('[data-page]')
+        };
+
+        // Helper Functions
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast px-4 py-3 rounded-md shadow-lg flex items-center ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'} text-white`;
+           
+            let icon;
+            switch(type) {
+                case 'success': icon = 'fa-check-circle'; break;
+                case 'error': icon = 'fa-exclamation-circle'; break;
+                case 'warning': icon = 'fa-exclamation-triangle'; break;
+                default: icon = 'fa-info-circle';
             }
+           
+            toast.innerHTML = `
+                <i class="fas ${icon} mr-2"></i>
+                <span>${message}</span>
+            `;
+           
+            elements.toastContainer.appendChild(toast);
+           
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
 
-            init() {
-                this.setupEventListeners();
-                this.renderAdminData();
-                this.renderNotifications();
-                this.renderPage(this.currentPage);
-            }
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
 
-            setupEventListeners() {
-                // Sidebar toggle for mobile
-                document.getElementById('sidebarToggle').addEventListener('click', () => {
-                    const sidebar = document.getElementById('sidebar');
-                    sidebar.classList.toggle('hidden');
-                });
+        function formatTime(timeString) {
+            return timeString; // In a real app, you might format this better
+        }
 
-                // Collapse sidebar
-                document.getElementById('collapseSidebarBtn').addEventListener('click', () => {
-                    this.sidebarCollapsed = !this.sidebarCollapsed;
-                    document.getElementById('sidebar').classList.toggle('collapsed');
-                });
+        function toggleDropdown(dropdown) {
+            dropdown.classList.toggle('opacity-0');
+            dropdown.classList.toggle('invisible');
+            dropdown.classList.toggle('opacity-100');
+            dropdown.classList.toggle('visible');
+        }
 
-                // Navigation menu items
-                document.querySelectorAll('.nav-item[data-page]').forEach(item => {
-                    item.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const page = item.getAttribute('data-page');
-                        this.navigateTo(page);
-                    });
-                });
+        // Event Handlers
+        function handleSidebarToggle() {
+            elements.sidebar.classList.toggle('-translate-x-full');
+        }
 
-                // Profile dropdown
-                document.getElementById('profileBtn').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const dropdown = document.getElementById('profileDropdown');
-                    dropdown.classList.toggle('opacity-0');
-                    dropdown.classList.toggle('invisible');
-                    dropdown.classList.toggle('opacity-100');
-                    dropdown.classList.toggle('visible');
-                });
+        function handleSidebarCollapse() {
+            elements.sidebar.classList.toggle('collapsed');
+        }
 
-                // Notification dropdown
-                document.getElementById('notificationBtn').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const dropdown = document.getElementById('notificationDropdown');
-                    dropdown.classList.toggle('opacity-0');
-                    dropdown.classList.toggle('invisible');
-                    dropdown.classList.toggle('opacity-100');
-                    dropdown.classList.toggle('visible');
-                    
-                    // Mark notifications as read when dropdown is opened
-                    if (!dropdown.classList.contains('invisible')) {
-                        this.markNotificationsAsRead();
-                    }
-                });
+        function handleLogout() {
+            showToast('Logging out...', 'info');
+            // In a real app, you would make an API call to logout
+            setTimeout(() => {
+                window.location.href = 'authPage.html';
+            }, 1000);
+        }
 
-                // Logout buttons
-                document.getElementById('logoutBtn').addEventListener('click', this.logout.bind(this));
-                document.getElementById('logoutBtn2').addEventListener('click', this.logout.bind(this));
-
-                // Search input
-                document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        this.handleSearch(e.target.value);
-                    }
-                });
-
-                // Click outside to close dropdowns
-                document.addEventListener('click', () => {
-                    const profileDropdown = document.getElementById('profileDropdown');
-                    profileDropdown.classList.add('opacity-0', 'invisible');
-                    profileDropdown.classList.remove('opacity-100', 'visible');
-                    
-                    const notificationDropdown = document.getElementById('notificationDropdown');
-                    notificationDropdown.classList.add('opacity-0', 'invisible');
-                    notificationDropdown.classList.remove('opacity-100', 'visible');
-                });
-            }
-
-            renderAdminData() {
-                document.getElementById('notificationCount').textContent = 
-                    this.notifications.filter(n => !n.read).length;
-            }
-
-            renderNotifications() {
-                const notificationList = document.getElementById('notificationList');
-                notificationList.innerHTML = this.notifications.map(notification => `
-                    <a href="#" class="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${!notification.read ? 'bg-blue-50 dark:bg-blue-900' : ''}">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 pt-0.5">
-                                <i class="fas fa-${this.getNotificationIcon(notification.type)} text-${this.getNotificationColor(notification.type)}"></i>
-                            </div>
-                            <div class="ml-3 flex-1">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">${notification.title}</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">${notification.message}</p>
-                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">${notification.timestamp}</p>
-                            </div>
-                        </div>
-                    </a>
-                `).join('');
-            }
-
-            markNotificationsAsRead() {
-                this.notifications.forEach(notification => {
-                    notification.read = true;
-                });
-                this.renderAdminData();
-            }
-
-            navigateTo(page) {
-                // Update current page
-                this.currentPage = page;
-                
-                // Update active nav item
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    if (item.getAttribute('data-page') === page) {
-                        item.classList.add('bg-primary-50', 'dark:bg-gray-700', 'text-primary-700', 'dark:text-primary-400');
-                        item.querySelector('i').classList.add('text-primary-600', 'dark:text-primary-400');
-                        item.querySelector('.nav-text').classList.add('text-primary-600', 'dark:text-primary-400');
-                    } else {
-                        item.classList.remove('bg-primary-50', 'dark:bg-gray-700', 'text-primary-700', 'dark:text-primary-400');
-                        item.querySelector('i').classList.remove('text-primary-600', 'dark:text-primary-400');
-                        item.querySelector('.nav-text').classList.remove('text-primary-600', 'dark:text-primary-400');
-                    }
-                });
-                
-                // Render the page
-                this.renderPage(page);
-            }
-
-            renderPage(page) {
-                // Hide all pages
-                document.querySelectorAll('.admin-page').forEach(el => {
-                    el.classList.remove('active');
-                });
-                
-                // Show current page
-                const pageElement = document.getElementById(`${page}-page`);
-                if (pageElement) {
-                    pageElement.classList.add('active');
-                }
-                
-                // Update page title
-                this.updatePageTitle(page);
-                
-                // Render page-specific content
-                switch(page) {
-                    case 'dashboard':
-                        this.renderDashboard();
-                        break;
-                    case 'events':
-                        this.renderEvents();
-                        break;
-                    case 'clubs':
-                        this.renderClubs();
-                        break;
-                    case 'announcements':
-                        this.renderAnnouncements();
-                        break;
-                    case 'users':
-                        this.renderUsers();
-                        break;
-                    case 'chat':
-                        this.renderChatMonitor();
-                        break;
-                    case 'rsvp':
-                        this.renderRSVPLogs();
-                        break;
-                    case 'settings':
-                        this.renderSettings();
-                        break;
-                    case 'help':
-                        this.renderHelp();
-                        break;
-                }
-            }
-
-            updatePageTitle(page) {
-                const titles = {
-                    dashboard: 'Dashboard Overview',
-                    events: 'Manage Events',
-                    clubs: 'Manage Clubs',
-                    announcements: 'Announcements',
-                    users: 'User Management',
-                    chat: 'Club Chat Monitor',
-                    rsvp: 'RSVP & Email Logs',
-                    settings: 'System Settings',
-                    help: 'Help & Support'
-                };
-                
-                const subtitles = {
-                    dashboard: 'Welcome back! Here\'s what\'s happening today.',
-                    events: 'Approve, edit, or delete events across all clubs',
-                    clubs: 'View and manage all registered clubs',
-                    announcements: 'Create and manage system-wide announcements',
-                    users: 'Manage all system users and permissions',
-                    chat: 'Monitor and moderate club chat conversations',
-                    rsvp: 'View event RSVPs and sent email notifications',
-                    settings: 'Configure system-wide settings and preferences',
-                    help: 'Access documentation and contact support'
-                };
-                
-                document.getElementById('pageTitle').textContent = titles[page] || 'Dashboard';
-                document.getElementById('pageSubtitle').textContent = subtitles[page] || '';
-            }
-
-            renderDashboard() {
-                // Render stats cards
-                const statsContainer = document.querySelector('#dashboard-page .grid.grid-cols-1');
-                statsContainer.innerHTML = `
-                    <div class="card">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Clubs</p>
-                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">${this.clubs.length}</h3>
-                                <p class="text-green-600 dark:text-green-400 text-xs mt-2">
-                                    <i class="fas fa-arrow-up mr-1"></i> 3 new this month
-                                </p>
-                            </div>
-                            <div class="bg-primary-100 dark:bg-primary-900 rounded-lg p-3">
-                                <i class="fas fa-users text-primary-600 dark:text-primary-300 text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Active Events</p>
-                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">${this.events.length}</h3>
-                                <p class="text-blue-600 dark:text-blue-400 text-xs mt-2">
-                                    ${this.events.filter(e => e.status === 'pending').length} pending approval
-                                </p>
-                            </div>
-                            <div class="bg-green-100 dark:bg-green-900 rounded-lg p-3">
-                                <i class="fas fa-calendar-day text-green-600 dark:text-green-300 text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">System Users</p>
-                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">${this.users.length}</h3>
-                                <p class="text-purple-600 dark:text-purple-400 text-xs mt-2">
-                                    2 admins, 5 club leaders
-                                </p>
-                            </div>
-                            <div class="bg-yellow-100 dark:bg-yellow-900 rounded-lg p-3">
-                                <i class="fas fa-user-cog text-yellow-600 dark:text-yellow-300 text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Unread Notifications</p>
-                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">${this.notifications.filter(n => !n.read).length}</h3>
-                                <p class="text-red-600 dark:text-red-400 text-xs mt-2">
-                                    <i class="fas fa-exclamation-circle mr-1"></i> Requires attention
-                                </p>
-                            </div>
-                            <div class="bg-purple-100 dark:bg-purple-900 rounded-lg p-3">
-                                <i class="fas fa-bell text-purple-600 dark:text-purple-300 text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                // Render recent activity
-                const activityList = document.getElementById('recentActivityList');
-                activityList.innerHTML = this.activityLog.map(activity => `
-                    <div class="flex items-start">
-                        ${activity.avatar ? 
-                            `<img src="${activity.avatar}" alt="User" class="h-10 w-10 rounded-full">` : 
-                            `<div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-                                <i class="fas fa-cog text-gray-500 dark:text-gray-300"></i>
-                            </div>`
-                        }
-                        <div class="ml-4 flex-1">
-                            <div class="flex items-center justify-between">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">${activity.user}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">${activity.timestamp}</p>
-                            </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${activity.action}</p>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            renderEvents() {
-                const tableBody = document.getElementById('eventsTableBody');
-                tableBody.innerHTML = this.events.map(event => {
-                    const statusBadge = this.getStatusBadge(event.status);
-                    const formattedDate = this.formatEventDate(event.date);
-                    
-                    return `
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${event.title}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${event.club}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${formattedDate}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                ${statusBadge}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                <button class="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 mr-2" data-event-id="${event.id}" data-action="view">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="p-2 rounded-md text-blue-600 hover:bg-blue-100 dark:text-blue-300 dark:hover:bg-blue-900 mr-2" data-event-id="${event.id}" data-action="edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="p-2 rounded-md text-red-600 hover:bg-red-100 dark:text-red-300 dark:hover:bg-red-900" data-event-id="${event.id}" data-action="delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-
-                // Add event listeners to action buttons
-                document.querySelectorAll('[data-event-id]').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const eventId = parseInt(btn.getAttribute('data-event-id'));
-                        const action = btn.getAttribute('data-action');
-                        this.handleEventAction(eventId, action);
-                    });
-                });
-            }
-
-            renderClubs() {
-                const tableBody = document.getElementById('clubsTableBody');
-                tableBody.innerHTML = this.clubs.map(club => {
-                    const statusBadge = this.getStatusBadge(club.status);
-                    
-                    return `
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${club.name}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${club.category}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${club.members}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                ${statusBadge}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                <button class="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 mr-2" data-club-id="${club.id}" data-action="view">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="p-2 rounded-md text-blue-600 hover:bg-blue-100 dark:text-blue-300 dark:hover:bg-blue-900" data-club-id="${club.id}" data-action="edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-
-                // Add event listeners to action buttons
-                document.querySelectorAll('[data-club-id]').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const clubId = parseInt(btn.getAttribute('data-club-id'));
-                        const action = btn.getAttribute('data-action');
-                        this.handleClubAction(clubId, action);
-                    });
-                });
-            }
-
-            renderAnnouncements() {
-                const tableBody = document.getElementById('announcementsTableBody');
-                // Mock data for announcements
-                const announcements = [
-                    {
-                        id: 1,
-                        title: "System Maintenance Tonight",
-                        author: "Sarah Johnson",
-                        date: "Jul 28, 2024",
-                        status: "published"
-                    },
-                    {
-                        id: 2,
-                        title: "New Club Registration Process",
-                        author: "Michael Chen",
-                        date: "Jul 25, 2024",
-                        status: "published"
-                    },
-                    {
-                        id: 3,
-                        title: "Upcoming Training Session",
-                        author: "Emily Davis",
-                        date: "Jul 20, 2024",
-                        status: "draft"
-                    }
-                ];
-                
-                tableBody.innerHTML = announcements.map(announcement => {
-                    const statusBadge = this.getStatusBadge(announcement.status);
-                    
-                    return `
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${announcement.title}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${announcement.author}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${announcement.date}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                ${statusBadge}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                <button class="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 mr-2" data-announcement-id="${announcement.id}" data-action="view">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="p-2 rounded-md text-blue-600 hover:bg-blue-100 dark:text-blue-300 dark:hover:bg-blue-900 mr-2" data-announcement-id="${announcement.id}" data-action="edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="p-2 rounded-md text-red-600 hover:bg-red-100 dark:text-red-300 dark:hover:bg-red-900" data-announcement-id="${announcement.id}" data-action="delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            renderUsers() {
-                const tableBody = document.getElementById('usersTableBody');
-                tableBody.innerHTML = this.users.map(user => {
-                    const roleBadge = this.getRoleBadge(user.role);
-                    const statusBadge = this.getStatusBadge(user.status);
-                    
-                    return `
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                <div class="flex items-center">
-                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="${user.name}" class="h-8 w-8 rounded-full mr-3">
-                                    <span>${user.name}</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${user.email}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                ${roleBadge}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                ${statusBadge}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                <button class="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 mr-2" data-user-id="${user.id}" data-action="view">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="p-2 rounded-md text-blue-600 hover:bg-blue-100 dark:text-blue-300 dark:hover:bg-blue-900 mr-2" data-user-id="${user.id}" data-action="edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="p-2 rounded-md text-red-600 hover:bg-red-100 dark:text-red-300 dark:hover:bg-red-900" data-user-id="${user.id}" data-action="delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            renderChatMonitor() {
-                const activeClubsList = document.getElementById('activeClubsList');
-                activeClubsList.innerHTML = this.clubs.map(club => `
-                    <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">
-                        <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mr-3">
-                            <i class="fas fa-users text-indigo-600 dark:text-indigo-300"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">${club.name}</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">${club.members} members</p>
-                        </div>
-                        <span class="h-2 w-2 rounded-full bg-green-500"></span>
-                    </div>
-                `).join('');
-                
-                const chatMessagesContainer = document.getElementById('chatMessagesContainer');
-                // Mock chat messages
-                const messages = [
-                    {
-                        id: 1,
-                        user: "Raj Patel",
-                        avatar: "https://randomuser.me/api/portraits/men/75.jpg",
-                        message: "When is our next practice session?",
-                        timestamp: "2:45 PM",
-                        club: "Music Club"
-                    },
-                    {
-                        id: 2,
-                        user: "Lisa Wilson",
-                        avatar: "https://randomuser.me/api/portraits/women/95.jpg",
-                        message: "I think it's tomorrow at 4pm in the music room",
-                        timestamp: "2:47 PM",
-                        club: "Music Club"
-                    },
-                    {
-                        id: 3,
-                        user: "David Kim",
-                        avatar: "https://randomuser.me/api/portraits/men/22.jpg",
-                        message: "Can someone help me with the guitar chords?",
-                        timestamp: "2:50 PM",
-                        club: "Music Club"
-                    }
-                ];
-                
-                chatMessagesContainer.innerHTML = messages.map(msg => `
-                    <div class="flex items-start p-4 border-b border-gray-200 dark:border-gray-600 last:border-0">
-                        <img src="${msg.avatar}" alt="${msg.user}" class="h-8 w-8 rounded-full mr-3">
-                        <div class="flex-1">
-                            <div class="flex items-center justify-between">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">${msg.user}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">${msg.timestamp}</p>
-                            </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${msg.message}</p>
-                            <div class="mt-2 flex items-center">
-                                <span class="text-xs bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-2 py-1 rounded">${msg.club}</span>
-                                <button class="ml-auto text-xs text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">
-                                    <i class="fas fa-flag mr-1"></i> Report
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            renderRSVPLogs() {
-                const tableBody = document.getElementById('rsvpTableBody');
-                // Mock RSVP data
-                const rsvpData = [
-                    {
-                        id: 1,
-                        event: "Summer Music Festival",
-                        club: "Music Club",
-                        rsvps: 120,
-                        emails: 150
-                    },
-                    {
-                        id: 2,
-                        event: "Debate Tournament",
-                        club: "Debate Society",
-                        rsvps: 45,
-                        emails: 60
-                    }
-                ];
-                
-                tableBody.innerHTML = rsvpData.map(item => `
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${item.event}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${item.club}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${item.rsvps}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${item.emails}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                            <button class="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 mr-2" data-rsvp-id="${item.id}" data-action="view">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="p-2 rounded-md text-blue-600 hover:bg-blue-100 dark:text-blue-300 dark:hover:bg-blue-900" data-rsvp-id="${item.id}" data-action="export">
-                                <i class="fas fa-download"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-
-            renderSettings() {
-                // Already populated in HTML
-            }
-
-            renderHelp() {
-                // Already populated in HTML
-            }
-
-            handleEventAction(eventId, action) {
-                const event = this.events.find(e => e.id === eventId);
-                if (!event) return;
-                
-                switch(action) {
-                    case 'view':
-                        this.showToast(`Viewing event: ${event.title}`, 'info');
-                        break;
-                    case 'edit':
-                        this.showToast(`Editing event: ${event.title}`, 'info');
-                        break;
-                    case 'delete':
-                        if (confirm(`Are you sure you want to delete "${event.title}"?`)) {
-                            this.events = this.events.filter(e => e.id !== eventId);
-                            this.showToast('Event deleted successfully', 'success');
-                            this.renderEvents();
-                        }
-                        break;
-                }
-            }
-
-            handleClubAction(clubId, action) {
-                const club = this.clubs.find(c => c.id === clubId);
-                if (!club) return;
-                
-                switch(action) {
-                    case 'view':
-                        this.showToast(`Viewing club: ${club.name}`, 'info');
-                        break;
-                    case 'edit':
-                        this.showToast(`Editing club: ${club.name}`, 'info');
-                        break;
-                }
-            }
-
-            handleSearch(query) {
-                this.showToast(`Searching for: ${query}`, 'info');
-                // In a real app, you would perform search and display results
-            }
-
-            logout() {
-                // In a real app, this would redirect to login page
-                this.showToast('You have been logged out', 'info');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 1500);
-            }
-
-            showToast(message, type = 'info') {
-                const toastContainer = document.getElementById('toastContainer');
-                const toast = document.createElement('div');
-                
-                toast.className = `toast flex items-center p-4 w-full max-w-xs rounded-lg shadow-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white`;
-                
-                let iconClass = 'fas fa-info-circle text-blue-500 dark:text-blue-400';
-                if (type === 'success') iconClass = 'fas fa-check-circle text-green-500 dark:text-green-400';
-                if (type === 'warning') iconClass = 'fas fa-exclamation-circle text-yellow-500 dark:text-yellow-400';
-                if (type === 'danger') iconClass = 'fas fa-times-circle text-red-500 dark:text-red-400';
-                
-                toast.innerHTML = `
-                    <i class="${iconClass} mr-3 text-xl"></i>
-                    <div class="text-sm font-normal">${message}</div>
-                `;
-                
-                toastContainer.appendChild(toast);
-                
-                // Remove toast after animation
-                setTimeout(() => {
-                    toast.remove();
-                }, 3000);
-            }
-
-            getStatusBadge(status) {
-                const statusMap = {
-                    'active': { text: 'Active', class: 'badge-success' },
-                    'pending': { text: 'Pending', class: 'badge-warning' },
-                    'inactive': { text: 'Inactive', class: 'badge-danger' },
-                    'published': { text: 'Published', class: 'badge-success' },
-                    'draft': { text: 'Draft', class: 'badge-warning' },
-                    'approved': { text: 'Approved', class: 'badge-success' }
-                };
-                
-                const statusInfo = statusMap[status] || { text: status, class: 'badge-gray' };
-                return `<span class="badge ${statusInfo.class}">${statusInfo.text}</span>`;
-            }
-
-            getRoleBadge(role) {
-                const roleMap = {
-                    'super_admin': { text: 'Super Admin', class: 'badge-danger' },
-                    'admin': { text: 'Admin', class: 'badge-warning' },
-                    'club_admin': { text: 'Club Admin', class: 'badge-primary' },
-                    'member': { text: 'Member', class: 'badge-gray' }
-                };
-                
-                const roleInfo = roleMap[role] || { text: role, class: 'badge-gray' };
-                return `<span class="badge ${roleInfo.class}">${roleInfo.text}</span>`;
-            }
-
-            getNotificationIcon(type) {
-                const icons = {
-                    'event': 'calendar-day',
-                    'club': 'users',
-                    'system': 'cog',
-                    'default': 'bell'
-                };
-                return icons[type] || icons['default'];
-            }
-
-            getNotificationColor(type) {
-                const colors = {
-                    'event': 'blue',
-                    'club': 'green',
-                    'system': 'purple',
-                    'default': 'gray'
-                };
-                return colors[type] || colors['default'];
-            }
-
-            formatEventDate(dateString) {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
+        function handleNavLinkClick(e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+           
+            // Update active page
+            elements.adminPages.forEach(p => p.classList.remove('active'));
+            document.getElementById(`${page}-page`).classList.add('active');
+           
+            // Update page title
+            const titles = {
+                dashboard: 'Dashboard Overview',
+                events: 'Manage Events',
+                clubs: 'Manage Clubs',
+                announcements: 'Announcements',
+                users: 'User Management',
+                chat: 'Club Chat Monitor',
+                rsvp: 'RSVP & Email Logs',
+                settings: 'System Settings',
+                help: 'Help & Support'
+            };
+           
+            const subtitles = {
+                dashboard: 'Welcome back! Here\'s what\'s happening today.',
+                events: 'Approve, edit, or delete events across all clubs',
+                clubs: 'View and manage all registered clubs',
+                announcements: 'Create and manage system-wide announcements',
+                users: 'Manage all system users and permissions',
+                chat: 'Monitor and moderate club chat conversations',
+                rsvp: 'View event RSVPs and sent email notifications',
+                settings: 'Configure system-wide settings and preferences',
+                help: 'Find answers to common questions and get support'
+            };
+           
+            elements.pageTitle.textContent = titles[page];
+            elements.pageSubtitle.textContent = subtitles[page];
+           
+            // Load data for the page if needed
+            if (page === 'dashboard') {
+                loadDashboardData();
+            } else if (page === 'events') {
+                loadEventsData();
+            } else if (page === 'clubs') {
+                loadClubsData();
+            } else if (page === 'announcements') {
+                loadAnnouncementsData();
+            } else if (page === 'users') {
+                loadUsersData();
+            } else if (page === 'chat') {
+                loadChatData();
+            } else if (page === 'rsvp') {
+                loadRSVPData();
+            } else if (page === 'help') {
+                loadFAQData();
             }
         }
 
-        // Initialize the app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            const app = new AdminApp();
-            window.app = app; // Make app available globally for debugging
-        });
+        // Data Loading Functions
+        async function loadDashboardData() {
+            try {
+                // Try to fetch from API first
+                // const response = await fetch(apiEndpoints.getStats);
+                // const data = await response.json();
+               
+                // For this example, we'll use mock data
+                const data = mockData.stats;
+               
+                // Render stats cards
+                let statsHTML = '';
+                data.forEach(stat => {
+                    statsHTML += `
+                        <div class="card">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">${stat.title}</p>
+                                    <h3 class="text-2xl font-bold mt-1">${stat.value}</h3>
+                                    <p class="text-sm mt-1 ${stat.change.startsWith('+') ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">
+                                        ${stat.change} from last week
+                                    </p>
+                                </div>
+                                <div class="p-3 rounded-lg bg-${stat.color}-100 dark:bg-${stat.color}-900 text-${stat.color}-600 dark:text-${stat.color}-300">
+                                    <i class="fas fa-${stat.icon} text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                elements.statsCards.innerHTML = statsHTML;
+               
+                // Load recent activity
+                // const activityResponse = await fetch(apiEndpoints.getRecentActivity);
+                // const activityData = await activityResponse.json();
+                const activityData = mockData.recentActivity;
+               
+                let activityHTML = '';
+                activityData.forEach(activity => {
+                    activityHTML += `
+                        <div class="flex items-start">
+                            <img src="${activity.avatar}" alt="${activity.user}" class="h-10 w-10 rounded-full mr-3">
+                            <div>
+                                <p class="text-sm">
+                                    <span class="font-medium">${activity.user}</span> ${activity.action}
+                                    <span class="font-medium">${activity.target}</span>
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${activity.time}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                elements.recentActivityList.innerHTML = activityHTML;
+               
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showToast('Failed to load dashboard data. Using cached information.', 'error');
+                // Fallback to mock data is already implemented above
+            }
+        }
+
+        async function loadEventsData() {
+            try {
+                // Try to fetch from API first
+                // const response = await fetch(apiEndpoints.getEvents);
+                // const data = await response.json();
+               
+                // For this example, we'll use mock data
+                const data = mockData.events;
+               
+                // Calculate pending events count
+                const pendingCount = data.filter(event => event.status === 'pending').length;
+                elements.pendingEventsCount.textContent = pendingCount;
+               
+                // Render events table
+                let eventsHTML = '';
+                data.forEach(event => {
+                    const statusClass = event.status === 'approved' ? 'badge-success' : 'badge-warning';
+                    const statusText = event.status === 'approved' ? 'Approved' : 'Pending';
+                   
+                    eventsHTML += `
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">${event.name}</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">${event.club}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">${formatDate(event.date)} at ${formatTime(event.time)}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="${statusClass}">${statusText}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <button class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-500 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-500">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                elements.eventsTableBody.innerHTML = eventsHTML;
+               
+            } catch (error) {
+                console.error('Error loading events data:', error);
+                showToast('Failed to load events data. Using cached information.', 'error');
+                // Fallback to mock data is already implemented above
+            }
+        }
+
+        async function loadClubsData() {
+            try {
+                // Try to fetch from API first
+                // const response = await fetch(apiEndpoints.getClubs);
+                // const data = await response.json();
+               
+                // For this example, we'll use mock data
+                const data = mockData.clubs;
+               
+                // Render clubs table
+                let clubsHTML = '';
+                data.forEach(club => {
+                    const statusClass = club.status === 'active' ? 'badge-success' : 'badge-danger';
+                    const statusText = club.status === 'active' ? 'Active' : 'Inactive';
+                   
+                    clubsHTML += `
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">${club.name}</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">${club.category}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">${club.members}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="${statusClass}">${statusText}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <button class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-500 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-500">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                elements.clubsTableBody.innerHTML = clubsHTML;
+               
+            } catch (error) {
+                console.error('Error loading clubs data:', error);
+                showToast('Failed to load clubs data. Using cached information.', 'error');
+                // Fallback to mock data is already implemented above
+            }
+        }
+
+        async function loadAnnouncementsData() {
+            try {
+                // Try to fetch from API first
+                // const response = await fetch(apiEndpoints.getAnnouncements);
+                // const data = await response.json();
+               
+                // For this example, we'll use mock data
+                const data = mockData.announcements;
+               
+                // Render announcements table
+                let announcementsHTML = '';
+                data.forEach(announcement => {
+                    const statusClass = announcement.status === 'active' ? 'badge-success' : 'badge-warning';
+                    const statusText = announcement.status === 'active' ? 'Active' : 'Expired';
+                   
+                    announcementsHTML += `
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">${announcement.title}</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">${announcement.author}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">${formatDate(announcement.date)}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="${statusClass}">${statusText}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <button class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-500 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-500">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                elements.announcementsTableBody.innerHTML = announcementsHTML;
+               
+            } catch (error) {
+                console.error('Error loading announcements data:', error);
+                showToast('Failed to load announcements data. Using cached information.', 'error');
+                // Fallback to mock data is already implemented above
+            }
+        }
+
+        async function loadUsersData() {
+            try {
+                // Try to fetch from API first
+                // const response = await fetch(apiEndpoints.getUsers);
+                // const data = await response.json();
+               
+                // For this example, we'll use mock data
+                const data = mockData.users;
+               
+                // Render users table
+                let usersHTML = '';
+                data.forEach(user => {
+                    const statusClass = user.status === 'active' ? 'badge-success' : 'badge-danger';
+                    const statusText = user.status === 'active' ? 'Active' : 'Inactive';
+                    const roleText = user.role === 'super_admin' ? 'Super Admin' :
+                                    user.role === 'club_admin' ? 'Club Admin' : 'Club Member';
+                    const roleClass = user.role === 'super_admin' ? 'badge-primary' :
+                                    user.role === 'club_admin' ? 'badge-info' : 'badge-gray';
+                   
+                    usersHTML += `
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img src="${user.avatar}" alt="${user.name}" class="h-10 w-10 rounded-full mr-3">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">${user.name}</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">${user.email}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="${roleClass}">${roleText}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="${statusClass}">${statusText}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <button class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-500 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-500">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                elements.usersTableBody.innerHTML = usersHTML;
+               
+            } catch (error) {
+                console.error('Error loading users data:', error);
+                showToast('Failed to load users data. Using cached information.', 'error');
+                // Fallback to mock data is already implemented above
+            }
+        }
+
+        async function loadChatData() {
+            try {
+                // For this example, we'll use mock data from clubs
+                const data = mockData.clubs.filter(club => club.status === 'active');
+               
+                // Render active clubs list
+                let clubsHTML = '';
+                data.forEach(club => {
+                    clubsHTML += `
+                        <div class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer transition-colors">
+                            <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 mr-3">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">${club.name}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">${club.members} members</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                elements.activeClubsList.innerHTML = clubsHTML;
+               
+                // Render sample chat messages
+                const chatHTML = `
+                    <div class="p-4">
+                        <div class="mb-4">
+                            <div class="flex items-start mb-2">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="h-8 w-8 rounded-full mr-2">
+                                <div>
+                                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 inline-block">
+                                        <p class="text-sm">Hey everyone! Don't forget about our meeting tomorrow at 3pm in the student center.</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Alex Morgan - 10:30 AM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start mb-2">
+                                <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="User" class="h-8 w-8 rounded-full mr-2">
+                                <div>
+                                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 inline-block">
+                                        <p class="text-sm">I'll be there! Can someone bring snacks?</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Taylor Swift - 10:32 AM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start mb-2">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User" class="h-8 w-8 rounded-full mr-2">
+                                <div>
+                                    <div class="bg-indigo-100 dark:bg-indigo-900 rounded-lg p-3 inline-block">
+                                        <p class="text-sm">I can bring some chips and drinks. How many people should I plan for?</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Chris Evans - 10:35 AM</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                            <div class="relative">
+                                <input type="text" placeholder="Type a message..." class="w-full pl-4 pr-12 py-2 border border-gray-200 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700">
+                                <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                elements.chatMessagesContainer.innerHTML = chatHTML;
+               
+            } catch (error) {
+                console.error('Error loading chat data:', error);
+                showToast('Failed to load chat data. Using cached information.', 'error');
+            }
+        }
+
+        async function loadRSVPData() {
+            try {
+                // For this example, we'll use mock data from events
+                const data = mockData.events;
+               
+                // Render RSVP table
+                let rsvpHTML = '';
+                data.forEach(event => {
+                    rsvpHTML += `
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">${event.name}</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">${event.club}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">${event.rsvps}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">${Math.floor(event.rsvps * 0.8)}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <button class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-500">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                elements.rsvpTableBody.innerHTML = rsvpHTML;
+               
+            } catch (error) {
+                console.error('Error loading RSVP data:', error);
+                showToast('Failed to load RSVP data. Using cached information.', 'error');
+            }
+        }
+
+        async function loadFAQData() {
+            try {
+                // Try to fetch from API first
+                // const response = await fetch(apiEndpoints.getFAQs);
+                // const data = await response.json();
+               
+                // For this example, we'll use mock data
+                const data = mockData.faqs;
+               
+                // Render FAQ accordion
+                let faqHTML = '';
+                data.forEach(faq => {
+                    faqHTML += `
+                        <div class="border-b border-gray-200 dark:border-gray-600 pb-4 mb-4">
+                            <button class="faq-question flex items-center justify-between w-full text-left font-medium text-gray-900 dark:text-white">
+                                <span>${faq.question}</span>
+                                <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-answer mt-2 text-sm text-gray-600 dark:text-gray-300 hidden">
+                                ${faq.answer}
+                            </div>
+                        </div>
+                    `;
+                });
+                elements.faqAccordion.innerHTML = faqHTML;
+               
+                // Add click handlers for FAQ accordion
+                document.querySelectorAll('.faq-question').forEach(question => {
+                    question.addEventListener('click', function() {
+                        const answer = this.nextElementSibling;
+                        const icon = this.querySelector('i');
+                       
+                        answer.classList.toggle('hidden');
+                        icon.classList.toggle('transform');
+                        icon.classList.toggle('rotate-180');
+                    });
+                });
+               
+            } catch (error) {
+                console.error('Error loading FAQ data:', error);
+                showToast('Failed to load FAQ data. Using cached information.', 'error');
+            }
+        }
+
+        async function loadNotifications() {
+            try {
+                // Try to fetch from API first
+                // const response = await fetch(apiEndpoints.getNotifications);
+                // const data = await response.json();
+               
+                // For this example, we'll use mock data
+                const data = mockData.notifications;
+               
+                // Calculate unread count
+                const unreadCount = data.filter(notification => !notification.read).length;
+                elements.notificationCount.textContent = unreadCount;
+               
+                // Render notifications
+                let notificationsHTML = '';
+                data.forEach(notification => {
+                    notificationsHTML += `
+                        <a href="#" class="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${notification.read ? '' : 'bg-blue-50 dark:bg-blue-900'}">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 pt-0.5">
+                                    <i class="fas fa-bell text-gray-400"></i>
+                                </div>
+                                <div class="ml-3 w-0 flex-1">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">${notification.title}</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate">${notification.message}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${notification.time}</p>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                });
+                elements.notificationList.innerHTML = notificationsHTML;
+               
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+                showToast('Failed to load notifications. Using cached information.', 'error');
+            }
+        }
+
+        // Initialize the Dashboard
+        function initDashboard() {
+            // Set admin profile data
+            elements.adminAvatar.src = mockData.admin.avatar;
+            elements.adminName.textContent = mockData.admin.name;
+            elements.adminRole.textContent = mockData.admin.role;
+            elements.profileAvatar.src = mockData.admin.avatar;
+            elements.profileName.textContent = mockData.admin.name;
+           
+            // Load initial data
+            loadDashboardData();
+            loadNotifications();
+           
+            // Set up event listeners
+            elements.sidebarToggle.addEventListener('click', handleSidebarToggle);
+            elements.collapseSidebarBtn.addEventListener('click', handleSidebarCollapse);
+            elements.notificationBtn.addEventListener('click', () => toggleDropdown(elements.notificationDropdown));
+            elements.profileBtn.addEventListener('click', () => toggleDropdown(elements.profileDropdown));
+            elements.logoutBtn.addEventListener('click', handleLogout);
+            elements.logoutBtn2.addEventListener('click', handleLogout);
+           
+            // Set up navigation links
+            elements.navLinks.forEach(link => {
+                link.addEventListener('click', handleNavLinkClick);
+            });
+           
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!elements.notificationBtn.contains(e.target) && !elements.notificationDropdown.contains(e.target)) {
+                    elements.notificationDropdown.classList.add('opacity-0');
+                    elements.notificationDropdown.classList.add('invisible');
+                    elements.notificationDropdown.classList.remove('opacity-100');
+                    elements.notificationDropdown.classList.remove('visible');
+                }
+               
+                if (!elements.profileBtn.contains(e.target) && !elements.profileDropdown.contains(e.target)) {
+                    elements.profileDropdown.classList.add('opacity-0');
+                    elements.profileDropdown.classList.add('invisible');
+                    elements.profileDropdown.classList.remove('opacity-100');
+                    elements.profileDropdown.classList.remove('visible');
+                }
+            });
+           
+            // Show welcome toast
+            setTimeout(() => {
+                showToast(`Welcome back, ${mockData.admin.name}!`, 'success');
+            }, 1000);
+        }
+
+        // Start the dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initDashboard);
     </script>
 </body>
 </html>

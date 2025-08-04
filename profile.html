@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusHub | Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+       
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+        .toast.success {
+            background-color: #10b981;
+            color: white;
+        }
+        .toast.error {
+            background-color: #ef4444;
+            color: white;
+        }
+       
+        /* Sticky navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .navbar-scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .dark .navbar-scrolled {
+            background-color: rgba(31, 41, 55, 0.95);
+        }
+       
+        /* Main content spacing */
+        .main-content {
+            margin-top: 80px;
+        }
+       
+        /* Profile tabs */
+        .profile-tab {
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .profile-tab:hover {
+            border-bottom-color: #6366f1;
+        }
+        .profile-tab.active {
+            border-bottom-color: #6366f1;
+            color: #6366f1;
+            font-weight: 500;
+        }
+        .dark .profile-tab.active {
+            color: #8b5cf6;
+            border-bottom-color: #8b5cf6;
+        }
+       
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+       
+        /* Event card */
+        .event-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
+    <!-- Sticky Navbar -->
+    <nav class="navbar bg-white dark:bg-gray-800 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="index.html" class="flex items-center">
+                            <i class="fas fa-university text-primary-600 dark:text-primary-400 text-2xl mr-2"></i>
+                            <span class="text-xl font-bold text-gray-800 dark:text-white">CampusHub</span>
+                        </a>
+                    </div>
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="index.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Home</a>
+                        <a href="events.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Events</a>
+                        <a href="clubs.html" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Clubs</a>
+                        <a href="#announcements" class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Announcements</a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline"></i>
+                    </button>
+                    <div id="userDropdown" class="relative">
+                        <button id="userMenuButton" class="flex items-center space-x-2 focus:outline-none">
+                            <span id="usernameNav" class="text-sm font-medium text-gray-700 dark:text-gray-200"></span>
+                            <img id="userAvatar" class="w-8 h-8 rounded-full" src="https://ui-avatars.com/api/?background=6366f1&color=fff" alt="User avatar">
+                        </button>
+                        <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10">
+                            <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Your Profile</a>
+                            <a href="#" id="logoutNavBtn" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="-mr-2 flex items-center md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-50 bg-gray-600 bg-opacity-75">
+        <div class="fixed inset-0 flex z-40">
+            <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-gray-800">
+                <div class="absolute top-0 right-0 -mr-12 pt-2">
+                    <button id="mobile-menu-close" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none">
+                        <span class="sr-only">Close sidebar</span>
+                        <i class="fas fa-times text-white"></i>
+                    </button>
+                </div>
+                <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
+                    <div class="flex-shrink-0 flex items-center px-4">
+                        <i class="fas fa-university text-primary-600 dark:text-primary-400 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800 dark:text-white">CampusHub</span>
+                    </div>
+                    <nav class="mt-5 px-2 space-y-1">
+                        <a href="index.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                            <i class="fas fa-home mr-3 text-gray-500 dark:text-gray-400"></i>
+                            Home
+                        </a>
+                        <a href="events.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                            <i class="fas fa-calendar-alt mr-3 text-gray-500 dark:text-gray-400"></i>
+                            Events
+                        </a>
+                        <a href="clubs.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                            <i class="fas fa-users mr-3 text-gray-500 dark:text-gray-400"></i>
+                            Clubs
+                        </a>
+                        <a href="#announcements" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                            <i class="fas fa-bullhorn mr-3 text-gray-500 dark:text-gray-400"></i>
+                            Announcements
+                        </a>
+                        <div id="mobileProfileSection" class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <a href="profile.html" class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                                <i class="fas fa-user mr-3 text-gray-500 dark:text-gray-400"></i>
+                                Your Profile
+                            </a>
+                            <a href="#" id="mobileLogoutBtn" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                                <i class="fas fa-sign-out-alt mr-3 text-gray-500 dark:text-gray-400"></i>
+                                Sign Out
+                            </a>
+                        </div>
+                    </nav>
+                </div>
+                <div class="flex-shrink-0 w-14"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Profile Header -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
+                <div class="gradient-bg h-32"></div>
+                <div class="px-6 pb-6 -mt-16 relative">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end">
+                        <div class="flex items-end">
+                            <div class="h-32 w-32 rounded-full border-4 border-white dark:border-gray-800 bg-white dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+                                <img id="profileAvatar" class="h-full w-full object-cover" src="https://ui-avatars.com/api/?background=6366f1&color=fff" alt="Profile avatar">
+                            </div>
+                            <div class="ml-6 mb-4">
+                                <h1 id="profileName" class="text-2xl font-bold text-gray-900 dark:text-white">Loading...</h1>
+                                <p id="profileRole" class="text-gray-600 dark:text-gray-300">Loading...</p>
+                                <div class="mt-2 flex space-x-2">
+                                    <span class="badge bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
+                                        <i class="fas fa-star mr-1"></i> <span id="membershipStatus">Member</span>
+                                    </span>
+                                    <span id="profileYear" class="badge bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                        Loading...
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 sm:mt-0 flex space-x-3">
+                            <button class="bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-800 dark:text-white px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium transition-colors">
+                                <i class="fas fa-share-alt mr-2"></i> Share Profile
+                            </button>
+                            <button id="editProfileBtn" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                <i class="fas fa-pencil-alt mr-2"></i> Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Profile Tabs -->
+            <div class="mt-6 border-b border-gray-200 dark:border-gray-700">
+                <nav class="-mb-px flex space-x-8">
+                    <a href="#" id="overviewTab" class="profile-tab active whitespace-nowrap py-4 px-1 text-sm font-medium">
+                        Overview
+                    </a>
+                    <a href="#" id="eventsTab" class="profile-tab whitespace-nowrap py-4 px-1 text-sm font-medium">
+                        My Events
+                    </a>
+                    <a href="#" id="clubsTab" class="profile-tab whitespace-nowrap py-4 px-1 text-sm font-medium">
+                        My Clubs
+                    </a>
+                    <a href="#" id="settingsTab" class="profile-tab whitespace-nowrap py-4 px-1 text-sm font-medium">
+                        Settings
+                    </a>
+                </nav>
+            </div>
+           
+            <!-- Tab Content -->
+            <div class="mt-8">
+                <!-- Overview Tab Content -->
+                <div id="overviewContent" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Left Column -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <!-- About Section -->
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">About</h3>
+                                </div>
+                                <div class="p-6">
+                                    <p id="profileBio" class="text-gray-600 dark:text-gray-300">
+                                        Loading bio...
+                                    </p>
+                                    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                                                <i class="fas fa-envelope"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</h4>
+                                                <p id="profileEmail" class="text-sm text-gray-900 dark:text-white mt-1">Loading...</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                                                <i class="fas fa-phone"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Phone</h4>
+                                                <p id="profilePhone" class="text-sm text-gray-900 dark:text-white mt-1">Loading...</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                                                <i class="fas fa-graduation-cap"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Major</h4>
+                                                <p id="profileMajor" class="text-sm text-gray-900 dark:text-white mt-1">Loading...</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Location</h4>
+                                                <p id="profileLocation" class="text-sm text-gray-900 dark:text-white mt-1">University Campus</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <!-- Recent Activity Section -->
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
+                                </div>
+                                <div class="divide-y divide-gray-200 dark:divide-gray-700" id="recentActivity">
+                                    <!-- Activity items will be loaded here -->
+                                    <div class="p-6 text-center">
+                                        <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                                        <p class="mt-2 text-gray-500">Loading activities...</p>
+                                    </div>
+                                </div>
+                                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 text-center">
+                                    <a href="#" class="text-sm font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
+                                        View all activity
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <!-- Right Column -->
+                        <div class="space-y-6">
+                            <!-- Stats Section -->
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Your Stats</h3>
+                                </div>
+                                <div class="p-6">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                            <div class="text-3xl font-bold text-primary-600 dark:text-primary-400" id="eventsAttended">0</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Events Attended</div>
+                                        </div>
+                                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                            <div class="text-3xl font-bold text-primary-600 dark:text-primary-400" id="clubsJoined">0</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Clubs Joined</div>
+                                        </div>
+                                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                            <div class="text-3xl font-bold text-primary-600 dark:text-primary-400" id="badgesEarned">0</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Badges Earned</div>
+                                        </div>
+                                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                            <div class="text-3xl font-bold text-primary-600 dark:text-primary-400" id="connectionsCount">0</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Connections</div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-6">
+                                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Event Participation</h4>
+                                        <div class="h-48">
+                                            <canvas id="eventsChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <!-- Badges Section -->
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Badges</h3>
+                                </div>
+                                <div class="p-6">
+                                    <div class="grid grid-cols-3 gap-4" id="badgesContainer">
+                                        <!-- Badges will be loaded here -->
+                                        <div class="text-center">
+                                            <div class="mx-auto h-16 w-16 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-gray-400 mb-2">
+                                                <i class="fas fa-spinner fa-spin"></i>
+                                            </div>
+                                            <p class="text-xs font-medium text-gray-900 dark:text-white">Loading...</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-6 text-center">
+                                        <a href="#" class="text-sm font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
+                                            View all badges
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+                <!-- Events Tab Content -->
+                <div id="eventsContent" class="tab-content hidden">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">My Events</h3>
+                            <div class="flex space-x-3">
+                                <div class="relative">
+                                    <select id="eventsFilter" class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                                        <option value="all">All Events</option>
+                                        <option value="upcoming">Upcoming</option>
+                                        <option value="past">Past</option>
+                                        <option value="rsvpd">RSVP'd</option>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                        <i class="fas fa-chevron-down text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="divide-y divide-gray-200 dark:divide-gray-700" id="userEventsContainer">
+                            <!-- Events will be loaded here -->
+                            <div class="p-6 text-center">
+                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                                <p class="mt-2 text-gray-500">Loading events...</p>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 text-center">
+                            <a href="events.html" class="text-sm font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
+                                Browse more events
+                            </a>
+                        </div>
+                    </div>
+                </div>
+               
+                <!-- Clubs Tab Content -->
+                <div id="clubsContent" class="tab-content hidden">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">My Clubs</h3>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6" id="userClubsContainer">
+                            <!-- Clubs will be loaded here -->
+                            <div class="text-center">
+                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                                <p class="mt-2 text-gray-500">Loading clubs...</p>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 text-center">
+                            <a href="clubs.html" class="text-sm font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
+                                Browse more clubs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+               
+                <!-- Settings Tab Content -->
+                <div id="settingsContent" class="tab-content hidden">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Account Settings</h3>
+                        </div>
+                        <div class="p-6">
+                            <form id="profileForm">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
+                                        <input type="text" id="firstName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white" required>
+                                    </div>
+                                    <div>
+                                        <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
+                                        <input type="text" id="lastName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white" required>
+                                    </div>
+                                    <div>
+                                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                                        <input type="email" id="email" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white" required>
+                                    </div>
+                                    <div>
+                                        <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone</label>
+                                        <input type="tel" id="phone" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                    <div>
+                                        <label for="major" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Major</label>
+                                        <input type="text" id="major" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                    <div>
+                                        <label for="year" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Graduation Year</label>
+                                        <select id="year" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white">
+                                            <option value="2023">2023</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2026">2026</option>
+                                            <option value="2027">2027</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mt-6">
+                                    <label for="bio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
+                                    <textarea id="bio" rows="4" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"></textarea>
+                                </div>
+                                <div class="mt-6">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notification Preferences</label>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <input id="event-notifications" name="event-notifications" type="checkbox" checked class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="event-notifications" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Event reminders</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="club-notifications" name="club-notifications" type="checkbox" checked class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="club-notifications" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Club announcements</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="newsletter" name="newsletter" type="checkbox" checked class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="newsletter" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Weekly newsletter</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-8 flex justify-end space-x-3">
+                                    <button type="button" class="bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-800 dark:text-white px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium transition-colors">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                           
+                            <div class="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Change Password</h3>
+                                <form id="passwordForm">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label for="currentPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
+                                            <input type="password" id="currentPassword" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white" required>
+                                        </div>
+                                        <div>
+                                            <label for="newPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New Password</label>
+                                            <input type="password" id="newPassword" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white" required>
+                                        </div>
+                                        <div>
+                                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm New Password</label>
+                                            <input type="password" id="confirmPassword" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white" required>
+                                        </div>
+                                    </div>
+                                    <div class="mt-6 flex justify-end">
+                                        <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                            Update Password
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                           
+                            <div class="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8">
+                                <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-4">Danger Zone</h3>
+                                <div class="bg-red-50 dark:bg-red-900 dark:bg-opacity-20 rounded-lg p-4">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h4 class="text-sm font-medium text-red-800 dark:text-red-200">Delete Account</h4>
+                                            <p class="text-sm text-red-600 dark:text-red-300 mt-1">Once you delete your account, there is no going back. Please be certain.</p>
+                                        </div>
+                                        <button type="button" id="deleteAccountBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                            Delete Account
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <script>
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:5000/api'; // Update with your backend URL
+
+        // Enhanced Auth Utility Functions
+        const AuthUtils = {
+            // Get auth token
+            getToken: () => {
+                return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+            },
+
+            // Get auth headers
+            getAuthHeaders: () => {
+                return {
+                    'Authorization': `Bearer ${AuthUtils.getToken()}`,
+                    'Content-Type': 'application/json'
+                };
+            },
+
+            // Store user data
+            storeUserData: (userData) => {
+                const storage = localStorage.getItem('authToken') ? localStorage : sessionStorage;
+                storage.setItem('userId', userData._id);
+                storage.setItem('userRole', userData.role);
+                storage.setItem('userName', userData.name);
+                storage.setItem('userEmail', userData.email);
+                storage.setItem('userMajor', userData.major || '');
+                storage.setItem('userGraduationYear', userData.graduationYear || '');
+                storage.setItem('userBio', userData.bio || '');
+                storage.setItem('userPhone', userData.phone || '');
+                storage.setItem('userAvatar', userData.avatar || '');
+            },
+
+            // Clear auth data
+            clearAuthData: () => {
+                localStorage.removeItem('authToken');
+                sessionStorage.removeItem('authToken');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userMajor');
+                localStorage.removeItem('userGraduationYear');
+                localStorage.removeItem('userBio');
+                localStorage.removeItem('userPhone');
+                localStorage.removeItem('userAvatar');
+                sessionStorage.removeItem('userId');
+                sessionStorage.removeItem('userRole');
+                sessionStorage.removeItem('userName');
+                sessionStorage.removeItem('userEmail');
+                sessionStorage.removeItem('userMajor');
+                sessionStorage.removeItem('userGraduationYear');
+                sessionStorage.removeItem('userBio');
+                sessionStorage.removeItem('userPhone');
+                sessionStorage.removeItem('userAvatar');
+            },
+
+            // Get current user data
+            getUserData: () => {
+                const storage = localStorage.getItem('authToken') ? localStorage : sessionStorage;
+                return {
+                    id: storage.getItem('userId'),
+                    role: storage.getItem('userRole'),
+                    name: storage.getItem('userName'),
+                    email: storage.getItem('userEmail'),
+                    major: storage.getItem('userMajor'),
+                    graduationYear: storage.getItem('userGraduationYear'),
+                    bio: storage.getItem('userBio'),
+                    phone: storage.getItem('userPhone'),
+                    avatar: storage.getItem('userAvatar')
+                };
+            },
+
+            // Check if user is authenticated
+            isAuthenticated: () => {
+                return !!AuthUtils.getToken();
+            },
+
+            // Redirect based on role
+            redirectByRole: () => {
+                const role = AuthUtils.getUserData().role;
+                switch(role) {
+                    case 'student':
+                        window.location.href = 'index.html';
+                        break;
+                    case 'club-rep':
+                        window.location.href = 'clubrepdash.html';
+                        break;
+                    case 'admin':
+                        window.location.href = 'admindashboard.html';
+                        break;
+                    default:
+                        window.location.href = 'authPage.html';
+                }
+            },
+
+            // Protect routes
+            protectRoute: () => {
+                if (!AuthUtils.isAuthenticated()) {
+                    window.location.href = 'authPage.html';
+                }
+            },
+
+            // Logout function
+            logout: () => {
+                AuthUtils.clearAuthData();
+                window.location.href = 'authPage.html';
+            },
+
+            // Update UI with user data
+            updateAuthUI: () => {
+                if (!AuthUtils.isAuthenticated()) {
+                    window.location.href = 'authPage.html';
+                    return;
+                }
+
+                const userData = AuthUtils.getUserData();
+                
+                // Set navbar user info
+                document.getElementById('usernameNav').textContent = userData.name;
+                document.getElementById('userAvatar').src = userData.avatar || 
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=6366f1&color=fff`;
+                
+                // Set profile data
+                document.getElementById('profileName').textContent = userData.name;
+                document.getElementById('profileAvatar').src = userData.avatar || 
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=6366f1&color=fff`;
+                document.getElementById('profileEmail').textContent = userData.email;
+                document.getElementById('profilePhone').textContent = userData.phone || 'Not provided';
+                document.getElementById('profileMajor').textContent = userData.major || 'Not specified';
+                document.getElementById('profileYear').textContent = userData.graduationYear ? 
+                    `Class of ${userData.graduationYear}` : 'Graduation year not set';
+                document.getElementById('profileBio').textContent = userData.bio || 'No bio provided yet.';
+                
+                // Set profile role
+                const roleText = {
+                    'student': 'Student',
+                    'club-rep': 'Club Representative',
+                    'admin': 'Administrator'
+                };
+                document.getElementById('profileRole').textContent = roleText[userData.role] || 'User';
+                
+                // Set form values
+                const nameParts = userData.name.split(' ');
+                document.getElementById('firstName').value = nameParts[0] || '';
+                document.getElementById('lastName').value = nameParts.slice(1).join(' ') || '';
+                document.getElementById('email').value = userData.email;
+                document.getElementById('phone').value = userData.phone || '';
+                document.getElementById('major').value = userData.major || '';
+                document.getElementById('year').value = userData.graduationYear || '';
+                document.getElementById('bio').value = userData.bio || '';
+            }
+        };
+
+        // Toast Notification Function
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const newTheme = html.classList.contains('dark') ? 'light' : 'dark';
+            html.classList.remove('dark', 'light');
+            html.classList.add(newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Initialize theme
+        function initTheme() {
+            const html = document.documentElement;
+            const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            html.classList.add(currentTheme);
+        }
+
+        // Tab switching functionality
+        function setupTabs() {
+            const tabs = ['overview', 'events', 'clubs', 'settings'];
+           
+            tabs.forEach(tab => {
+                const tabButton = document.getElementById(`${tab}Tab`);
+                const tabContent = document.getElementById(`${tab}Content`);
+               
+                if (tabButton && tabContent) {
+                    tabButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                       
+                        // Remove active class from all tabs
+                        tabs.forEach(t => {
+                            document.getElementById(`${t}Tab`).classList.remove('active');
+                            document.getElementById(`${t}Content`).classList.add('hidden');
+                        });
+                       
+                        // Add active class to clicked tab
+                        tabButton.classList.add('active');
+                        tabContent.classList.remove('hidden');
+                    });
+                }
+            });
+        }
+
+        // API Service for User Data
+        const UserService = {
+            // Fetch current user profile
+            getProfile: async () => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users/me`, {
+                        method: 'GET',
+                        headers: AuthUtils.getAuthHeaders()
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch user profile');
+                    }
+                    
+                    const data = await response.json();
+                    AuthUtils.storeUserData(data);
+                    return data;
+                    
+                } catch (error) {
+                    console.error('Error fetching user profile:', error);
+                    showToast('Failed to load profile data', 'error');
+                    throw error;
+                }
+            },
+
+            // Update user profile
+            updateProfile: async (profileData) => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users/me`, {
+                        method: 'PATCH',
+                        headers: AuthUtils.getAuthHeaders(),
+                        body: JSON.stringify(profileData)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to update profile');
+                    }
+                    
+                    const data = await response.json();
+                    AuthUtils.storeUserData(data);
+                    return data;
+                    
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                    showToast(error.message || 'Failed to update profile', 'error');
+                    throw error;
+                }
+            },
+
+            // Change password
+            changePassword: async (currentPassword, newPassword) => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users/change-password`, {
+                        method: 'POST',
+                        headers: AuthUtils.getAuthHeaders(),
+                        body: JSON.stringify({ currentPassword, newPassword })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to change password');
+                    }
+                    
+                    return await response.json();
+                    
+                } catch (error) {
+                    console.error('Error changing password:', error);
+                    showToast(error.message || 'Failed to change password', 'error');
+                    throw error;
+                }
+            },
+
+            // Delete account
+            deleteAccount: async () => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users/me`, {
+                        method: 'DELETE',
+                        headers: AuthUtils.getAuthHeaders()
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to delete account');
+                    }
+                    
+                    return await response.json();
+                    
+                } catch (error) {
+                    console.error('Error deleting account:', error);
+                    showToast(error.message || 'Failed to delete account', 'error');
+                    throw error;
+                }
+            }
+        };
+
+        // API Service for Events
+        const EventService = {
+            // Get user's events
+            getUserEvents: async (filter = 'all') => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users/me/events?filter=${filter}`, {
+                        method: 'GET',
+                        headers: AuthUtils.getAuthHeaders()
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch user events');
+                    }
+                    
+                    return await response.json();
+                    
+                } catch (error) {
+                    console.error('Error fetching user events:', error);
+                    showToast('Failed to load your events', 'error');
+                    return [];
+                }
+            },
+
+            // Cancel event RSVP
+            cancelRsvp: async (eventId) => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/events/${eventId}/rsvp`, {
+                        method: 'DELETE',
+                        headers: AuthUtils.getAuthHeaders()
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to cancel RSVP');
+                    }
+                    
+                    return await response.json();
+                    
+                } catch (error) {
+                    console.error('Error canceling RSVP:', error);
+                    showToast(error.message || 'Failed to cancel RSVP', 'error');
+                    throw error;
+                }
+            }
+        };
+
+        // API Service for Clubs
+        const ClubService = {
+            // Get user's clubs
+            getUserClubs: async () => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users/me/clubs`, {
+                        method: 'GET',
+                        headers: AuthUtils.getAuthHeaders()
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch user clubs');
+                    }
+                    
+                    return await response.json();
+                    
+                } catch (error) {
+                    console.error('Error fetching user clubs:', error);
+                    showToast('Failed to load your clubs', 'error');
+                    return [];
+                }
+            },
+
+            // Leave club
+            leaveClub: async (clubId) => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/clubs/${clubId}/members`, {
+                        method: 'DELETE',
+                        headers: AuthUtils.getAuthHeaders()
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to leave club');
+                    }
+                    
+                    return await response.json();
+                    
+                } catch (error) {
+                    console.error('Error leaving club:', error);
+                    showToast(error.message || 'Failed to leave club', 'error');
+                    throw error;
+                }
+            }
+        };
+
+        // API Service for Activity
+        const ActivityService = {
+            // Get user activity
+            getUserActivity: async () => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users/me/activity`, {
+                        method: 'GET',
+                        headers: AuthUtils.getAuthHeaders()
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch user activity');
+                    }
+                    
+                    return await response.json();
+                    
+                } catch (error) {
+                    console.error('Error fetching user activity:', error);
+                    showToast('Failed to load your activity', 'error');
+                    return [];
+                }
+            }
+        };
+
+        // Render events
+        function renderEvents(events) {
+            const container = document.getElementById('userEventsContainer');
+            
+            if (events.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 text-center">
+                        <i class="fas fa-calendar-times text-gray-400 text-2xl"></i>
+                        <p class="mt-2 text-gray-500">No events found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = events.map(event => `
+                <div class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" data-event-id="${event._id}">
+                    <div class="flex flex-col sm:flex-row sm:items-center">
+                        <div class="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
+                            <img src="${event.image || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'}" 
+                                 alt="${event.name}" class="h-32 w-full sm:w-48 object-cover rounded-lg">
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-lg font-medium text-gray-900 dark:text-white">${event.name}</h4>
+                                <span class="text-xs bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-2 py-1 rounded-full">
+                                    ${event.category || 'General'}
+                                </span>
+                            </div>
+                            <div class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                <i class="far fa-calendar-alt mr-1"></i>
+                                <span>${new Date(event.startTime).toLocaleString()}</span>
+                            </div>
+                            <div class="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                <i class="fas fa-map-marker-alt mr-1"></i>
+                                <span>${event.location || 'TBD'}</span>
+                            </div>
+                            <p class="mt-3 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+                                ${event.description || 'No description available.'}
+                            </p>
+                            <div class="mt-4 flex space-x-3">
+                                <a href="event-details.html?id=${event._id}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                    <i class="fas fa-ticket-alt mr-2"></i> View Details
+                                </a>
+                                <button class="cancel-rsvp-btn bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-800 dark:text-white px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium transition-colors">
+                                    <i class="fas fa-calendar-minus mr-2"></i> Cancel RSVP
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add event listeners for cancel RSVP buttons
+            document.querySelectorAll('.cancel-rsvp-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const eventCard = e.target.closest('[data-event-id]');
+                    const eventId = eventCard.dataset.eventId;
+                    
+                    try {
+                        await EventService.cancelRsvp(eventId);
+                        showToast('RSVP canceled successfully');
+                        eventCard.remove();
+                        
+                        // Update events count
+                        const eventsCount = document.getElementById('eventsAttended');
+                        eventsCount.textContent = parseInt(eventsCount.textContent) - 1;
+                        
+                    } catch (error) {
+                        console.error('Error canceling RSVP:', error);
+                    }
+                });
+            });
+        }
+
+        // Render clubs
+        function renderClubs(clubs) {
+            const container = document.getElementById('userClubsContainer');
+            
+            if (clubs.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 text-center col-span-3">
+                        <i class="fas fa-users-slash text-gray-400 text-2xl"></i>
+                        <p class="mt-2 text-gray-500">You haven't joined any clubs yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = clubs.map(club => `
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden relative group" data-club-id="${club._id}">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${club.image || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'}" 
+                             alt="${club.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center mb-2">
+                            <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-600 flex items-center justify-center mr-3">
+                                <i class="fas fa-users text-primary-600 dark:text-primary-400"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${club.name}</h3>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm line-clamp-2">
+                            ${club.description || 'No description available.'}
+                        </p>
+                        <div class="mt-4 flex justify-between items-center">
+                            <span class="text-xs bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">
+                                ${club.role || 'Member'}
+                            </span>
+                            <button class="leave-club-btn text-xs bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-3 py-1 rounded-md font-medium transition-colors">
+                                Leave Club
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add event listeners for leave club buttons
+            document.querySelectorAll('.leave-club-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const clubCard = e.target.closest('[data-club-id]');
+                    const clubId = clubCard.dataset.clubId;
+                    
+                    try {
+                        await ClubService.leaveClub(clubId);
+                        showToast('Successfully left the club');
+                        clubCard.remove();
+                        
+                        // Update clubs count
+                        const clubsCount = document.getElementById('clubsJoined');
+                        clubsCount.textContent = parseInt(clubsCount.textContent) - 1;
+                        
+                    } catch (error) {
+                        console.error('Error leaving club:', error);
+                    }
+                });
+            });
+        }
+
+        // Render activity
+        function renderActivity(activities) {
+            const container = document.getElementById('recentActivity');
+            
+            if (activities.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 text-center">
+                        <i class="fas fa-inbox text-gray-400 text-2xl"></i>
+                        <p class="mt-2 text-gray-500">No recent activity</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = activities.map(activity => {
+                let icon, color;
+                switch(activity.type) {
+                    case 'event':
+                        icon = 'fa-calendar-check';
+                        color = 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300';
+                        break;
+                    case 'club':
+                        icon = 'fa-users';
+                        color = 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300';
+                        break;
+                    case 'badge':
+                        icon = 'fa-trophy';
+                        color = 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300';
+                        break;
+                    default:
+                        icon = 'fa-bell';
+                        color = 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300';
+                }
+                
+                return `
+                    <div class="p-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-10 w-10 rounded-full ${color} flex items-center justify-center">
+                                <i class="fas ${icon}"></i>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                        ${activity.message}
+                                    </p>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">
+                                        ${new Date(activity.timestamp).toLocaleString()}
+                                    </span>
+                                </div>
+                                ${activity.details ? `
+                                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                        ${activity.details}
+                                    </p>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render badges
+        function renderBadges(badges) {
+            const container = document.getElementById('badgesContainer');
+            
+            if (badges.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 text-center col-span-3">
+                        <i class="fas fa-medal text-gray-400 text-2xl"></i>
+                        <p class="mt-2 text-gray-500">No badges earned yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = badges.map(badge => `
+                <div class="text-center">
+                    <div class="mx-auto h-16 w-16 rounded-full ${badge.colorClass || 'bg-yellow-100 dark:bg-yellow-900'} flex items-center justify-center ${badge.textColorClass || 'text-yellow-600 dark:text-yellow-300'} mb-2">
+                        <i class="${badge.icon || 'fas fa-trophy'} text-xl"></i>
+                    </div>
+                    <p class="text-xs font-medium text-gray-900 dark:text-white">${badge.name}</p>
+                </div>
+            `).join('');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize theme
+            initTheme();
+            
+            // Set up theme toggle
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+            
+            // Check auth and update UI
+            AuthUtils.protectRoute();
+            AuthUtils.updateAuthUI();
+            
+            // Set up logout buttons
+            document.getElementById('logoutNavBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                AuthUtils.logout();
+            });
+            
+            document.getElementById('mobileLogoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                AuthUtils.logout();
+            });
+            
+            // Set up user dropdown
+            const userMenuButton = document.getElementById('userMenuButton');
+            const userDropdownMenu = document.getElementById('userDropdownMenu');
+            
+            if (userMenuButton && userDropdownMenu) {
+                userMenuButton.addEventListener('click', () => {
+                    userDropdownMenu.classList.toggle('hidden');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!userMenuButton.contains(e.target) && !userDropdownMenu.contains(e.target)) {
+                        userDropdownMenu.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+            
+            if (mobileMenuButton && mobileMenu && mobileMenuClose) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('hidden');
+                });
+                
+                mobileMenuClose.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            }
+            
+            // Set up profile tabs
+            setupTabs();
+            
+            // Edit profile button
+            document.getElementById('editProfileBtn').addEventListener('click', () => {
+                // Switch to settings tab
+                document.getElementById('settingsTab').click();
+            });
+            
+            // Fetch and render user data
+            try {
+                const userData = await UserService.getProfile();
+                
+                // Update stats
+                document.getElementById('eventsAttended').textContent = userData.stats?.eventsAttended || 0;
+                document.getElementById('clubsJoined').textContent = userData.stats?.clubsJoined || 0;
+                document.getElementById('badgesEarned').textContent = userData.stats?.badgesEarned || 0;
+                document.getElementById('connectionsCount').textContent = userData.stats?.connections || 0;
+                
+                // Update membership status
+                const membershipStatus = document.getElementById('membershipStatus');
+                if (userData.stats?.eventsAttended >= 10) {
+                    membershipStatus.textContent = 'Platinum Member';
+                } else if (userData.stats?.eventsAttended >= 5) {
+                    membershipStatus.textContent = 'Gold Member';
+                } else {
+                    membershipStatus.textContent = 'Member';
+                }
+                
+                // Initialize events chart
+                const eventsCtx = document.getElementById('eventsChart');
+                if (eventsCtx) {
+                    new Chart(eventsCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                            datasets: [{
+                                label: 'Events Attended',
+                                data: userData.eventsChartData || [0, 0, 0, 0, 0, 0],
+                                borderColor: '#6366f1',
+                                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // Render badges
+                renderBadges(userData.badges || []);
+                
+            } catch (error) {
+                console.error('Error initializing profile:', error);
+            }
+            
+            // Fetch and render user events when events tab is clicked
+            document.getElementById('eventsTab').addEventListener('click', async () => {
+                try {
+                    const filter = document.getElementById('eventsFilter').value;
+                    const events = await EventService.getUserEvents(filter);
+                    renderEvents(events);
+                } catch (error) {
+                    console.error('Error loading events:', error);
+                }
+            });
+            
+            // Events filter change
+            document.getElementById('eventsFilter').addEventListener('change', async () => {
+                try {
+                    const filter = document.getElementById('eventsFilter').value;
+                    const events = await EventService.getUserEvents(filter);
+                    renderEvents(events);
+                } catch (error) {
+                    console.error('Error filtering events:', error);
+                }
+            });
+            
+            // Fetch and render user clubs when clubs tab is clicked
+            document.getElementById('clubsTab').addEventListener('click', async () => {
+                try {
+                    const clubs = await ClubService.getUserClubs();
+                    renderClubs(clubs);
+                } catch (error) {
+                    console.error('Error loading clubs:', error);
+                }
+            });
+            
+            // Fetch and render user activity
+            try {
+                const activities = await ActivityService.getUserActivity();
+                renderActivity(activities);
+            } catch (error) {
+                console.error('Error loading activity:', error);
+            }
+            
+            // Profile form submission
+            document.getElementById('profileForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const major = document.getElementById('major').value;
+                const year = document.getElementById('year').value;
+                const bio = document.getElementById('bio').value;
+                
+                try {
+                    await UserService.updateProfile({
+                        name: `${firstName} ${lastName}`,
+                        email,
+                        phone,
+                        major,
+                        graduationYear: year,
+                        bio
+                    });
+                    
+                    showToast('Profile updated successfully!');
+                    AuthUtils.updateAuthUI();
+                    
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                }
+            });
+            
+            // Password form submission
+            document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (newPassword !== confirmPassword) {
+                    showToast('New passwords do not match', 'error');
+                    return;
+                }
+                
+                try {
+                    await UserService.changePassword(currentPassword, newPassword);
+                    showToast('Password updated successfully!');
+                    e.target.reset();
+                    
+                } catch (error) {
+                    console.error('Error changing password:', error);
+                }
+            });
+            
+            // Delete account button
+            document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+                if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                    try {
+                        await UserService.deleteAccount();
+                        showToast('Account deleted successfully. You will be redirected to the login page.');
+                        
+                        setTimeout(() => {
+                            AuthUtils.logout();
+                        }, 1500);
+                        
+                    } catch (error) {
+                        console.error('Error deleting account:', error);
+                    }
+                }
+            });
+            
+            // Sticky Navbar Scroll Effect
+            window.addEventListener('scroll', () => {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 10) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
